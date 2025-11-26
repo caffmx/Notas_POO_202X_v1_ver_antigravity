@@ -1,0 +1,762 @@
+\chapter{Programación en Red con Java (2)}
+
+Una vez analizados los conceptos básicos de programación en red en el material pasa
+do,  revisaremos unas clases complementarias y veremos algunos ejemplos de aplicaciones cliente/servidor.
+
+\section{Clases \textit{URL}}
+
+
+	En el documento anterior se han revisado varias clases para la comunicación en red a través de TCP y de UDP. Sin embargo, Java proporciona otras clases de alto nivel y se encuentran organizadas alrededor de la clase URL.
+
+	Existen varias clases para el manejo de URL además de la propia clase URL vista anteriormente.
+
+
+\begin{enumerate}
+\item \textit{URLConnection}. Es una clase abstracta, ofrece una conexión activa a un recurso representado en una instancia de URL. Tiene como subclases a  \textit{HttpURLConnection} y \textit{JarURLConnection}. Proporciona la funcionalidad básica para que las instancias de sus subclases puedan leer o escribir del recurso apuntado por un URL.
+\item \textit{HttpURLConnection}. Extiende la clase \textit{URLConnection}. Una instancia de esta clase permite la conexión a un servidor http.
+\item \textit{JarURLConnection}. Es usada para hacer referencia a un archivo jar o a un recurso contenido dentro de un archivo jar. La conexión sigue siendo bajo http. Sintaxis general:
+
+$jar:<url>!/{entry}$
+
+\item \textit{URLEncoder}. Esta clase contiene un método estático para convertir una cadena en formato \textit{x-www-form-urlencoded}\footnote{Este formato es posible apreciarlo en el uso de CGI's; donde por ejemplo, un espacio es representado con el símbolo +.}.
+\item \textit{URLDecoder}. Al contrario de la clase anterior, una instancia de esta clase convierte del formato \textit{x-www-form-urlencoded} a cadena.
+\end{enumerate}
+
+\section{Cliente / Servidor}
+
+Mucho se ha hablado de la tecnología cliente / servidor y como ésta es lograda en diferentes niveles. Por ejemplo, el uso de la JDBC es una arquitectura de este estilo donde la aplicación carga con las capas de manipulación y presentación de datos y el manejador de la base de datos obviamente tiene la responsabilidad del almacenamiento. Con la programación en red nosotros podemos realizar aplicaciones cliente y aplicaciones servidor, donde dependiendo de nuestras necesidades podamos proponer inclusive el movimiento de estas capas como se mencionaba en el curso propedéutico de introducción a la tecnología de objetos.
+
+	Retomando la JDBC, uno de los problemas del acceso usando el puente JDBC-ODBC es que debe estar configurado el acceso a la base de datos en cada máquina, lo que no es recomendable para cierto tipo de aplicaciones. Si no se tiene otra forma de acceder a la base de datos es posible hacer un cliente que solo se encargue de recibir la información y presentarla, y una aplicación del lado del servidor que acceda a la base de datos a través de JDBC-ODBC y envié la información a través de conexiones de \textit{sockets}.
+
+De una manera más formal, un cliente y servidor se definen como sigue:
+
+\textbf{Cliente}. Un cliente es una aplicación que realiza un servicio al usuario  apoyado en tareas realizadas por un servidor, a través de solicitudes de servicio. Se asume que por lo general el cliente es quien contacta al servidor para realizar la conexión.
+
+\textbf{Servidor}. Un servidor por su parte es una aplicación que se encuentra a la espera de conexiones de clientes a través de un puerto asociado a su servicio. Un servidor debe generar un hilo por cada cliente que se encuentre solicitando un servicio.
+
+\subsection{Programas cliente}
+
+Se muestran a continuación ejemplos de programas cliente básicos.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Programa que almacena páginas html
+import java.util.Vector;
+import java.io.*;
+import java.net.*;
+
+public class CapturaHtmlApp {
+ public static void main(String args[]){
+  CapturaHtml captu = new CapturaHtml();
+  captu.run();
+ }
+}
+
+class CapturaHtml {
+ String urlList = "urlList.txt";
+ Vector URLs = new Vector();
+ Vector fileNames = new Vector();
+ public CapturaHtml() {
+  super();
+ }
+ public void getURLList() {
+  try {
+   BufferedReader inStream = new BufferedReader(new FileReader(urlList));
+   String inLine;
+   while((inLine = inStream.readLine()) != null) {
+    inLine = inLine.trim();
+    if(!inLine.equals("")) {
+     int tabPos = inLine.lastIndexOf('\t');
+     String url = inLine.substring(0,tabPos).trim();
+     String fileName = inLine.substring(tabPos+1).trim();
+     URLs.addElement(url);
+     fileNames.addElement(fileName);
+    }
+   }
+  }catch(IOException ex){
+   error("Error leyendo "+urlList);
+  }
+ }
+ public void run() {
+  getURLList();
+  int numURLs = URLs.size();
+  for(int i=0;i<numURLs;++i)
+   captuURL((String) URLs.elementAt(i),(String) fileNames.elementAt(i));
+  System.out.println("Ok.");
+ }
+ public void captuURL(String urlName,String fileName) {
+  try{
+   URL url = new URL(urlName);
+   System.out.println("Obteniendo "+urlName+"...");
+   File outFile = new File(fileName);
+   PrintWriter outStream = new PrintWriter(new FileWriter(outFile));
+   BufferedReader inStream = new BufferedReader(
+    new InputStreamReader(url.openStream()));
+   String line;
+   while ((line = inStream.readLine())!= null) outStream.println(line);
+   inStream.close();
+   outStream.close();
+  }catch (MalformedURLException ex){
+   System.out.println("MalformedURLException");
+  }catch (IOException ex){
+   System.out.println("IOException");
+  }
+ }
+ public void error(String s){
+  System.out.println(s);
+  System.exit(1);
+ }
+}
+\end{minted}
+\caption{Ejemplo que almacena páginas html.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Este programa toma un archivo urlList.txt para obtener una lista de direcciones de Web y almacenar localmente los archivos html resultantes, obtenidos de los servidores correspondientes. El archivo de direcciones puede ser:
+\begin{alltt}
+http://www.utm.mx   utm.htm 
+http://virtual.utm.mx   virtual.htm
+\end{alltt}
+
+donde la dirección se encuentra separada del nombre del archivo local por un carácter de tabulación.
+
+En el siguiente programa podemos ver a un cliente de SMTP para envío de correo, el cual manda un correo electrónico de prueba conectándose a un servidor SMTP.  Para que se ejecute correctamente es necesario ajustar las cuentas de origen y destino, así como el nombre de dominio del servidor de SMTP.
+
+Es posible que este programa no funcione con algunos servidores. Una de las razones puede ser por cuestiones de seguridad, ya que fácilmente se podría mandar un mensaje aparentando un remitente que no nos pertenece pues, como es posible apreciar, en el código no hay ninguna medida de seguridad de para comprobar nuestra identidad. Sin embargo muchos servidores SMTP no están activados para verificar la identidad del cliente\footnote{ El código muestra servidores de ejemplo. En la fecha de prueba de este programa dicho servidor no verificaba la identidad del cliente pero esto pudo haber cambiado a la fecha. }.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Ejemplo de  cliente de SMTP
+import java.io.*;
+import java.net.*;
+
+public class CorreoJava {
+   static PrintStream ps = null;       // envío de mensajes
+   static BufferedReader dis =null; 
+              
+
+   public static void enviar(String str) throws IOException
+     {
+       ps.println(str); // enviar una cadena SMTP
+       ps.flush();      // vaciar la cadena
+
+       System.out.println("Java envió: " + str);
+     }
+
+   public static void recibir() throws IOException
+     {
+       String readstr = dis.readLine(); // obtener la respuesta SMTP
+       System.out.println("respuesta SMTP: " + readstr);
+     }
+
+   public static void main (String args[])
+     {
+       String HELO = "HELO ";
+       String MAIL_FROM = "MAIL FROM: miCuenta@mixteco.utm.mx ";
+       String RCPT_TO = "RCPT TO: destino@nuyoo.utm.mx ";
+       String DATA = "DATA"; // inicio del mensage
+       String ASUNTO = "Subject: Prueba Java\n";
+
+       // Nota: "\n.\n" indica el final el mensaje 
+       String MENSAJE = "Cadena de mensaje\n.\n";
+ 
+       Socket smtp = null;   // socket de SMTP
+       
+       try {  // Nota: 25 es el número de puerto SMTP por omisión
+           smtp = new Socket("mixteco.utm.mx", 25);
+           OutputStream os = smtp.getOutputStream();
+           ps = new PrintStream(os);
+           InputStream is = smtp.getInputStream();
+           dis= new BufferedReader(new InputStreamReader(is));
+         }  
+       catch (IOException e)
+         {
+           System.out.println("Error al conectar: " + e);
+         }
+
+       try {      
+           String loc = InetAddress.getLocalHost().getHostName();
+           enviar(HELO + loc);
+           recibir();           // obtener la respuesta SMTP
+           enviar(MAIL_FROM);   // enviar el remitente
+           recibir();
+           enviar(RCPT_TO);     // enviar el receptor
+           recibir();
+           enviar(DATA);        // enviar el inicio de mensaje
+           recibir();
+           enviar(ASUNTO); 
+           recibir();
+           enviar(MENSAJE); 
+           recibir();
+           smtp.close();
+         } 
+       catch (IOException e)
+         {
+           System.out.println("Error al enviar:" + e);
+         }
+      
+       System.out.println("Correo enviado!");
+    }
+}
+\end{minted}
+\caption{Ejemplo de cliente SMTP.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Un ejemplo muy claro de una aplicación cliente/servidor mediante sockets es la del juego de gato presentada por Deitel \cite{deitel2012c}, donde el servidor está a la espera de que se conecten dos clientes jugadores de gato. Se muestra a continuación el lado del cliente.
+
+\ejemplo  %ACTUALIZAR
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Cliente de TicTacToe 
+import java.applet.Applet;
+import java.awt.*;
+import java.net.*;
+import java.io.*;
+
+public class TicTacToeClient extends Applet
+                             implements Runnable {
+   TextField id;
+   TextArea display;
+   Panel boardPanel, panel2;
+   Square board[][], currentSquare;
+   Socket connection;
+   DataInputStream input;
+   DataOutputStream output;
+   Thread outputThread;
+   char myMark;
+
+
+   public void init()
+   {
+      setLayout( new BorderLayout() );
+      display = new TextArea( 4, 30 );
+      display.setEditable( false );
+      add( "South", display );
+
+      boardPanel = new Panel();
+      boardPanel.setLayout( new GridLayout( 3, 3, 0, 0 ) );
+      board = new Square[ 3 ][ 3 ];
+
+      for ( int row = 0; row < board.length; row++ )
+         for (int col = 0; col < board[row].length; col++ ) {
+            board[ row ][ col ] = new Square();
+            boardPanel.add( board[ row ][ col ] );
+         }
+      id = new TextField();
+      id.setEditable( false );
+      add( "North", id );
+
+      panel2 = new Panel();
+      panel2.add( boardPanel );
+      add( "Center", panel2 );
+   }
+
+   public void start()
+   {
+      try {
+         connection =
+            new Socket( InetAddress.getLocalHost(), 5000 );
+         input = new DataInputStream(
+            connection.getInputStream() );
+         output = new DataOutputStream(
+            connection.getOutputStream() );
+      }
+      catch ( IOException e ) {
+         e.printStackTrace();         
+      }
+
+      outputThread = new Thread( this );
+      outputThread.start();
+   }
+
+   public boolean mouseUp( Event e, int x, int y )
+   {      
+      for ( int row = 0; row < board.length; row++ ) {
+         for (int col = 0; col < board[row].length; col++ ) {
+            try {
+               if ( e.target == board[ row ][ col ] ) {
+                  currentSquare = board[ row ][ col ];
+                  output.writeInt( row * 3 + col );
+               }
+            }
+            catch ( IOException ie ) {
+                  ie.printStackTrace();         
+            }
+         }
+      }
+      return true;
+   }
+
+   public void run()
+   {
+      try {
+         myMark = input.readChar();
+         id.setText( "Eres el jugador \"" + myMark + "\"" );
+      }
+      catch ( IOException e ) {
+         e.printStackTrace();         
+      }
+
+      // Recibir mensajes
+      while ( true ) {
+         try {
+            String s = input.readUTF();
+            processMessage( s );
+         }
+         catch ( IOException e ) {
+            e.printStackTrace();         
+         }
+      }
+   }
+
+
+   public void processMessage( String s )
+   {
+      if ( s.equals( "Movida valida." ) ) {
+         display.appendText( "Movida valida, espere un momento.\n" );
+         currentSquare.setMark( myMark );
+         currentSquare.repaint();
+      }
+      else if ( s.equals( "Movida invalida, intente de nuevo" ) ) {
+         display.appendText( s + "\n" );
+      }
+      else if ( s.equals( "El oponente movio" ) ) {
+         try {
+            int loc = input.readInt();
+   
+            done:
+            for ( int row = 0; row < board.length; row++ )
+               for ( int col = 0;
+                     col < board[ row ].length; col++ )
+                  if ( row * 3 + col == loc ) {
+                     board[ row ][ col ].setMark(
+                        ( myMark == 'X' ? 'O' : 'X' ) );
+                     board[ row ][ col ].repaint();
+                     break done;
+                  }
+            display.appendText(
+               "El oponente movio. Es tu turno.\n" );
+         }
+         catch ( IOException e ) {
+            e.printStackTrace();         
+         }
+      }
+      else {
+         display.appendText( s + "\n" );
+      }
+   }
+}
+
+class Square extends Canvas {
+   char mark;
+
+   public Square()
+   {
+      resize ( 30, 30 );
+   }
+
+   public void setMark( char c ) { mark = c; }
+
+   public void paint( Graphics g )
+   {
+      g.drawRect( 0, 0, 29, 29 );
+      g.drawString( String.valueOf( mark ), 11, 20 );
+   }
+}
+\end{minted}
+\caption{Ejemplo - Cliente de TicTacToe.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Programas servidor}
+
+Veremos ahora algunos ejemplos de programas servidores, recordando que ya se ha mencionado la importancia de que estos sean capaces de soportar la conexión de varios clientes al mismo tiempo, por lo que es relevante el manejo de programación concurrente.
+
+Inicialmente veamos el código de un servidor genérico, este no hace nada en particular, únicamente se muestra como un ejemplo de los aspectos generales de los servidores en Java.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Ejemplo de un servidor genérico multihilado
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+public class GenericServer {
+    // 1234 puede ser cualquier número de puerto que se determine
+    int serverPort = 1234; 
+    public static void main(String args[]){
+        //crear un objeto de servidor y ejecutarlo
+        GenericServer server = new GenericServer();
+        server.run();
+    }
+    public GenericServer() {
+        super();
+    }
+    public void run() {
+        try {
+            //crear un socket servidor en el puerto especificado
+            ServerSocket server = new ServerSocket(serverPort);
+            do {
+                //hacer un ciclo infinito para aceptar conexiones entrantes
+                Socket client = server.accept();
+                //crear un hilo nuevo para cada conexión
+                (new ServerThread(client)).start();
+            } while(true);
+        } catch(IOException ex) {
+            System.exit(0);
+        }
+    }
+}
+
+class ServerThread extends Thread {
+    Socket client;
+    //almacenar una referencia al socket en el que
+    //está  conectado el cliente
+    public ServerThread(Socket client) {
+        this.client = client;
+    }
+    //este es el método inicial del hilo
+    public void run() {
+        try {
+            //crea flujos para comunicarse con el cliente
+            ServiceOutputStream outStream = new ServiceOutputStream(
+                new BufferedOutputStream(client.getOutputStream()));
+            ServiceInputStream inStream = new ServiceInputStream(client.getInputStream());
+            //leer la solicitud del cliente en el flujo de entrada
+            ServiceRequest request = inStream.getRequest();
+            //procesar solicitudes del cliente y devolver la salida al cliente
+            while (processRequest(outStream)) {};
+        }catch(IOException ex) {
+            System.exit(0);
+        }
+        try {
+            client.close();
+        }catch(IOException ex) {
+            System.exit(0);
+        }
+    }
+    //procesamiento de solicitudes
+    public boolean processRequest(ServiceOutputStream outStream) {
+        return false;
+    }
+}
+
+//filtro de flujo de entrada
+class ServiceInputStream extends FilterInputStream {
+    public ServiceInputStream(InputStream in) {
+        super(in);
+    }
+    //método para leer solicitudes de los clientes en el flujo de entrada
+    public ServiceRequest getRequest() throws IOException {
+        ServiceRequest request = new ServiceRequest();
+        return request;
+    }
+}
+
+//filtro de flujo de salida
+class ServiceOutputStream extends FilterOutputStream {
+    public ServiceOutputStream(OutputStream out) {
+        super(out);
+    }
+}
+
+//clase que implementa solicitudes del cliente
+class ServiceRequest {
+}
+\end{minted}
+\caption{Ejemplo de un servidor genérico multihilado.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El programa servidor del gato, el cual lógicamente debe ejecutarse antes que los clientes para estar listo a recibir las conexiones. Es importante señalar que estos ejemplos no contienen más que una validación simple de las casillas ocupadas y el turno. No realiza por ejemplo, una validación para ver si alguno de los jugadores gano el juego.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Servidor de TicTacToe.
+import java.awt.*;
+import java.net.*;
+import java.io.*;
+
+public class TicTacToeServer extends Frame {
+   private byte board[];
+   private boolean xMove;
+   private TextArea output;
+   private Player players[];
+   private ServerSocket server;
+   private int numberOfPlayers;
+   private int currentPlayer;
+
+   public TicTacToeServer()
+   {
+      super( "Servidor Tic-Tac-Toe" );
+      board = new byte[ 9 ];
+      xMove = true;
+      players = new Player[ 2 ];
+      currentPlayer = 0;
+ 
+      try {
+         server = new ServerSocket( 5000, 2 );
+      }
+      catch( IOException e ) {
+         e.printStackTrace();
+         System.exit( 1 );
+      }
+
+      output = new TextArea();
+      add( "Center", output );
+      resize( 300, 300 );
+      show();
+   }
+
+   // espera por dos conexiones de los clientes
+   public void execute()
+   {
+      for ( int i = 0; i < players.length; i++ ) {
+         try {
+            players[ i ] =
+               new Player( server.accept(), this, i );
+            players[ i ].start();
+            ++numberOfPlayers;
+         }
+         catch( IOException e ) {
+            e.printStackTrace();
+            System.exit( 1 );
+         }
+      }
+   }
+   
+   public int getNumberOfPlayers() {
+ return numberOfPlayers;
+   }
+
+   public void display( String s )
+   {
+      output.appendText( s + "\n" );
+   }
+ 
+   public synchronized boolean validMove( int loc, int player )
+   {
+      boolean moveDone = false;
+
+      while ( player != currentPlayer ) {
+         try {
+            wait();
+         }
+         catch( InterruptedException e ) {
+         }
+      }
+
+      if ( !isOccupied( loc ) ) {
+         board[ loc ] =
+            (byte)( currentPlayer == 0 ? 'X' : 'O' );
+         currentPlayer = ++currentPlayer % 2;
+         players[ currentPlayer ].otherPlayerMoved( loc );
+         notify();    // indicar al jugador en espera que continúe
+         return true;
+      }
+      else 
+         return false;
+   }
+
+   public boolean isOccupied( int loc )
+   {
+      if ( board[ loc ] == 'X' || board [ loc ] == 'O' )
+          return true;
+      else
+          return false;
+   }
+
+   public boolean gameOver()
+   {
+      return false;
+   }
+
+   public boolean handleEvent( Event event )
+   {
+      if ( event.id == Event.WINDOW_DESTROY ) {
+         hide();
+         dispose();
+
+         for ( int i = 0; i < players.length; i++ )
+            players[ i ].stop();
+
+         System.exit( 0 );
+      }
+
+      return super.handleEvent( event );
+   }
+
+   public static void main( String args[] )
+   {
+      TicTacToeServer game = new TicTacToeServer();
+
+      game.execute();
+   }
+}
+
+class Player extends Thread {
+   Socket connection;
+   DataInputStream input;
+   DataOutputStream output;
+   TicTacToeServer control;
+   int number;
+   char mark;
+
+   public Player( Socket s, TicTacToeServer t, int num )
+   {
+      mark = ( num == 0 ? 'X' : 'O' );
+
+      connection = s;
+      
+      try {
+         input = new DataInputStream(
+                    connection.getInputStream() );
+         output = new DataOutputStream(
+                    connection.getOutputStream() );
+      }
+      catch( IOException e ) {
+         e.printStackTrace();
+         System.exit( 1 );
+      }
+
+      control = t;
+      number = num;
+   }
+
+   public void otherPlayerMoved( int loc )
+   {
+      try {
+         output.writeUTF( "El oponente movio" );
+         output.writeInt( loc );
+      }
+      catch ( IOException e ) {}
+   }
+
+   public void run()
+   {
+      boolean done = false;
+
+      try {
+         control.display( "Jugador " +
+            ( number == 0 ? 'X' : 'O' ) + " conectado" );
+         output.writeChar( mark );
+         output.writeUTF( "Jugador " +
+            ( number == 0 ? "X conectado\n" :
+                            "O conectado, espere un momento\n" ) );
+
+         if ( control.getNumberOfPlayers() < 2 ) {
+            output.writeUTF( "Esperando otro jugador" );
+
+            while (control.getNumberOfPlayers() < 2 )
+               ; 
+
+            output.writeUTF(
+               "Ya se conectó otro jugador. Es tu turno." );
+         }
+
+         while ( !done ) {
+            int location = input.readInt();
+
+            if ( control.validMove( location, number ) ) {
+               control.display( "pos: " + location );
+               output.writeUTF( "Movida válida." );
+            }
+            else 
+               output.writeUTF( "Movida inválida, intente de nuevo" );
+
+            if ( control.gameOver() )
+               done = true;
+         }         
+         connection.close();
+      }
+      catch( IOException e ) {
+         e.printStackTrace();
+         System.exit( 1 );
+      }
+   }
+}
+\end{minted}
+\caption{Ejemplo - Servidor de TicTacToe.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+
+
+
+%\section*{Acknowledgments}
+%\noindent Delete if not applicable\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Acknowledgments not required
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%ajustando encabezado para Referencias y apéndices
+%\pagestyle{fancy}
+%\fancyhf{}
+\rhead{\textcolor{blue}{\textbf{Notas de Programación Orientada a Objetos}} }  %\\ \leftmark}
+
+%\lfoot{Página \thepage}
+%\rfoot{\textcolor{blue}{Carlos Alberto Fernández y Fernández}}
+%\cfoot{\\ - \thepage \hspace{1pt} / \pageref{LastPage} -}
+%\renewcommand{\footrulewidth}{1pt}
+%%%
+
+

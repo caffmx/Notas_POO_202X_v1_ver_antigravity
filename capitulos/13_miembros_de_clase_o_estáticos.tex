@@ -1,0 +1,761 @@
+\chapter{Miembros de clase  o estáticos}
+
+Cada objeto tiene su propio estado, pero a veces es necesario tener valores por clase y no por objeto. En esos casos se requiere tener atributos \textbf{estáticos} que sean compartidos por todos los objetos de la clase.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+Existe solo una copia de un miembro estático y no forma parte de los objetos de la clase. Este tipo de miembro son también conocidos como miembros de clase.   
+\\ \hline
+\end{tabular}
+\end{center}
+
+\includegraphics[scale=.9]{imagenes/miembros_estaticos.png}
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Miembros estáticos en C++}
+
+Un miembro estático es accesible desde cualquier objeto de la clase o mediante el operador de resolución de alcance binario (::) y el nombre de la clase, dado que el miembro estático \textbf{existe} aunque no haya instancias de la clase. 
+
+Sin embargo, el acceso sigue restringido bajo las reglas de acceso a miembros:
+ 
+\begin{itemize}
+\item  Si se quiere acceder a un miembro estático que es privado deberá hacerse mediante un método público. 
+\item  Si no existe ninguna instancia de la clase entonces deberá ser por medio de un método público y estático.
+\end{itemize}
+
+Además, un método estático solo puede tener acceso a miembros estáticos.
+
+Ejemplo:
+
+\begin{minted}{cpp}
+class Objeto{
+	private:
+	char nombre[10];
+	static int numObjetos;
+ 	public:
+	Objeto(char *cadena=NULL);
+	~Objeto();
+};
+
+Objeto::Objeto(const char *cadena){
+	if(cadena!=NULL)
+		strcpy(nombre, cadena);
+	else
+		nombre=NULL;
+	numObjetos++;
+}
+
+Objeto::~Objeto(){
+	numObjetos--;
+}	
+\end{minted}
+
+Los atributos estáticos deben de ser inicializados al igual que los atributos constantes, fuera de la declaración de la clase. Por ejemplo:
+
+\mint[linenos=false]{cpp}| int Clase::atributo=0;		int const Clase::ATRCONST=50; |
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//prueba de miembros estáticos
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+class Persona{
+	private:
+	static int nPersonas;
+	static const int MAX;
+	char *nombre;
+	
+	public:
+	Persona(const char *c=NULL){
+		if(c!=NULL){
+			nombre= new char[strlen(c)+1];
+			strcpy(nombre, c);
+			cout<<"Persona: "<<nombre<<endl;
+		}else{
+			nombre=NULL;
+			cout<<"Persona: "<<endl;
+		} 
+		nPersonas++;
+	}
+	
+	~Persona(){
+		cout<<"eliminando persona : "<<nombre<<endl;
+		if(nombre)
+			delete []nombre;
+		nPersonas--;
+	}
+
+	static int getMax(){
+		return MAX;
+	}
+	
+	static int getnPersonas(){
+		return nPersonas;
+	}
+};
+int Persona::nPersonas=0;
+const int Persona::MAX=10;
+
+int main() {
+	 
+	cout<<"Máximo de personas: "<<Persona::getMax()<<endl;
+	cout<<"Número de personas: "<<Persona::getnPersonas()<<endl;
+
+	Persona per1;
+	cout<<"Máximo de personas: "<<Persona::getMax()<<endl;
+	cout<<"Número de personas: " <<Persona::getnPersonas()<<endl;
+
+	Persona per2("persona 2");
+	cout<<"Máximo de personas: "<<per2.getMax()<<endl;
+	cout<<"Número de personas: "<<per2.getnPersonas()<<endl;
+	return 0;
+}	
+\end{minted}
+\caption{Ejemplo miembros estáticos en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Miembros estáticos en Java}
+Un miembro estático en Java se maneja de la misma forma que en C++. Cada uno de los objetos tiene su propio estado independiente del resto de los objetos, compartiendo al  mismo tiempo un estado común al tener todos los objetos acceso al estado de la clase, el cual es único y existe de forma independiente.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Objeto{
+    private String nombre;
+	private static int numObjetos;
+	public Objeto(String cadena){
+                if(cadena.length()!=0)
+			nombre=cadena;
+		else
+			nombre="cadena por omision";
+		numObjetos++;
+	}
+
+	public static int getNumObjetos(){
+		return numObjetos;
+	}
+
+	public static void main(String argv[]) {
+                System.out.println("Objetos: " + getNumObjetos());
+                System.out.println("Objetos: " + Objeto.getNumObjetos());
+                Objeto uno,dos;
+                uno= new Objeto("");
+                dos= new Objeto("Objeto dos");
+                System.out.println("Objetos: " + uno.getNumObjetos());
+                System.out.println("Objetos: " + dos.getNumObjetos());         
+	}
+}
+\end{minted}
+\caption{Ejemplo de miembros estáticos en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Una diferencia que se puede apreciar en este ejemplo con respecto a C++, es que no estamos obligados a inicializar el elemento estático, pues éste es inicializado automáticamente.
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Miembros de clase en Ruby}
+
+Los elementos estáticos en Ruby son conocidos como miembros de clase, el cual es un término también usado en otros lenguajes debido a que el ámbito de los miembros va  más allá del objeto pues existen en la clase sin depender de un objeto en particular y representan, como ya mencionamos, un estado de la clase.
+
+\subsection{Atributos de clase}
+
+Las variables de clase en Ruby son nombradas usando @@ como prefijo y deben ser inicializadas antes de ser usadas en definiciones de métodos. Referenciar un atributo de clase no inicializado genera un error. Las variables de clase son compartidas entre descendientes de las clases donde estas fueron definidas.
+
+\subsection{Métodos de clase}
+
+Los métodos de clase son definidos en Ruby usando como prefijo el nombre de la clase o la palabra reservada \textit{self} seguido de punto y el nombre del método de clase. \textit{self} se resuelve como el nombre de la clase en este caso, siendo un comportamiento distinto a cuando es usado dentro de un método (\textit{self} se resuelve como el objeto en ejecución).
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class Persona
+	@@nPersonas=0
+	@@MAX=100 	# no es una constante 
+	@nombre
+	def initialize nom
+		@nombre=nom
+		puts "Persona: " + @nombre if nom.size>0
+		@@nPersonas+=1
+	end
+	
+	def self.getMax
+		return @@MAX
+	end
+	
+	def Persona.getnPersonas
+		return @@nPersonas
+	end
+	
+end
+
+#código principal
+
+puts "Numero maximo de personas: #{Persona.getMax}"
+puts "Numero de personas: #{Persona.getnPersonas}"
+
+per1 = Persona.new "Persona 1"
+puts "Numero maximo de personas: #{Persona.getMax}"
+puts "Numero de personas: #{Persona.getnPersonas}"
+
+per2 = Persona.new "Persona 2"
+puts Persona.getMax
+puts Persona.getnPersonas
+# puts per2.getMax    -- error
+
+\end{minted}
+\caption{Ejemplo de miembros de clase en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+A diferencia de C++ y Java, en Ruby un método de clase no puede ser accedido mediante un objeto. Un método de clase solo puede ser usado externamente mediante el nombre de la clase.
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Miembros estáticos / de clase en Python}
+
+En Python existe el concepto de atributos de clase y métodos de clase, pero estos últimos se diferencian de los métodos estáticos como se explica a continuación.
+
+\subsection{Atributos de clase}
+
+	En Python los \textbf{atributos de clase} en realidad son los atributos que se definen \textbf{dentro de la clase}. Los atributos de instancia (\textit{data attributes} en Python) son definidos dentro del método $\_\_init\_\_$.
+
+\subsection{Método de clase y Método estático}
+
+En Python existe una ligera diferencia entre un método de clase y un método estático. Son definidos usando \textit{decorators}: \textit{@staticmethod }y \textit{@classmethod}.  Un método de clase recibe a la clase como primer argumento, de la misma forma que un método de instancia recibe a la instancia como primer argumento, por lo que tiene el ámbito de la clase. Como en Java, el método puede ser llamado mediante el nombre de la clase o el de un objeto de la clase. El método estático por su parte, no recibe un argumento implícito\footnote{ \href{ http://www.bogotobogo.com/python/python_differences_between_static_method_and_class_method_instance_method.php}{Class method vs static method 2015}}, por lo que \textbf{no puede modificar ni el estado de un objeto ni el de la clase}.   Un \textcolor{blue}{ejemplo} marcando la diferencia:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class A:
+    def metodo(self,x):
+        print ("ejecutando metodo(%s,%s)"%(self,x))
+ 
+    @classmethod
+    def metodo_de_clase(cls,x):
+        print ("ejecutando metodo de clase(%s,%s)"%(cls,x))
+ 
+    @staticmethod
+    def metodo_estatico(x):
+        print ("ejecutando metodo estatico(%s)"%x)
+
+#Script de ejecución
+a=A()
+ 
+#La llamada normal a un método de instancia. 
+#El objeto es pasado de manea implícita como primer argumento
+a.metodo(1)
+# salida: ejecutando metodo(<__main__.A object at 0xb7dbef0c>,1)
+ 
+# En un metodo de clase, la clase del objeto es pasada 
+# implicitamente como primer argumento
+a.metodo_de_clase(1)
+# salida: ejecutando metodo de clase(<class '__main__.A'>,1)
+ 
+# Tambien puede ejecutarse un metodo de clase usando 
+# el nombre de la clase 
+A.metodo_de_clase(1)
+# salida: ejecutando metodo de clase(<class '__main__.A'>,1)
+ 
+# Un metodo estatico no pasa implicitamente ni al objeto 
+# ni la clase como primer argumento
+a.metodo_estatico(1)
+# salida: ejecutando metodo estatico(1)
+ 
+#metodo esta confinado al objeto a 
+print(a.metodo)
+ 
+#metodo_de_clase esta confinado a la clase A, no a al objeto a
+print(a.metodo_de_clase)
+ 
+# metodo_estatico no esta confinado ni al objeto 
+# ni a la clase, no va dicha informacion como argumento
+print(a.metodo_estatico)
+print(A.metodo_estatico)
+\end{minted}
+\caption{Ejemplo de métodos estáticos y de clase en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+    nPersonas=0
+    MAX=100     # no es una constante 
+    def __init__(self, nom):
+        self.nombre=nom
+        print("Persona: " + self.nombre)
+        Persona.nPersonas+=1
+        
+    @classmethod    
+    def getMax(cls):
+        return cls.MAX
+
+    @classmethod
+    def getnPersonas(cls):
+        return cls.nPersonas
+    
+    def getnPersonas2(self):
+        return self.nPersonas
+
+#código principal
+
+print("Numero maximo de personas:", Persona.getMax() )
+print("Numero de personas:", Persona.getnPersonas() )
+
+per1 = Persona("Persona 1")
+print("Numero maximo de personas: ", Persona.getMax() )
+print("Numero de personas: ", Persona.getnPersonas() )
+
+per2 = Persona("Persona 2")
+print(Persona.getMax() )
+print(per2.getnPersonas() )
+print(per2.getnPersonas2() )
+\end{minted}
+\caption{Ejemplo de métodos de clase en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo:}
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+from datetime import date
+
+class Persona:
+	def __init__(self, nombre, edad):
+		self.nombre = nombre
+		self.edad = edad
+
+	# método de clase crea una clase persona por año de nacimiento.
+	@classmethod
+	def porAñoNacimiento(cls, nombre, año):
+		return cls(nombre, date.today().year - año)
+
+	# método estático para verificar si una persona es un adulto
+	@staticmethod
+	def esAdulto(edad):
+		return edad > 18
+
+persona1 = Persona('un nombre', 30)
+persona2 = Persona.porAñoNacimiento('otro nombre', 1999)
+
+print("Edad: ", persona1.edad)
+print("Edad: ", persona2.edad)
+
+print("¿Es adulto?", Persona.esAdulto(22))
+
+\end{minted}
+\caption{Ejemplo de métodos de clase y estático en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+\section{Miembros estáticos en Scala}
+
+Scala no cuenta con miembros estáticos. Una opción es utilizar la definición de miembros “estáticos” en objetos únicos (\textit{singleton}). Un ejemplo de este tipo de estructura se vio en el ejemplo de inicial del lenguaje:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+object HolaMundo {
+  def main(args: Array[String])  ={
+    println("Hola, Mundo!")
+  }
+}
+\end{minted}
+\caption{Ejemplo de objeto único \textit{singleton} en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Donde \textit{HolaMundo} es un objeto único que por lo tanto no tiene que ser instanciado.
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+\section{Miembros estáticos / de clase en C\#}
+Un miembro estático en C\# se maneja de forma similar a C++ y Java. Cada uno de los objetos tiene su propio estado independiente del resto de los objetos. También, el los miembros estáticos sirven para definir un estado de clase. Sin embargo,  los objetos no tienen acceso dicho estado, por lo que los miembros estáticos únicamente pueden ser accedidos usando el nombre de la clase. 
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+class Objeto{
+    	private String nombre;
+	private static int numObjetos;
+	public Objeto(String cadena){
+                if(cadena.Length!=0)
+			nombre=cadena;
+		else
+			nombre="cadena por omision";
+		numObjetos++;
+	}
+
+	public static int getNumObjetos(){
+		return numObjetos;
+	}
+
+	public static void Main() {
+                Console.WriteLine("Objetos: " + getNumObjetos());
+                Console.WriteLine("Objetos: " + Objeto.getNumObjetos());
+
+                Objeto uno,dos;
+
+			   uno= new Objeto("");
+                dos= new Objeto("Objeto dos");
+                // valido en Java y C++ pero no en  C#
+                //Console.WriteLine("Objetos: " + uno.getNumObjetos());
+                //Console.WriteLine("Objetos: " + dos.getNumObjetos());      
+                // error CS0176: Static member `Objeto.getNumObjetos()' cannot be accessed with an instance reference, qualify it with a type name instead  
+                Console.WriteLine("Objetos: " + getNumObjetos()); 
+	}
+}
+\end{minted}
+\caption{Ejemplo de miembros estáticos en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+//prueba de miembros estáticos
+using System;
+
+class Persona{
+        private static int nPersonas;
+        // private static const int MAX=10;
+        // constantes son estaticas por default
+        private const int MAX=10;
+        
+        string nombre;
+
+        public Persona(string c){
+             if(c.Length!=0)
+			// no se proporciona un constructor que reciba un string
+                  //nombre= new string(c); 
+                  nombre= (string) c.Clone();  // o c.Copy() Ver diferencia entre copia superficial y profunda (shallow & deep copy)
+
+             else
+                  nombre="";
+             Console.WriteLine("Persona: "+nombre);
+			nPersonas++;
+		}
+
+        	public static int getMax(){
+			return MAX;
+		}
+       	public static int getnPersonas(){
+			return nPersonas;
+		}
+
+        public static void Main() {
+        		Console.WriteLine("Maximo de personas: "+Persona.getMax());
+        		Console.WriteLine("Numero de personas: "+Persona.getnPersonas());
+
+          	Persona per1= new Persona("");
+            	Console.WriteLine("Maximo de personas: "+Persona.getMax());
+         	Console.WriteLine("Numero de personas: "+Persona.getnPersonas());
+
+         	Persona per2= new Persona("persona 2");
+          	//Console.WriteLine("Maximo de personas: "+per2.getMax());
+             //Console.WriteLine("Numero de personas: "+per2.getnPersonas());
+			Console.WriteLine("Maximo de personas: "+Persona.getMax());
+	        Console.WriteLine("Numero de personas: "+Persona.getnPersonas());
+
+
+                Persona per3= new Persona("persona 3");
+                Console.WriteLine("Maximo de personas: "+Persona.getMax());
+                Console.WriteLine("Numero de personas: "+Persona.getnPersonas());			
+       }
+}
+\end{minted}
+\caption{Ejemplo 2 de miembros estáticos en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Al igual que en Java, no estamos obligados a inicializar el atributo estático. 
+
+El manejo de cadenas aquí cambió ligeramente debido a que C\# no proporciona un constructor del tipo \textit{string(string)}. Se usó el método \textit{Clone()} el cual genera una copia superficial del objeto. En este caso una copia profunda \textit{Copy()} hubiera dado el mismo resultado. Otro aspecto importante en cuanto a cadenas es que en C\# las cadenas son inmutables, por lo que si se requiere un cambio a una cadena debe generarse en una nueva. La restricción es para hacer un manejo más eficiente de las cadenas.
+
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Miembros estáticos / de clase en D}
+
+El manejo de miembros estáticos es similar al de C++
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Objeto;
+import std.stdio;
+ 
+class Objeto{
+    private:
+        string nombre;
+        static int numObjetos;
+   public:
+        this(string cadena){
+                if(cadena.length!=0)
+                        nombre=cadena;
+                else
+                        nombre="cadena por omision";
+                numObjetos++;
+        }
+ 
+        static int getNumObjetos(){
+                return numObjetos;
+        }
+}
+int main() {
+        writeln("Objetos: ", Objeto.getNumObjetos());
+ 
+        Objeto uno,dos;
+        uno= new Objeto("");
+        dos= new Objeto("Objeto dos");
+        writeln("Objetos: ", uno.getNumObjetos());
+        writeln("Objetos: ", dos.getNumObjetos());        
+        return 0; 
+}
+\end{minted}
+\caption{Ejemplo de miembros estáticos en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Persona;
+ 
+import std.stdio;
+ 
+class Persona{
+        private:
+                static int nPersonas;
+                static const int MAX=10;
+                string nombre;
+        
+        public:
+                this(string s=null){
+                if(s!=null){
+                        nombre= s;
+                        writeln("Persona: ", nombre);
+                }else{
+                        nombre=null ;
+                        writeln("Persona: ");
+                } 
+                nPersonas++;
+        }
+        
+        ~this(){
+                writeln("eliminando persona : ", nombre);       
+                nPersonas--;
+        }
+ 
+        static int getMax(){
+                return MAX;
+        }
+        
+        static int getnPersonas(){
+                return nPersonas;
+        }
+}
+
+int main() {       
+        writeln("Máximo de personas: ", Persona.getMax());
+        writeln("Número de personas: ", Persona.getnPersonas());
+ 
+        Persona per1= new Persona();
+        writeln("Máximo de personas: ", Persona.getMax());
+        writeln("Número de personas: ", Persona.getnPersonas());
+ 
+        Persona per2= new Persona("persona 2");
+        writeln("Máximo de personas: ", per2.getMax());
+        writeln("Número de personas: ", per2.getnPersonas());
+        return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de miembros estáticos en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como en Java, no estamos obligados a inicializar los atributos estáticos.
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+

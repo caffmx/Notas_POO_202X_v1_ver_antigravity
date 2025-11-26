@@ -1,0 +1,216 @@
+\chapter{Amistad en C++}
+
+En C++ existe el concepto de \textbf{amistad}.  Aunque puede ser considerado por algunos como una intrusión a la encapsulación o a la privacidad de los datos: 
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+\textit{"... la amistad corrompe el ocultamiento de información y debilita el valor del enfoque de diseño orientado a objetos"}\cite{deitel2006c++}    
+\\ \hline
+\end{tabular}
+\end{center}
+
+Un amigo de una clase es una función u otra clase que no es miembro de la clase, pero que tiene permiso de usar los miembros públicos y privados de la clase\footnote{También tiene acceso a los miembros protegidos que se verán más adelante.}. 
+
+Es importante señalar que el ámbito de una función amiga no es el de la clase, y por lo tanto los amigos no son llamados con los operadores de acceso de miembros.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+Sintaxis para una función amiga:
+    \begin{minted} [linenos=false]{cpp}
+class <nombreClase> {
+	friend <tipo> <metodo>();
+...
+public:
+	...
+};
+    \end{minted}
+\\
+Sintaxis para una clase amiga:
+  \begin{minted} [linenos=false]{cpp}
+class <nombreClase> {
+	friend <nombreClaseAmiga>;
+...
+public:
+	...
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+	Las funciones o clases amigas no son privadas ni públicas (o protegidas), pueden ser colocadas en cualquier parte de la definición de la clase, pero se acostumbra que sea al principio.[Deitel, 1995]
+
+	Como la amistad entre personas, esta es \textbf{concedida} y no tomada. Si la clase B quiere ser amigo de la clase A, la clase A debe declarar que la clase B es su amiga.
+
+	La amistad \textbf{no es simétrica ni transitiva}: si la clase A es un amigo de la clase B, y la clase B es un amigo de la clase C, no implica:
+
+\begin{itemize}
+\item     Que la clase B sea un amigo de la clase A.
+\item     Que la clase C sea un amigo de la clase B.
+\item     Que la clase A sea un amigo de la clase C.
+\end{itemize}
+
+El concepto de amistad no esta implementado en otros lenguajes aunque el nivel protegido  permite un cierto nivel de acceso miembros de clases del mismo módulo an algunos lenguajes.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//Ejemplo de funcion amiga con acceso a miembros privados
+#include <iostream>
+
+using namespace std;
+
+class ClaseX{
+	friend void setX(ClaseX &, int);  //declaración friend
+	public:
+	ClaseX(){
+		x=0;
+	}
+	void print() const {
+		cout<<x<<endl;
+	}
+	private:
+	int x;
+};
+
+void setX(ClaseX &c, int val){
+	c.x=val;	//es legal el acceso a miebros privados por amistad.
+}
+
+int main(){
+	ClaseX pr;
+
+	cout<<"pr.x después de instanciación : ";
+	pr.print();
+	cout<<"pr.x después de la llamada a la función amiga setX : ";
+	setX(pr, 10);
+	pr.print();
+}
+\end{minted}
+\caption{Ejemplo de funciones amigas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo 2 de funciones amigas
+#include <iostream>
+using namespace std;
+
+class Linea;
+
+class Recuadro {
+	friend int mismoColor(Linea, Recuadro);
+	
+	private:
+	int color; //color del recuadro
+	int xsup, ysup; //esquina superior izquierda
+	int xinf, yinf; //esquina inferior derecha
+	
+	public:
+	void ponColor(int);
+	void definirRecuadro(int, int, int, int);
+};
+
+class Linea{
+	friend int mismoColor(Linea, Recuadro);
+	
+	private:
+	int color;
+	int xInicial, yInicial;
+	int lon;
+	
+	public:
+	void ponColor(int);
+	void definirLinea(int, int, int);
+};
+
+int mismoColor(Linea l, Recuadro r){
+	if(l.color==r.color)
+		return 1;
+	return 0;
+}
+
+//métodos de la clase Recuadro
+void Recuadro::ponColor(int c) {
+	color=c;
+}
+
+void Recuadro::definirRecuadro(int x1, int y1, int x2, int y2) {
+	xsup=x1;
+	ysup=y1;
+	xinf=x2;
+	yinf=y2;
+}
+
+//métodos de la clase Linea
+void Linea::ponColor(int c) {
+	color=c;
+}
+
+void Linea::definirLinea(int x, int y, int l) {
+	xInicial=x;
+	yInicial=y;
+	lon=l;
+}
+
+int main(){
+	Recuadro r;
+	Linea l;
+
+	r.definirRecuadro(10, 10, 15, 15);
+	r.ponColor(3);
+	l.definirLinea(2, 2, 10);
+	l.ponColor(4);
+	if(!mismoColor(l, r))
+		cout<<"No tienen el mismo color"<<endl;
+	//se ponen en el mismo color
+	l.ponColor(3);
+	if(mismoColor(l, r))
+		cout<<"Tienen el mismo color";
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de funciones amigas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+\newpage

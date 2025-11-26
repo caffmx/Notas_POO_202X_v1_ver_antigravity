@@ -1,0 +1,971 @@
+\chapter{Polimorfismo AdHoc: Sobrecarga de operadores}
+
+La sobrecarga de operadores es la capacidad de definir nuevo comportamiento para operadores existentes en un lenguaje con tipos de datos definidos por el usuario. De esta forma, en programación orientada a objetos, se les da a los operadores un nuevo significado de acuerdo al objeto sobre el cual se aplique.
+
+C++,  Ruby, Scala\footnote{\href{https://j2eethoughts.wordpress.com/2010/10/13/scala-overloading-operators/} {Scala: Overloading Operators}},  C\#\footnote{ \href{https://msdn.microsoft.com/en-us/library/aa288467(v=vs.71).aspx}{Operator Overloading Tutorial}} y  D\footnote{ \href{http://dlang.org/operatoroverloading.html}{Operator Overloading}} permiten la sobrecarga de de operadores. Java no permite la sobrecarga de operadores. Python cuenta con una aproximación a la sobrecarga de operadores.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+Para sobrecargar un operador, se define un método que es invocado cuando el operador es aplicado sobre ciertos tipos de datos.
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Sobrecarga de operadores en C++}
+
+La sintaxis para definir un método con un operador difiere de la definición normal de un método, pues el nombre del método esta definido por la palabra reservada \textit{operator} y el operador que se va a sobrecargar:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+<tipo> operator <operador> (<argumentos>) ;
+    \end{minted}
+\\
+o
+\\
+   \begin{minted} [linenos=false]{cpp}
+<tipo> operator <operador> (<argumentos>) {
+<cuerpo del método>
+}
+    \end{minted}
+\\
+Para la definición fuera de la clase:
+\\
+   \begin{minted} [linenos=false]{cpp}
+<tipo> <clase>::operator <operador> (<argumentos>) {
+<cuerpo del método>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Para utilizar un operador con objetos, es necesario que el operador este sobrecargado, aunque existen dos excepciones:
+
+\begin{itemize}
+\item  El\textbf{ operador de asignación =}, puede ser utilizado sin sobrecargarse explícitamente, pues el comportamiento por omisión es una\textbf{ copia a nivel de miembro} de los miembros de la clase. Sin embargo no debe de usarse si la clase cuenta con miembros a los que se les asigne memoria de manera dinámica.
+\item  El \textbf{operador de dirección \&}, esta sobrecargado por omisión para devolver la dirección de un objeto de cualquier clase.
+\end{itemize}
+
+\textbf{Algunas restricciones: }
+
+   \begin{enumerate}
+\item  Operadores que no pueden ser sobrecargados:  $.		.*		::		?:		sizeof$
+\item  La precedencia de un operador no puede ser modificada. Deben usarse los paréntesis para obligar un nuevo orden de evaluación.
+\item  La asociatividad de un operador no puede ser modificada.
+\item  No se puede modificar el número de operandos de un operador. Los operadores siguen siendo unarios o binarios.
+\item  No es posible crear nuevos operadores.
+\item  No puede modificarse el comportamiento de un operador sobre tipos de datos definidos por el lenguaje.
+\end{enumerate}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//programa de ejemplo de sobrecarga de operadores.
+class Punto {
+	float x, y;
+public:
+	Punto(float xx=0, float yy=0){
+		x=xx;
+		y=yy;
+	}
+	Punto operator =(Punto);
+	Punto operator +(Punto);
+	Punto operator -();
+	Punto operator *(float);
+	Punto operator *=(float);
+	Punto operator ++();  //prefijo
+	Punto operator ++(int);  //posfijo	
+	bool operator >(Punto);
+	bool operator <=(Punto);
+};
+
+Punto Punto::operator =(Punto a){ //copia o asignación
+	x=a.x;
+	y=a.y;
+	return *this;
+}
+
+Punto Punto::operator +(Punto p){
+	return Punto(x+p.x, y+p.y);
+}
+
+Punto Punto::operator -(){
+	return Punto(-x, -y);
+}
+
+Punto Punto::operator *(float f){
+	Punto temp;
+	temp=Punto(x*f, y*f);
+	return temp;
+}
+
+// incremento prefijo
+Punto Punto::operator ++(){
+	x++;
+	y++;
+	return *this;
+}
+
+// incremento posfijo
+Punto Punto::operator++(int)
+{
+    Punto temp= *this;
+    x++;
+    y++;
+    return temp;
+}
+
+bool Punto::operator >(Punto p){
+	return (x>p.x && y>p.y) ? 1 : 0;
+}
+
+bool Punto::operator <=(Punto p){
+	return (x<=p.x && y<=p.y) ? 1 : 0;
+}
+
+int main(){
+	Punto a(1,1);
+	Punto b;
+	Punto c;
+
+	b++;
+	++b;
+	c=b;
+	c=a+b;
+	c=-a;
+	c=a*.5;
+
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga de operadores con C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Ejercicio} 
+\end{center} 
+\\ \hline
+Crear una clase \textit{String} para el manejo de cadenas. Tendrá dos atributos: apuntador a carácter y un entero $tam$, para almacenar el tamaño de la cadena. Sobrecargar operadores $=$ (asignación), ($==$) igualdad, $!=, <, >, <=, >=, +, +=, [ ]$. 
+Generar un programa de prueba para objetos de la clase. La estructura inicial será la siguiente:
+\\
+    \begin{minted} [linenos=false]{cpp}
+class String{
+   char *s;
+   int tam;
+public:
+   String(char * =NULL);
+   String(const String &copia);  //constructor de copia
+   ~String();
+//sobrecarga de operador de asignación
+   const String &operator =(const String &);
+   //igualdad
+   bool operator ==(const String &) const ;
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\newpage
+\textcolor{blue}{Ejemplo:} código de \textit{String}
+
+Véase que es posible asignar una cadena "   " sin sobrecargar el operador de asignación, o comparar un objeto \textit{String} con una cadena. Esto se logra gracias a que se provee de un constructor que convierte una cadena a un objeto \textit{String}. De esta manera, este \textbf{constructor de conversión} es llamado automáticamente, creando un objeto temporal para ser comparado con el otro objeto. 
+
+No es posible que la cadena (o apuntador a char) vaya del lado izquierdo, pues se estaría llamando a la funcionalidad del operador para un apuntador a char.  Si se requiere que el operando izquierdo sea de un tipo distinto al de la clase, la sobrecarga del operador debe hacerse usando una función externa a la clase. Si fuera necesario, esta función podría declararse como amiga de la clase.
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//Sobrecarga de operadores. Implementación de una clase String
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+class String{
+	//operadores de salida de flujo
+	friend ostream &operator << (ostream &, const String &);
+private:
+	char *s;
+	int tam;
+public:
+	String(const char * =NULL);
+
+	String(const String &copia){
+		s=NULL;
+		tam=0;
+		*this=copia;//¿se vale o no?
+	}
+	~String(){
+		if(s!=NULL){
+			delete []s;
+			s=NULL;
+			tam=0;
+		}
+	}
+
+	//sobrecarga de constructor de asignación
+	const String &operator =(const String &);
+
+	//igualdad
+	bool operator ==(const String &) const ;
+
+	//concatenación
+	String operator +(const String &) const;
+
+	//concatenación y asignación
+	const String &operator +=(const String &);
+
+	String &copia (const String &);
+
+	//sobrecarga de los corchetes
+	char &operator[] (int) const;
+};
+
+//operadores de inserción y extracción de flujo
+ostream& operator<< (ostream &salida, const String &cad){
+	salida<<cad.s;
+	return salida;  //permite concatenación
+}
+
+istream &operator >> (istream &entrada, String &cad){
+	char tmp[100];
+	entrada >> tmp;
+	cad=tmp; //usa operador de asignación de String y const. de conversión
+	return entrada;	//permite concatenación
+}
+
+String::String(const char *c){
+	if(c==NULL){
+		s=NULL;
+		tam=0;
+	} else {
+		tam=strlen(c);
+		s= new char[tam+1];
+		strcpy(s, c);
+	}
+}
+
+const String &String::operator =(const String &c){
+	if(this!= &c) {      //verifica no asignarse a si mismo
+		if(s!=NULL)
+			delete []s;
+		tam=c.tam;
+		s= new char[tam+1];
+		strcpy(s, c.s);
+	}
+	return *this; //permite concatenación de asignaciones
+}
+
+bool String::operator ==(const String &c)const {
+		return strcmp(s, c.s)==0;
+}
+
+//operador de suma regresa una copia de la suma obtenida
+//en un objeto local.
+String String::operator +(const String &c) const {
+	String tmp(*this);
+	tmp+=c;
+	return tmp;
+}
+
+const String &String::operator +=(const String &c){
+	char *str=s, *ctmp= new char [c.tam+1];
+	strcpy(ctmp, c.s);
+	tam+=c.tam;
+	s= new char[tam+1];
+	strcpy(s, str);
+	strcat(s, ctmp);
+	delete []str;
+	delete []ctmp;
+	return *this;
+}
+
+String &String::copia (const String &c) {
+	if(this!= &c) {      //verifica no asignarse a si mismo
+		if(s!=NULL)
+			delete []s;
+		tam=c.tam;
+		s= new char[tam+1];
+		strcpy(s, c.s);
+	}
+	return *this; //permite concatenación de asignaciones
+}
+
+char &String::operator[] (int i) const {
+	if(i>=0 && i<tam)
+		return s[i];
+	return s[0];
+}
+
+int main(){
+	String a("AAA");
+	String b("Prueba de cadena");
+	String c(b);
+    // Es un error hacer una asignación sin liberar memoria.
+    // ese es el principal peligro de usar el operador sobrecargado 
+    // por default de asignación
+	a=b;
+	b.copia("H o l a");
+	b=c+c;
+	b="nueva";
+	c+=c;
+	String d("nueva cadena");
+	d+="Hola";
+	String e;
+	e=d+"Adios";
+	d="coche";
+	int x=0;
+	x=d=="coche"; //Lo contrario no es válido "coche"==d
+	char ch;
+	ch=d[7];
+	d[2]='X';
+	cout<<d<<endl;
+	cout<<"Introduce dos cadenas:";
+	cin>>e>>d;
+	cout<<"Cadenas:\n";
+	cout<<e<<endl<<d;
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de String con sobrecarga de operadores en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Sobrecarga de operadores en Ruby}
+Aunque Ruby no maneja sobrecarga de operaciones si soporta la sobrecarga de operadores. Para hacerlo simplemente se define un método en la clase, donde el nombre del método es el nombre del operador que se necesita sobrecargar.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+def  <operador>
+	...
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Operadores que no pueden ser sobrecargados:
+
+\mint[linenos=false]{cpp}| =, !, not, &&, and, ||, or, ., !=, .., ..., :: and some others ¿- ?. |
+
+La instrucción \textit{return} puede omitirse en Ruby porque regresa el resultado de la ultima expresión de una función.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+#programa de ejemplo de sobrecarga de operadores.
+class Punto  
+  attr_reader :x, :y
+  @x
+  @y
+  def initialize x=10, y=10
+    @x, @y=x,y
+  end
+  
+  def + op
+    return Punto.new(@x+op.x, @y+op.y)
+  end
+
+  def - (op)
+    Punto.new(@x-op.x, @y-op.y)
+  end
+  
+  def * (f)
+    temp=Punto.new @x*f, @y*f
+    return temp
+  end 
+
+  def > (op)
+    return (@x>op.x && @y>op.y) ? true : false
+  end
+  
+  def <= (op)
+    return (@x<=op.x && @y<=op.y) ? true : false
+  end  
+end
+
+def prueba
+  a= Punto.new 1,1
+  b= Punto.new
+  c= Punto.new
+  puts a.x
+  puts b.x
+  puts c.x
+  
+  c=a+b
+  puts c.x
+  puts c.y
+  c+=a
+  puts c.x
+  puts c.y  
+  c=a*0.5
+  puts c.x
+  puts c.y
+  p=a-b
+  puts p.x
+  puts p.y
+
+  puts a>b
+  puts a<=b
+end
+
+prueba
+\end{minted}
+\caption{Ejemplo de sobrecarga en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Al ser un lenguaje dinámico, el segundo operando queda determinado en tiempo de ejecución. Además al sobrecargar, por ejemplo, el operador $+$ automáticamente queda sobrecargado el operador $+=$ (lo mismo para el resto de las asignaciones abreviadas).
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Sobrecarga de operadores en Python}
+
+Python permite la sobrecarga de operadores mediante la definición de métodos especiales\footnote{Ver más sobre métodos especiales en: {\href{https://docs.python.org/3/reference/datamodel.html#special-method-names}{Python reference}}. Dichos métodos inician y terminan con doble '\_'. Por ejemplo, si se quiere sobrecargar la igualdad ($==$) se tiene que crear una definición del método $\_\_eq\_\_$.
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#programa de ejemplo de sobrecarga de operadores.
+class Punto:  
+  
+  def __init__(self,x=10, y=10 ):
+    self.x=x
+    self.y=y
+  
+  def __add__(self, op):
+    return Punto(self.x+op.x, self.y+op.y)
+  
+  def __sub__(self, op):
+    return Punto(self.x-op.x, self.y-op.y)
+  
+  def __mul__(self, f):
+    temp=Punto(self.x*f, self.y*f)
+    return temp
+ 
+  def __gt__(self, op):  # >
+    return (self.x>op.x and self.y>op.y)
+
+  def __le__ (self, op): # <=
+    return (self.x<=op.x and self.y<=op.y)
+
+# principal
+a= Punto(1,1)
+b= Punto()
+c= Punto()
+print( a.x)
+print(b.x)
+print(c.x)
+  
+c=a+b
+print(c.x)
+print(c.y)
+c+=a
+print(c.x)
+print(c.y)  
+ 
+p=a-b
+print(p.x)
+print(p.y)
+ 
+c=a*0.5
+print(c.x)
+print(c.y)
+  
+print( a>b)
+print( a<=b)
+\end{minted}
+\caption{Ejemplo de sobrecarga de operadores en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Una lista de las funciones para la sobrecarga de operadores se muestra a continuación\footnote{Fuente: Pointal, Lauren; Python 2.4 Quick Reference Card, 2006.}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+__add__(self,other) → value: self + other 
+__sub__(self,other) → value: self- ­ other 
+__mul__(self,other) → value: self * other 
+__div__(self,other)→value: self/other 
+__mod__(self,other) → value: self % other  
+__pow__(self,other) → value: self ** other  
+__neg__(self) → value:- ­self 
+__pos__(self) → value: +self
+__abs__(self) → value: abs(self) 
+__iadd__(self,other) ➤ self += other 
+__isub__(self,other) ➤ self- ­= other 
+__imul__(self,other) ➤ self *= other 
+__idiv__(self,other)➤ self/=other  
+__imod__(self,other) ➤ self %= other 
+__ipow__(self,other) ➤ self **= other 
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Es importante mencionar que, aunque no hay un método especial para la asignación, hay métodos especiales para los operadores de asignación compuesta como $+=, -=, *=, /=$, etc. Estos son \_\_iadd\_\_, \_\_isub\_\_, \_\_imul\_\_, \_\_idiv\_\_, entre otros.
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+\section{Sobrecarga de operadores en Scala}
+
+La sobrecarga de operadores en Scala es permitida debido a que en realidad los operadores son métodos. La diferencia es la forma en que se usan los operadores con respecto a los métodos. De hecho, una expresión del tipo:
+
+$10+2$
+
+en realidad es la ejecución del método $+$ definido para $Int$:
+
+$(10).+(2)$
+
+De hecho en Scala podemos usar cada método en el estilo de un operador. Se podría decir que no es que Scala tenga sobrecarga de operadores sino sobrecarga de métodos y los operadores son métodos. El operador de asignación $=$ recibe un tratamiento especial por parte del compilador de Scala y no puede ser sobrecargado.
+
+Existen algunas restricciones para la sobrecarga de operadores prefijos. Los operadores prefijos en Scala son unarios. Los únicos operadores que pueden ser usados de forma unaria son $+, -, !$  y  \textasciitilde . Para sobrecargar uno de estos operadores el método debe llevar como prefijo del operador el nombre de $unary\_$.  Por ejemplo, una sobrecarga del operador unario $+$ se llamaría $unary\_+$.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Punto(var x:Int, var y:Int) {
+    def Punto (x:Int, y:Int){
+       this.x= x
+       this.y= y
+    }
+
+    def + (p: Punto): Punto = {
+        new Punto(x+p.x, y+p.y)
+    }       
+
+    def > (p: Punto): Boolean = {
+     if (x>p.x && y>p.y)  true else false
+    }
+
+    //sobrecarga de operador prefijo unario
+    def unary_-(): Punto ={
+        new Punto(-x, -y)
+    }
+}
+
+object Main{
+  def main(args: Array[String]) ={
+    System.out.println("Sobrecarga de operadores")
+    var a: Punto = new Punto(1,1)
+    var b,c= new Punto(0, 0)
+
+    println(a.x)
+    println(b.x)
+    b=a
+    println(b.x)
+    println(a>c)
+    c= -b  // espacio o paréntesis necesarios para evitar ambigüedad con operador de asignación  
+    println(c.x)
+  }  
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga de operadores en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+\section{Sobrecarga de operadores en C\#}
+
+Como ya se sabe, la sobrecarga de operadores esta relacionada con la sobrecarga de métodos. Al igual que en C++, la sobrecarga de operadores en C\# depende de la palabra reservada \textit{operator} y el método debe ser público y estático.
+
+Existen dos formas de métodos de sobrecarga de operadores: para operadores unarios y para operadores binarios\footnote{ \href{https://msdn.microsoft.com/en-us/library/aa691324(v=vs.71).aspx}{Operator overloading} }. 
+
+En el caso de los operadores unarios, el tipo del operando deberá ser del mismo tipo de la clase para la cual el operador esta siendo definido. Para operadores binarios, al menos uno de los dos operandos debe ser del mismo tipo de la clase. Esto limita la sobrecarga de operadores para objetos que no hemos creado. (no se puede sobrecargar $+$ para \textit{int}, por ejemplo). Los parámetros tampoco deben usar los modificadores \textit{ref}  o \textit{out}. La sintaxis general se muestra a continuación.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\
+Forma general para operadores unarios:
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+public static <tipo-retorno> operator <operador> 
+ ( <tipo> <nombre operando>) {
+    <instrucciones>
+}
+    \end{minted}
+\\
+Forma general para operadores binarios:
+\\
+\begin{minted}[linenos=false]{csharp}
+public static <tipo-retorno> operator <operador> 
+ ( <tipo> <nombre operando1>, <tipo> <nombre operando2>)  {
+    <instrucciones>
+}
+\end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Las sobrecarga unaria de $–$ y $++$ es posible pero no se distingue entre la forma prefija y postfija\cite{schildt2010c}.
+
+Si se sobrecargan operadores como $<$, su operador complementario $>$ también debe ser sobrecargado.
+
+Los siguientes operadores no pueden ser sobrecargados: $=, ., ?:, ->, new, is, sizeof, typeof$ \footnote{Overloadable Operators, \url{https://msdn.microsoft.com/en-us/library/8edha89s(v=vs.71).aspx} }.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+//programa de ejemplo de sobrecarga de operadores.
+
+using System;
+
+class Punto {
+	float x, y;
+	public Punto(float xx=0, float yy=0){
+		x=xx;
+		y=yy;
+	}
+
+	public static Punto operator +(Punto a, Punto b){
+		return new Punto(a.x+b.x, a.y+b.y);
+	}
+
+	public static Punto operator -(Punto a){
+		return new Punto(-a.x, -a.y);
+	}
+
+	public static Punto operator *(Punto a, float f){
+		Punto temp;
+		temp=new Punto(a.x*f, a.y*f);
+		return temp;
+	}
+
+	// incremento prefijo
+	public static Punto operator ++(Punto a){
+		a.x++;
+		a.y++;
+		return a;
+	}
+
+	public static bool operator >(Punto a, Punto b){
+		return (a.x>b.x && a.y>b.y) ? true : false;
+	}
+	
+	public static bool operator <(Punto a, Punto b){
+		return (a.x<b.x && a.y<b.y) ? true : false;
+	}
+
+/*  Requerirá sobrecargar su operador complementario >=
+	public static bool operator <=(Punto a, Punto b){
+		return (a.x<=b.x && a.y<=b.y) ? true : false;
+	}
+*/
+
+	public static void Main(){
+		Punto a= new Punto(1,1);
+		Punto b= new Punto();
+		Punto c= new Punto();
+
+		b++;
+		++b;
+		c=b;
+		c=a+b;
+		c=-a;
+		c=a*.5f;
+	}
+}
+
+\end{minted}
+\caption{Ejemplo de sobrecarga de operadortes en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Sobrecarga de operadores en D\protect\footnote{ \href{ http://dlang.org/operatoroverloading.html} {Operator overloading}}  }
+
+El uso de sobrecarga en D involucra conceptos diversos tales como plantillas y auto referencia, entre otros. El uso de funciones de plantilla para sobrecargar operadores hace que requiera de una sintaxis particular\footnote{\c{C}ehreli, Ali; \textit{Programming in D}, First edition; pp. 291-313; 2015}.
+
+
+La definición de plantillas contiene dos partes:
+  
+\begin{enumerate}
+\item El encabezado o nombre de una función de plantilla para cada operador que se quiera sobrecargar y que se mostrará más adelante.
+\item Una restricción de plantilla ($if op==”+”$, por ejemplo) para identificar el carácter del operador en la cadena. 
+\end{enumerate}
+
+Los operadores postfijos de incremento y decremento ($x++$ y $x--$) no pueden ser sobrecargados directamente aunque son reescritos bajos los términos de la sobrecarga prefija.
+
+Ejemplo de sobrecarga unaria:
+
+\begin{minted}{d}
+struct S {
+    int m;
+
+    int opUnary(string s)() if (s == "-"){
+        return -m;
+    }
+}
+
+int foo(S s){
+    return -s;
+}
+\end{minted}
+
+La sobrecarga de operadores binarios requiere el uso de la función \textit{opBinary} y en algunos casos \textit{opBinaryRight}. \textit{OpBinaryRight} se ocupa cuando el objeto que ejecuta al método puede aparecer en el lado derecho del operador, aunque su uso es poco común. Para sobrecargar el operador de igualdad y desigualdad se usa la función \textit{opEquals} (una expresión con el operador $!=$ es reescrita como $!(a==b)$ por lo que solo se sobrecarga el operador de igualdad. Mientras que para sobrecargar un operador relacional se usa \textit{opCmp}. Existen funciones para otros operadores.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+//programa de ejemplo de sobrecarga de operadores.
+
+// test.d
+module Punto;
+
+import std.stdio;
+
+class Punto {
+	float x, y;
+	
+	public:
+	this(float xx=0, float yy=0){
+		x=xx;
+		y=yy;
+	}
+
+	Punto opBinary(string op) (Punto a) if (op=="+") {
+	    // if (op=="+")
+    	return new Punto(x+a.x, y+a.y);
+	}
+
+	Punto opUnary(string op) () if (op=="-"){
+		return new Punto(-x, -y);
+	}
+
+	Punto opBinary(string op)(float f) if (op=="*") {
+		Punto temp;
+		temp=new Punto(x*f, y*f);
+		return temp;
+	}
+
+	// incremento prefijo
+	Punto opUnary(string op) () if (op=="++"){
+		x++;
+		y++;
+		return this;
+	}
+
+	bool opEquals(Punto b) (Punto a, Punto b) if (op=="=="){  
+		return (x>b.x && y>b.y) ? true : false;
+	}
+
+
+	bool opCmp(string op) (Punto a, Punto b) if (op==">"){
+		return (a.x>b.x && a.y>b.y) ? true : false;
+	}
+	
+	bool opCmp(string op) (Punto b) if (op=="<"){
+		return (x<b.x && y<b.y) ? true : false;
+	}
+}
+
+void	 main(){
+	Punto a= new Punto(1,1);
+	Punto b= new Punto();
+	Punto c= new Punto();
+
+	b++;
+	writeln("b.x:", b.x, " b.y:",b.y);
+	++b;
+	writeln("b.x:", b.x, " b.y:",b.y);
+	c=b;
+	writeln("c.x:", c.x, " c.y:",c.y);
+	c=a+b;
+	writeln("c.x:", c.x, " c.y:",c.y);
+	c=-a;
+	writeln("c.x:", c.x, " c.y:",c.y);
+	c=a*.5f;
+	writeln("c.x:", c.x, " c.y:",c.y);
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga de operadores en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Ejercicio} 
+\end{center} 
+\\ \hline
+Crear un programa con una clase \textit{Pila} y los métodos correspondientes (\textit{push, pop, getTope, getElemTope, estaVacia, estaLlena, ...}) ocupando los temas OO antes vistos de acuerdo a lo que cada lenguaje permita (constructores, miembros estáticos, sobrecarga de operaciones, sobrecarga de operadores, funciones amigas)
+\\ \hline
+\end{tabular}
+\end{center}
+

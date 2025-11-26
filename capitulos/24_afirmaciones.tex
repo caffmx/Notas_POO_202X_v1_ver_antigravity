@@ -1,0 +1,885 @@
+\chapter{Afirmaciones}
+
+Las afirmaciones son usadas para verificar \textbf{invariantes} en un programa \cite{gosling2005java}. Es una manera simple de probar una condición que \textbf{siempre} debe ser verdadera. Si la afirmación resulta ser falsa se considera un error y se interrumpe la ejecución. Escribir afirmaciones mientras se programa es una de las más rápidas y efectivas formas de detectar y corregir errores \cite{sun2002}. 
+
+Las afirmaciones por lo tanto son usadas para comprobar código que se asume será verdadero, siendo la afirmación la parte responsable de verificar que realmente es verdadero.
+
+Las afirmaciones pueden ser utilizadas como una aproximación de la técnica de \textbf{diseño por contrato}. Podemos usar afirmaciones para definir\footnote{\href{https://docs.oracle.com/javase/7/docs/technotes/guides/language/assert.html}{Java assert}}:
+
+\begin{itemize}
+\item Precondiciones. Predicados que deben ser verdaderos cuando un método es invocado.
+\item Postcondiciones. Predicados que deben ser verdaderos después de la ejecución exitosa de un método. 
+\item Invariantes de clase. Predicados que deben ser verdaderos para cada instancia de una clase.
+\end{itemize}
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Afirmaciones en C++}
+Las afirmaciones en C++ se manejan a través de la macro\footnote{\href{http://www.cplusplus.com/reference/cassert/assert/}{C++ assert}}:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| assert (int expression)  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Que se encuentra en la biblioteca \textit{assert.h}.  Si la expresión dentro de \textit{assert} es falsa, se interrumpirá la ejecución del programa.
+
+Las afirmaciones serán deshabilitadas si previo a la introducción de la biblioteca se introduce la instrucción de preprocesador definiendo la macro \textit{NDEBUG}:
+
+\mint[linenos=false]{cpp}| #define NDEBUG |
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+/* Ejemplo assert  */
+#include <stdio.h>     
+#include <assert.h>    
+
+void print_number(int* myInt) {
+  assert (myInt!=NULL);
+  printf ("%d\n",*myInt);
+}
+
+int main (){
+  int a=10;
+  int * b = NULL;
+  int * c = NULL;
+
+  b=&a;
+  print_number (b);
+  print_number (c);
+
+  return 0;
+}
+\end{minted}
+\caption{Ejemplo de afirmaciones en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Afirmaciones en Java}
+
+Las afirmaciones fueron introducidas en Java desde la versión 1.4 del jdk.  Cada afirmación debe contener una expresión booleana (\textit{boolean} o \textit{Boolean}). 
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| assert Expression1;  |\\
+ o \\
+ \mint[linenos=false]{java}| assert Expression1 : Expression2 ;  |\\
+\hline
+\end{tabular}
+\end{center}
+
+donde \textit{Expression1} es una expresión booleana. Esta expresión es la evaluada y si es falsa la excepción \textit{AssertionError} es lanzada. \textit{Expression2} es una expresión que devuelve un valor (no \textit{void}) que generalmente es usado para proveer de un mensaje para la excepción \textit{AssertionError}.
+
+\subsection{Usando afirmaciones}
+
+Es importante no introducir código en las afirmaciones que en realidad sea una acción del programa. Por ejemplo:
+
+\mint[linenos=false]{java}| assert ++i < max; |
+
+Es inapropiado pues se esta modificando el estado del programa al mismo tiempo que validando. Lo correcto sería algo del estilo:
+
+\begin{minted}{java}
+i++;
+assert i < max;
+\end{minted}
+
+Errores detectados con afirmaciones deben ser errores que no deben pasar. Es por esto que se lanza un subtipo de \textit{Error} en lugar de un subtipo de \textit{Exception}. Si falla la validación de una afirmación se asume un error grave que nunca debe pasar.
+
+\subsection{Habilitando y deshabilitando las afirmaciones}
+
+Por omisión, las afirmaciones están deshabilitadas en tiempo de ejecución. Para cambiar de un estado a otro deben aplicarse parámetros especiales en la ejecución de la máquina virtual de Java:
+
+\begin{alltt}
+-enableassertions | -ea 
+-disableassertions | -da   
+\end{alltt}
+
+Estos modificadores pueden no llevar a su vez argumentos, por lo que active o desactiva las afirmaciones para todas las clases, o pueden indicarse nombres de paquetes ó clases específicas:
+
+\begin{alltt}
+-enablesystemassertions | –esa
+-disablesystemassertions | -dsa.
+\end{alltt}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Recuerda habilitar el uso de afirmaciones
+public class AssertionEjemplo {
+   public static void main(String argv[])  {
+      //obtener un número del primer argumento
+      int num = Integer.parseInt(argv[0]);
+      
+	  assert num <=10;  //se detiene si num>10
+         
+      System.out.println("Pasó");
+   }
+}
+\end{minted}
+\caption{Ejemplo de afirmaciones en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Afirmaciones en Python}
+
+Python también soporta la instrucción \textit{assert} para  lanzar una excepción de manera condicional en nuestro código. La sintaxis es la siguiente:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{python}| assert <expresión> [, ‘mensaje opcional’]  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Que en realidad equivale a lanzar la excepción
+
+\mint[linenos=false]{python}| raise AssertionError() |
+
+bajo una condición.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#Ejemplo de assert
+
+def printNumber(myInt):
+    assert myInt!=None, 'Dato no debe ser nulo'
+    print(myInt)
+
+a=10
+b=None
+c=None
+
+b=a
+printNumber(b)
+printNumber(c)
+\end{minted}
+\caption{Ejemplo de afirmaciones en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Para descartar la ejecución de las afirmaciones se tiene que ejecutar el Python con la opción en la línea de comandos de  -O (activando modo de Optimización), poniendo la variable $\_\_debug\_\_$ en falso\footnote{\href{https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement}{Assert statement}}:
+
+\mint[linenos=false]{bash}| $ python -O |
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Pruebas de unidad en Python}
+
+Las pruebas unitarias, también conocidas como unit testing en inglés, son una práctica fundamental en el desarrollo de software que se utiliza para verificar que las unidades individuales de código, como funciones o métodos, funcionen correctamente de forma aislada. Estas pruebas se centran en evaluar pequeñas partes del código de manera independiente, lo que facilita la identificación temprana de errores y garantiza que cada componente del programa se comporte como se espera.
+
+Las pruebas unitarias son esenciales para asegurar la calidad y la robustez del código Python. Al realizar pruebas unitarias, se pueden detectar y corregir problemas antes de que se propaguen a otras partes del sistema. Esto promueve una mayor confiabilidad y mantenibilidad del código, ya que los errores se encuentran y se corrigen de manera más eficiente.
+
+En Python, existen varios módulos y bibliotecas que se utilizan comúnmente para realizar pruebas unitarias y pruebas de software. Algunos de los módulos de pruebas más populares son:
+
+    \begin{itemize}
+        \item \textbf{unittest}: Este es el módulo de pruebas unitarias estándar en la biblioteca estándar de Python. Está inspirado en el marco de pruebas JUnit de Java y proporciona un conjunto completo de herramientas para escribir y ejecutar pruebas unitarias.
+        \item \textbf{pytest}: pytest es una biblioteca de pruebas muy popular que ofrece una sintaxis simple y poderosa para escribir pruebas. Se destaca por su capacidad para descubrir y ejecutar automáticamente pruebas en un proyecto, lo que hace que la configuración sea más sencilla.
+    \end{itemize}
+
+
+\subsection{Pytest}
+
+Pytest es un marco de pruebas unitarias en Python que simplifica la escritura y ejecución de pruebas. A diferencia de la biblioteca de pruebas estándar "unittest", pytest ofrece una sintaxis más sencilla y expresiva para crear pruebas, lo que facilita su adopción y uso. Además, pytest proporciona una amplia gama de características avanzadas y complementos para abordar diferentes situaciones de prueba.
+
+Ventajas de pytest:
+
+    \begin{enumerate}
+        \item Sintaxis Clara: La sintaxis de pytest es simple y legible, lo que permite escribir pruebas de manera más eficiente y comprensible.
+        \item Descubrimiento Automático de Pruebas: pytest puede descubrir y ejecutar automáticamente pruebas en todo un proyecto sin requerir una configuración extensa. Esto ahorra tiempo y esfuerzo en la configuración de pruebas.
+        \item Amplia Compatibilidad: Pytest es compatible con otros marcos de pruebas como unittest, lo que facilita la migración de pruebas existentes.
+        \item Parametrización: Permite ejecutar la misma prueba con múltiples conjuntos de datos, lo que simplifica las pruebas con diferentes casos de entrada.
+    \end{enumerate}
+
+
+\subsubsection{Ejemplos de Prueba Unitaria con pytest en Python}
+
+Supongamos que estamos desarrollando una función simple que suma dos números en Python. Primero, escribimos la función en el archivo \textit{calculadora.py}:
+
+%multiple lines
+\begin{minted}{python}
+# calculadora.py
+
+def suma(a, b):
+    return a + b
+\end{minted}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# test_calculadora.py
+
+import calculadora
+
+def test_suma():
+    resultado = calculadora.suma(2, 3)
+    assert resultado == 5, "La suma de 2 y 3 debería ser 5"
+
+
+\end{minted}
+\caption{Ejemplo de prueba de unidad con módulo pytest en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo:
+
+    \begin{itemize}
+        \item Importamos el módulo calculadora que contiene la función suma.
+        \item Definimos una función llamada \textit{test\_suma} que verifica si la función suma devuelve el resultado esperado cuando se le dan los argumentos 2 y 3.
+        \item Usamos la afirmación (\textit{assert}) para verificar si el resultado es igual a 5 y proporcionamos un mensaje de error personalizado si la afirmación falla.
+    \end{itemize}
+
+Para ejecutar estas pruebas con pytest, simplemente abre una terminal en la ubicación de tus archivos y ejecuta el siguiente comando:
+
+\mint[linenos=false]{console}| pytest test_calculadora.py |
+
+
+Otro ejemplo:
+
+
+Supongamos que tenemos una función simple que calcula el área de un rectángulo en un archivo llamado geometria.py:
+
+%multiple lines
+\begin{minted}{python}
+# geometria.py
+
+def area_rectangulo(base, altura):
+    if base <= 0 or altura <= 0:
+        raise ValueError("La base y la altura deben ser números positivos.")
+    return base * altura
+
+\end{minted}
+
+Ahora, creemos pruebas unitarias para esta función utilizando pytest en un archivo llamado test_geometria.py:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# test_geometria.py
+
+import pytest
+import geometria
+
+def test_area_rectangulo():
+    resultado = geometria.area_rectangulo(3, 4)
+    assert resultado == 12, "El área del rectángulo con base 3 y altura 4 debe ser 12"
+
+def test_area_rectangulo_excepcion():
+    with pytest.raises(ValueError):
+        geometria.area_rectangulo(-1, 5)
+
+\end{minted}
+\caption{Ejemplo de prueba de unidad con módulo pytest en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el código de prueba:
+
+    \begin{itemize}
+        \item Importamos pytest y el módulo geometria, que contiene la función que estamos probando.
+        \item Creamos dos funciones de prueba, \textit{test\_area\_rectangulo} y \textit{test\_area\_rectangulo\_excepcion}, que verifican si la función area\_rectangulo se comporta como se espera en diferentes situaciones.
+        \item Utilizamos \textit{assert} para verificar si los resultados son los esperados.
+        \item En \textit{test\_area\_rectangulo\_excepcion}, usamos \textit{pytest.raises} para verificar que la función eleve una excepción cuando se le proporciona una entrada inválida.
+    \end{itemize}
+
+Con esto, pytest descubrirá automáticamente las pruebas en el archivo y proporcionará información detallada sobre su ejecución.
+
+pytest es una herramienta esencial en el desarrollo de software en Python que simplifica la escritura y ejecución de pruebas unitarias. Su sintaxis clara y sus características avanzadas lo convierten en una elección poderosa para garantizar la calidad del código.
+    
+\subsection{unittest}
+
+Unittest es un módulo incorporado en Python que ofrece un marco de trabajo para la creación y ejecución de pruebas unitarias. Este módulo se inspira en el marco de pruebas JUnit de Java y sigue el enfoque de la orientación a objetos para organizar las pruebas. Permite a los desarrolladores crear pruebas efectivas al proporcionar una estructura coherente y herramientas para verificar el comportamiento de las funciones y métodos.
+
+Características Clave de "unittest":
+
+    \begin{enumerate}
+        \item Organización de Pruebas: "Unittest" fomenta la organización de pruebas en clases, lo que facilita la gestión de conjuntos de pruebas relacionadas.
+        \item Métodos de Aserción: Ofrece una variedad de métodos de aserción, como assertEqual, assertTrue, assertFalse, entre otros, para verificar resultados esperados.
+        \item Descubrimiento Manual de Pruebas: A diferencia de algunos otros marcos de pruebas, "unittest" no ofrece descubrimiento automático de pruebas. Los desarrolladores deben especificar manualmente las pruebas a ejecutar.
+        \item Fixture: Permite la configuración y limpieza compartida para las pruebas a través de métodos especiales de configuración (setUp) y limpieza (tearDown).
+    \end{enumerate}
+
+
+\subsubsection{Ejemplos de Prueba Unitaria con unittest en Python}
+
+Supongamos que estamos desarrollando una función simple que suma dos números en Python. Primero, escribimos la función en el archivo \textit{calculadora.py}:
+
+%multiple lines
+\begin{minted}{python}
+# calculadora.py
+
+def suma(a, b):
+    return a + b
+\end{minted}
+
+
+A continuación, creamos un archivo de prueba unitaria llamado \textit{test\_calculadora.py} para verificar si la función suma funciona correctamente:
+
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# test_calculadora.py
+
+import unittest
+from calculadora import suma
+
+class TestCalculadora(unittest.TestCase):
+
+    def test_suma(self):
+        resultado = suma(2, 3)
+        self.assertEqual(resultado, 5, "La suma de 2 y 3 debería ser 5")
+
+if __name__ == '__main__':
+    unittest.main()
+
+\end{minted}
+\caption{Ejemplo de pureba de unidad con módulo unittest en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este ejemplo:
+
+    \begin{itemize}
+        \item Importamos el módulo \textit{unittest} para crear nuestras pruebas unitarias.
+        \item Importamos la función suma desde el módulo calculadora.
+        \item Creamos una clase llamada \textit{TestCalculadora} que hereda de \textit{unittest.TestCase}. Esto nos permite definir métodos de prueba.
+        \item Dentro de la clase TestCalculadora, definimos un método llamado \textit{test\_suma}. Este método verifica si la función suma devuelve el resultado esperado cuando se le dan los argumentos 2 y 3.
+        \item Usamos el método \textit{self.assertEqual} para comparar el resultado con el valor esperado.
+    \end{itemize}
+
+Para ejecutar estas pruebas unitarias, simplemente ejecutamos el archivo \textit{test\_calculadora.py}. Si la función suma se comporta como se espera, no se mostrarán errores.
+
+
+
+Para el ejemplo de geometria.py visto anteriormente el código de prueba en \textit{unittest} queda como sigue:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# test_geometria.py
+
+import unittest
+import geometria
+
+class TestGeometria(unittest.TestCase):
+
+    def test_area_rectangulo(self):
+        resultado = geometria.area_rectangulo(3, 4)
+        self.assertEqual(resultado, 12, 
+          "El área del rectángulo con base 3 y altura 4 debe ser 12")
+
+    def test_area_rectangulo_excepcion(self):
+        with self.assertRaises(ValueError):
+            geometria.area_rectangulo(-1, 5)
+
+if __name__ == '__main__':
+    unittest.main()
+
+\end{minted}
+\caption{Ejemplo de prueba de unidad con módulo unittest en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este código de prueba:
+
+    \begin{itemize}
+        \item Importamos el módulo unittest y el módulo geometria que contiene la función que estamos probando.
+        \item Creamos una clase llamada TestGeometria que hereda de unittest.TestCase, lo que nos permite definir métodos de prueba.
+        \item Dentro de la clase TestGeometria, definimos dos métodos de prueba, test_area_rectangulo y test_area_rectangulo_excepcion, que verifican si la función area_rectangulo se comporta como se espera en diferentes situaciones.
+        \item Usamos los métodos de aserción self.assertEqual y self.assertRaises para verificar si los resultados son los esperados y si se eleva una excepción cuando se le proporciona una entrada inválida.
+    \end{itemize}
+
+Para ejecutar estas pruebas con \textit{unittest}, simplemente ejecutamos el archivo test_geometria.py.
+
+\textit{unittest} es un módulo importante para realizar pruebas unitarias en Python. Su enfoque orientado a objetos y sus métodos de aserción facilitan la creación de pruebas estructuradas y confiables para garantizar que las unidades individuales de código funcionen correctamente.
+
+
+\section{Manejo de archivos: de texto, JSON y CSV}
+
+\subsection{Manejo de archivos de texto}
+
+el manejo de archivos de texto se refiere a la capacidad de leer y escribir información en archivos de texto plano. Los archivos de texto son una forma común de almacenar datos estructurados de manera legible por humanos, lo que los hace ideales para tareas como guardar configuraciones, registros de actividad o información tabular. A continuación, se proporcionan ejemplos de cómo manejar archivos de texto en Python, centrándonos en las operaciones básicas de lectura y escritura.
+
+\subsubsection{Lectura de Archivos de Texto}
+
+Para leer información de un archivo de texto en Python, primero debemos abrir el archivo en modo lectura ('r'). Luego, podemos usar ciclos o métodos de lectura para procesar su contenido. Aquí hay un ejemplo:
+
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# Abrir un archivo en modo lectura
+with open('archivo.txt', 'r') as archivo:
+    # Leer todo el contenido del archivo
+    contenido = archivo.read()
+    
+# Imprimir el contenido leído
+print(contenido)
+
+\end{minted}
+\caption{Ejemplo de lectura de archivo de texto.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este ejemplo, utilizamos la declaración \textit{with} para garantizar que el archivo se cierre correctamente después de su uso. El método\textit{ read() }se emplea para leer todo el contenido del archivo y almacenarlo en la variable contenido.
+
+\subsubsection{Escritura en Archivos de Texto}
+
+Para escribir en un archivo de texto, debemos abrirlo en modo escritura ('w'). Si el archivo no existe, se creará; si existe, su contenido se sobrescribirá. A continuación, se muestra un ejemplo de escritura en un archivo de texto:
+
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# Abrir un archivo en modo escritura
+with open('nuevo_archivo.txt', 'w') as archivo:
+    # Escribir datos en el archivo
+    archivo.write("Este es un ejemplo de escritura en un archivo de texto.\n")
+    archivo.write("Python es un lenguaje de programación poderoso.\n")
+
+\end{minted}
+\caption{Ejemplo de escritura de archivo de texto.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este caso, utilizamos \textit{with} nuevamente para asegurarnos de que el archivo se cierre correctamente después de escribir en él. Los datos se escriben en el archivo utilizando el método \textit{write()}. Nota que agregamos el carácter de nueva línea ('\n') para separar las líneas.
+
+\subsubsection{Lectura Línea por Línea}
+
+Si deseamos leer un archivo línea por línea, podemos usar un ciclo \textit{for}. Esto es especialmente útil para archivos grandes, ya que no cargamos todo el contenido en la memoria al mismo tiempo:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# Abrir un archivo en modo lectura
+with open('archivo_grande.txt', 'r') as archivo:
+    for linea in archivo:
+        # Procesar cada línea
+        print(linea.strip())  # strip() 
+          elimina espacios en blanco y saltos de línea al final
+        
+\end{minted}
+\caption{Ejemplo de lectura línea por línea de archivo de texto.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+En este ejemplo, el ciclo \textit{for} itera sobre cada línea del archivo, y utilizamos \textit{strip()} para eliminar espacios en blanco y saltos de línea al final de cada línea.
+
+
+El manejo de archivos de texto en Python es fundamental para leer y escribir datos de manera eficiente y efectiva. Con las operaciones básicas de lectura y escritura, los programadores pueden manipular archivos de texto de diversas maneras, lo que resulta esencial en muchas aplicaciones y tareas de procesamiento de datos.
+
+\subsection{Manejo de archivos JSON }
+
+Los archivos JSON (JavaScript Object Notation) son una forma eficiente y ampliamente utilizada para el intercambio de datos estructurados entre aplicaciones. A continuación, se proporcionarán ejemplos detallados de cómo manejar archivos JSON en Python, ilustrando su relevancia en el ámbito de la programación.
+
+\subsubsection{Lectura de Archivos JSON}
+
+La lectura de archivos JSON en Python es un proceso esencial cuando se necesita acceder a datos estructurados almacenados en este formato. Para llevar a cabo esta tarea, se utiliza la biblioteca estándar json. A continuación, se presenta un ejemplo de lectura de un archivo JSON:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import json
+
+# Abrir y leer un archivo JSON en modo lectura
+with open('datos.json', 'r') as archivo_json:
+    # Cargar los datos desde el archivo
+    datos = json.load(archivo_json)
+
+# Acceder a los datos y realizar operaciones
+print("Nombre:", datos["nombre"])
+print("Edad:", datos["edad"])
+
+\end{minted}
+\caption{Ejemplo de lectura de archivo JSON.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este ejemplo, se utiliza json.load() para cargar los datos desde el archivo JSON en la variable datos. Luego, se pueden acceder y procesar los datos como diccionarios de Python.
+
+\subsubsection{Escritura en Archivos JSON}
+
+La escritura en archivos JSON es igualmente fundamental, ya que permite almacenar datos estructurados en un formato que es fácilmente comprensible por otros programas. Para llevar a cabo esta tarea, también empleamos la biblioteca json. Aquí se presenta un ejemplo de escritura en un archivo JSON:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import json
+
+# Datos que se desean escribir en el archivo JSON
+nuevos_datos = {
+    "nombre": "Ana",
+    "edad": 28,
+    "ciudad": "Ejemploville"
+}
+
+# Abrir y escribir en un archivo JSON en modo escritura
+with open('nuevos_datos.json', 'w') as archivo_json:
+    # Escribir los datos en el archivo
+    json.dump(nuevos_datos, archivo_json)
+
+print("Datos escritos en el archivo JSON.")
+
+\end{minted}
+\caption{Ejemplo de escritura de archivo JSON.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este caso, se utiliza \textit{json.dump()} para escribir los datos en el archivo JSON. Estos datos pueden ser un diccionario de Python, como se muestra en el ejemplo.
+
+\subsubsection{Ventajas del Uso de Archivos JSON}
+
+El manejo de archivos JSON en Python es crucial para la interoperabilidad de datos entre sistemas y aplicaciones. JSON es un formato ligero y fácil de leer, lo que lo hace ideal para la transferencia y el almacenamiento de datos estructurados. Además, Python proporciona herramientas integradas para trabajar con archivos JSON de manera eficiente, lo que simplifica las tareas de lectura y escritura de datos. 
+
+
+\subsection{Manejo de archivos CSV}
+
+Los archivos CSV son una forma común de almacenar datos tabulares en un formato que es fácilmente legible y editable tanto por humanos como por máquinas. A continuación, se presentarán ejemplos completos de cómo manejar archivos CSV en Python, destacando su relevancia en el ámbito de la programación y el procesamiento de datos.
+
+\subsubsection{Lectura de Archivos CSV}
+
+La lectura de archivos CSV en Python es esencial para analizar y procesar datos tabulares provenientes de diversas fuentes, como hojas de cálculo o bases de datos. Para llevar a cabo esta tarea, se utiliza la biblioteca estándar csv. A continuación, se presenta un ejemplo de lectura de un archivo CSV:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import csv
+
+# Abrir y leer un archivo CSV en modo lectura
+with open('datos.csv', 'r', newline='') as archivo_csv:
+    lector_csv = csv.reader(archivo_csv)
+    
+    # Iterar a través de las filas del archivo CSV
+    for fila in lector_csv:
+        # Procesar cada fila (que es una lista de valores)
+        print("Nombre:", fila[0])
+        print("Edad:", fila[1])
+
+\end{minted}
+\caption{Ejemplo de lectura de archivo CSV.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo, se utiliza \textit{csv.reader() }para crear un objeto que nos permite iterar a través de las filas del archivo CSV. Cada fila se convierte en una lista de valores que podemos procesar según sea necesario.
+
+\subsubsection{Escritura en Archivos CSV}
+
+La escritura en archivos CSV es igualmente importante, ya que nos permite almacenar datos tabulares en un formato que puede ser compartido y utilizado por otros programas. También utilizamos la biblioteca csv para esta tarea. Aquí se presenta un ejemplo de escritura en un archivo CSV:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import csv
+
+# Datos que se desean escribir en el archivo CSV
+nuevos_datos = [
+    ["Ana", 28],
+    ["Carlos", 35],
+    ["Elena", 22]
+]
+
+# Abrir y escribir en un archivo CSV en modo escritura
+with open('nuevos_datos.csv', 'w', newline='') as archivo_csv:
+    escritor_csv = csv.writer(archivo_csv)
+    
+    # Escribir los datos en el archivo CSV
+    for fila in nuevos_datos:
+        escritor_csv.writerow(fila)
+
+print("Datos escritos en el archivo CSV.")
+
+\end{minted}
+\caption{Ejemplo de escritura de archivo CSV.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este caso, utilizamos \textit{csv.writer()} para crear un objeto que nos permite escribir datos en el archivo CSV. Usamos el método \textit{writerow() }para escribir cada fila de datos.
+
+\subsubsection{Ventajas del Uso de Archivos CSV en Python}
+
+El manejo de archivos CSV en Python es crucial para la manipulación y análisis de datos tabulares, lo que es esencial en una amplia variedad de aplicaciones, desde procesamiento de datos hasta análisis estadístico. Los archivos CSV son ampliamente compatibles y su estructura simple los hace ideales para el intercambio de datos entre diferentes sistemas. Python proporciona herramientas eficientes y flexibles para trabajar con archivos CSV, lo que simplifica las tareas de lectura y escritura de datos tabulares. 
+
+\section{Casos de estudio orientados al aprendizaje computacional}
+
+\subsection{¿Qué es el aprendizaje computacional?}
+El aprendizaje computacional es una rama de la inteligencia artificial que se ocupa de la construcción de sistemas capaces de aprender a partir de datos. Estos sistemas, también conocidos como modelos de aprendizaje automático, pueden ser utilizados para realizar una amplia gama de tareas, como la clasificación de imágenes, la predicción de resultados y la detección de patrones.
+El aprendizaje computacional se basa en la idea de que los sistemas pueden aprender a realizar tareas sin ser explícitamente programados para ello. En lugar de ello, los sistemas aprenden a partir de datos de entrenamiento, que son ejemplos de cómo se debe realizar la tarea. Por ejemplo, un sistema de aprendizaje automático para clasificar imágenes podría ser entrenado con un conjunto de datos de imágenes etiquetadas, cada una de las cuales tiene un nombre de objeto. El sistema aprendería a identificar los patrones que distinguen a cada objeto, y luego podría utilizar esos patrones para clasificar nuevas imágenes.
+El aprendizaje computacional tiene una amplia gama de aplicaciones, que incluyen:
+\begin{itemize}
+    \item \textbf{Reconocimiento de imágenes y voz}: Los sistemas de aprendizaje automático se utilizan para reconocer rostros, objetos y palabras.
+    \item \textbf{Predicción}: Los sistemas de aprendizaje automático se pueden utilizar para predecir el comportamiento futuro, como el riesgo de que un cliente abandone una empresa o la probabilidad de que un paciente desarrolle una enfermedad.
+    \item \textbf{Robótica}: Los sistemas de aprendizaje automático se utilizan para que los robots puedan aprender a realizar tareas en entornos complejos.
+    \item \textbf{Médico}: Los sistemas de aprendizaje automático se utilizan para diagnosticar enfermedades, personalizar tratamientos y desarrollar nuevos fármacos.
+\end{itemize}
+El aprendizaje computacional es una disciplina en rápido desarrollo, y se espera que tenga un impacto cada vez mayor en nuestras vidas.
+Tipos de aprendizaje computacional
+Existen tres tipos principales de aprendizaje computacional:
+\begin{itemize}
+    \item \textbf{Aprendizaje supervisado}: En el aprendizaje supervisado, el sistema de aprendizaje automático se proporciona con datos de entrenamiento que están etiquetados con la respuesta correcta. El sistema aprende a identificar los patrones que distinguen a cada respuesta correcta, y luego puede utilizar esos patrones para predecir la respuesta correcta para nuevos datos.
+    \item \textbf{Aprendizaje no supervisado}: En el aprendizaje no supervisado, el sistema de aprendizaje automático no se proporciona con datos de entrenamiento etiquetados. El sistema aprende a identificar los patrones en los datos, y luego puede utilizar esos patrones para agrupar los datos en grupos o para identificar clusters.
+    \item \textbf{Aprendizaje por refuerzo}: En este enfoque, un agente de aprendizaje interactúa con un entorno y toma decisiones para maximizar una recompensa acumulada a lo largo del tiempo. A medida que el agente interactúa con el entorno, aprende a tomar decisiones óptimas para lograr sus objetivos.
+\end{itemize}
+
+\subsection{Bibliotecas de Python usadas en aprendizaje computacional}
+
+Python es un lenguaje de programación de propósito general que es cada vez más popular en el campo del aprendizaje computacional. Esto se debe a que Python es un lenguaje fácil de aprender y usar, y tiene una amplia gama de bibliotecas y herramientas disponibles para el aprendizaje automático.
+
+Las principales bibliotecas de Python usadas en aprendizaje computacional son:
+
+    \begin{itemize}
+        \item \textbf{Scikit-learn}: Es una biblioteca de aprendizaje automático de código abierto que proporciona una amplia gama de algoritmos para el aprendizaje supervisado, no supervisado y refuerzo.
+        \item \textbf{TensorFlow}: Es una biblioteca de aprendizaje profundo de código abierto que es popular para el desarrollo de redes neuronales.
+        \item \textbf{PyTorch}: Es una biblioteca de aprendizaje profundo de código abierto que es similar a TensorFlow, pero se centra en la velocidad y la eficiencia.
+        \item \textbf{Keras}: Es un marco de aprendizaje profundo de alto nivel que se basa en TensorFlow o PyTorch.
+        \item \textbf{SciPy}: Es una biblioteca de matemáticas y ciencias computacionales que proporciona funciones para el análisis de datos, la visualización y el cálculo numérico.
+        \item \textbf{NumPy}: Es una biblioteca de cálculo numérico que proporciona matrices y funciones para el análisis de datos.
+        \item \textbf{Pandas}: Es una biblioteca de análisis de datos que proporciona estructuras de datos y herramientas para la manipulación de datos tabulares.
+        \item \textbf{Matplotlib}: Es una biblioteca de visualización de datos que proporciona funciones para crear gráficos y diagramas.
+    \end{itemize}
+
+Estas bibliotecas proporcionan una amplia gama de funciones y capacidades para el aprendizaje computacional, incluyendo:
+
+    \begin{itemize}
+        \item \textbf{Algoritmos de aprendizaje automático}: La mayoría de estas bibliotecas proporcionan una amplia gama de algoritmos de aprendizaje automático, tanto para el aprendizaje supervisado como no supervisado.
+        \item \textbf{Herramientas de preprocesamiento de datos}: Estas bibliotecas proporcionan herramientas para limpiar, transformar y preparar los datos para el aprendizaje automático.
+        \item \textbf{Herramientas de evaluación de modelos}: Estas bibliotecas proporcionan herramientas para evaluar el rendimiento de los modelos de aprendizaje automático.
+        \item \textbf{Herramientas de visualización de datos}: Estas bibliotecas proporcionan herramientas para visualizar los resultados del aprendizaje automático.
+    \end{itemize}
+Elegir la biblioteca adecuada para una tarea de aprendizaje computacional depende de una serie de factores, incluyendo:
+
+    \begin{itemize}
+        \item \textbf{El tipo de algoritmo de aprendizaje automático que se necesita}: Algunas bibliotecas se especializan en ciertos tipos de algoritmos de aprendizaje automático, mientras que otras proporcionan una gama más amplia de opciones.
+        \item \textbf{Las características y capacidades de la biblioteca}: Algunas bibliotecas proporcionan más funciones y capacidades que otras.
+        \item E\textbf{l nivel de experiencia del usuario}: Algunas bibliotecas son más fáciles de usar que otras.
+    \end{itemize}
+
+En general, las bibliotecas de Python son una herramienta poderosa para el aprendizaje computacional. Proporcionan una amplia gama de funciones y capacidades que pueden ayudar a los usuarios a desarrollar modelos de aprendizaje automático eficaces.
+
+\subsection{Casos de estudio orientados al aprendizaje computacional}
+
+El aprendizaje computacional tiene una amplia gama de aplicaciones, y se utiliza en una gran variedad de industrias. Aquí hay algunos ejemplos de casos de estudio orientados al aprendizaje computacional:
+
+\begin{itemize}
+    \item \textbf{Reconocimiento de imágenes y voz}. El reconocimiento de imágenes y voz es una de las aplicaciones más comunes del aprendizaje computacional. Se utiliza en una amplia gama de productos y servicios, como los asistentes virtuales, las cámaras de seguridad y los sistemas de reconocimiento facial.
+    \item \textbf{Predicción}. El aprendizaje computacional se utiliza para predecir el comportamiento futuro. Se puede utilizar para predecir el riesgo de que un cliente abandone una empresa, la probabilidad de que un paciente desarrolle una enfermedad o el rendimiento de una inversión.
+    \item \textbf{Robótica}. El aprendizaje computacional se utiliza para que los robots puedan aprender a realizar tareas en entornos complejos. Se puede utilizar para enseñar a los robots a navegar por un entorno, a interactuar con los humanos y a realizar tareas complejas.
+    \item \textbf{Médico}. El aprendizaje computacional se utiliza en el campo de la medicina para diagnosticar enfermedades, personalizar tratamientos y desarrollar nuevos fármacos. Se puede utilizar para analizar imágenes médicas, para identificar patrones de enfermedad y para predecir la respuesta a los tratamientos.
+\end{itemize}
+
+\subsubsection{Otros casos de estudio}
+
+El aprendizaje computacional se utiliza en una amplia gama de otros campos, como el marketing, la educación y el transporte. Por ejemplo, se puede utilizar para personalizar la publicidad, para mejorar el aprendizaje de los estudiantes y para optimizar el tráfico.
+
+Ejemplos específicos
+
+Aquí hay algunos ejemplos específicos de casos de estudio orientados al aprendizaje computacional:
+
+    \begin{itemize}
+        \item Google utiliza el aprendizaje computacional para clasificar imágenes en su motor de búsqueda.
+        \item Amazon utiliza el aprendizaje computacional para recomendar productos a sus clientes.
+        \item Netflix utiliza el aprendizaje computacional para recomendar películas y programas de televisión a sus usuarios.
+        \item Tesla utiliza el aprendizaje computacional para que sus coches autónomos puedan navegar por la carretera.
+        \item IBM Watson utiliza el aprendizaje computacional para diagnosticar enfermedades.
+        \item Duolingo utiliza el aprendizaje computacional para personalizar el aprendizaje de idiomas.
+        \item Uber utiliza el aprendizaje computacional para optimizar el tráfico.
+    \end{itemize}
+
+Estos son solo algunos ejemplos de los muchos casos de estudio en los que el aprendizaje computacional se está utilizando para resolver problemas y mejorar nuestras vidas.
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%  TEMAS PENDIENTES
+%
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\newpage
+
+%
+%

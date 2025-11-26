@@ -1,0 +1,1066 @@
+\chapter{Introducción a Ruby}
+
+\section{Introducción}
+
+Ruby es un lenguaje definido para ser dinámico, reflexivo y orientado a objetos. Combina una sintaxis inspirada en Perl y similar a las características orientadas a objetos de Smalltalk. También comparte ciertas características con Phyton, Lisp, Dylan, y CLU. 
+
+Ruby fue creado por \textbf{Yukihiro  Matsumoto} con la idea de crear un lenguaje que balanceara la programación funcional con la programación imperativa. 
+
+%https://www.overleaf.com/learn/latex/Wrapping_text_around_figures
+\begin{wrapfigure}{O}{0.05\textwidth}
+    \centering
+    \includegraphics[scale=.6]{imagenes/ruby-lang-matz.png}
+\end{wrapfigure}
+
+El lenguaje fue liberado desde un inicio como \textit{open source} (1995) y en los últimos años ha crecido su aceptación masivamente.
+
+Matsumoto dice haber puesto énfasis en crear un lenguaje productivo y divertido, siguiendo los principios de buen diseñó de interfaz con el usuario. Remarca que el diseño de sistemas necesita –también- enfatizar las necesidades humanas, en lugar de las de la computadora.
+
+Ruby es actualmente un lenguaje interpretado aunque se pretende que en futuras versiones sea semi-compilado y ejecutado por una máquina virtual, de manera similar a Java. Además existe un número amplio de implementaciones de Ruby con diferentes aproximaciones.
+
+\section{Características}
+
+%https://www.overleaf.com/learn/latex/Wrapping_text_around_figures
+\begin{wrapfigure}{O}{0.05\textwidth}
+    \centering
+    \includegraphics[scale=.25]{imagenes/2000px-Ruby-logo-R.svg-56a811b75f9b58b7d0f05e83.jpg}
+
+\end{wrapfigure}
+
+Ruby es principalmente un lenguaje orientado a objetos, pero también es descrito como un lenguaje multiparadigma: permite programación procedural, con orientación a objetos y declaraciones funcionales. 
+
+Un resumen de sus características  puede verse enseguida:
+\begin{itemize}
+\item Orientado a objetos
+\item 4 niveles de alcance de variables: global, clase, instancia y local
+\item Manejo de excepciones
+\item Expresiones regulares nativas al nivel del lenguaje (\textit{perl-like})
+\item Sobrecarga de operadores
+\item Recolector automático de basura
+\item Biblioteca dinámica compartida en la mayoría de las plataformas
+\item Soporta introspección, reflexión y metaprogramación
+\item Soporta \textit{continuations} y \textit{generators}
+\end{itemize}
+
+
+\subsection{Comparado con C}
+
+Similitudes
+\begin{itemize}
+\item Puedes programar proceduralmente si lo deseas, pero aún será orientado a objetos internamente.
+\item La mayoría de los operadores son los mismos. Pero no cuenta con ++ o --.
+\item Se pueden tener constantes, aunque no hay una instrucción \textit{const}.
+\item Las cadenas van entre comillas y son mutables.
+\item Se cuenta con un depurador en línea.
+\end{itemize}
+
+Diferencias
+\begin{itemize}
+\item Los objetos tienen un tipo fuerte y las variables no tienen tipo.
+\item No cuenta con macros o preprocesador.
+\item No tiene enmascaramiento.
+\item No tiene apuntadores, ni aritmética de apuntadores.
+\item No tiene \textit{typedef}, \textit{sizeof}, ni enumeraciones.
+\item No archivos de encabezados.
+\item Es interpretado en tiempo de ejecución, por lo que no hay código compilado o \textit{bytecode} de ningún tipo (hasta la versión 1.8).
+\item Cuenta con recolector de basura.
+\item Los argumentos son pasados por referencia, no por valor.
+\item No usa ‘;’ obligatoriamente para finalizar instrucciones
+\item Condiciones para \textit{if} y \textit{while} van sin paréntesis.
+\item Paréntesis para llamadas a métodos son frecuentemente opcionales.
+\item Usualmente no se usan llaves, se finalizan las instrucciones de múltiples líneas con una palabra clave.
+\item No hay declaraciones de variables. Asignas nombre conforme los necesitas.
+\item Sólo falso y nulo evalúan como falso. Cualquier otro valor es verdadero (incluyendo 0 –cero-)
+\item No hay tipo \textit{char}.
+\item Cadenas no terminan con un valor nulo.
+\item Los arreglos automáticamente se agrandan conforme vas necesitando más elementos.
+\end{itemize}
+
+
+\subsection{Comparado con C++}
+
+Similitudes
+\begin{itemize}
+\item Public, protected y private realizan actividades similares.
+\item Puedes poner tu código en módulos, similar a espacios de nombre en C++.
+\item Excepciones trabajan de forma similar.
+\end{itemize}
+
+Diferencias
+\begin{itemize}
+\item No hay referencias explícitas. En Ruby cada variable es un nombre automáticamente desreferenciado para un objeto.
+\item El constructor es llamado initialize en lugar de usar el nombre de la clase.
+\item Todos los métodos son siempre virtuales.
+\item Nombres de atributos de clase siempre empiezan con @@.
+\item No es posible acceder directamente variables miembros. Todos los atributos deben ser accedidos a mediante métodos.
+\item Se usa self en lugar de \textit{this}.
+\item Algunos métodos terminan con ‘?’ o ‘!’. Es parte del nombre del método.
+\item No hay herencia múltiple.
+\item Existen algunas reglas con nombres (e.g., nombre de clases empiezan con mayúscula, variables inician con minúscula.)
+\item Solo dos tipos de clases contenedoras: \textit{Array} y \textit{Hash}.
+\item No hay conversiones  de tipos automáticas.
+\item Multihilos son implementados en el intérprete (\textit{green threads}). No son hilos nativos.
+\item Existe una biblioteca para pruebas de unidad como parte estándar del lenguaje.
+\end{itemize}
+
+\subsection{Comparado con Java}
+
+Similitudes
+\begin{itemize}
+\item La memoria es manejada automáticamente mediante un recolector de basura.
+\item Los objetos son fuertemente tipados.
+\item Hay métodos públicos, privados y protegidos.
+\item Tiene herramientas de documentación embebidas (la de Ruby se llama RDoc). La documentación generada por rdoc se ve muy similar a la generada por javadoc.
+\end{itemize}
+
+Diferencias
+\begin{itemize}
+\item No necesitas compilar tu código fuente. Directamente lo ejecutas.
+\item Hay distintos conjuntos de herramientas para interfaz gráfica.
+\item Se usa la palabra clave \textit{end} después de definir clases, en vez de tener que poner llaves encerrando el código.
+\item Tienes require en vez de \textit{import}.
+\item Todas las variables de instancia son privadas. Desde afuera, todo se accede usando métodos.
+\item Los paréntesis en las llamadas a los métodos usualmente son opcionales y a menudo son omitidos.
+\item Todo es un objeto, incluyendo los números como 2 y 3,14159.
+\item No hay validación estática de tipos de datos.
+\item Los nombres de variables son sólo etiquetas. No tienen un tipo de dato asociado.
+\item No hay declaración de tipo de datos. Simplemente se asigna a nuevos nombres de variable a medida que se necesita (por ejemplo $a = [1,2,3]$ en vez de $int[] a = {1,2,3};)$.
+\item  No hay transformación de tipos (\textit{casting}). Simplemente se llama a los métodos. Tus pruebas unitarias deberían avisarte antes de que ejecutes el código si habrá una excepción.
+\item Es $foo = Foo.new("hola")$ en vez de $Foo foo = new Foo("hola")$.
+\item El constructor siempre se llama “initialize” en vez del nombre de la clase.
+\item Tienes \textit{mixins} en vez de interfaces.
+\item Es \textit{nil} en vez de \textit{null}.
+\end{itemize}
+
+\section{Herramientas}
+
+Existen dos herramientas básicas en Ruby:
+\begin{itemize}
+\item \textbf{ruby}. Es el intérprete del lenguaje. Puede recibir expresiones del lenguaje como parámetros o archivos con programas.
+\item \textbf{irb} (o fxri en algunas versiones para Windows). Este es Ruby interactivo (\textit{Interactive RuBy}) que permite recibir expresiones del lenguaje e irlas interpretando línea por línea, como cualquier lenguaje interpretado.
+Además:
+\item \textbf{ri}. Documentación de clases estándar de ruby.
+\end{itemize}
+
+También es posible integrar al interprete al IDE de Eclipse. Para esto se debe agregar el plugin llamado \textit{Ruby Development Tools} (RDT) aparte de tener instalado el interprete en la computadora. El plugin puede ser encontrado en: \url{http://rubyeclipse.sourceforge.net/}. Tiene que agregarse, como cualquier otro plugin en la herramienta, mediante la opción de actualización del software en el menú de ayuda de Eclipse. 
+
+El plugin debe configurarse indicando la ubicación del intérprete:
+
+\includegraphics[scale=.35]{imagenes/rubyEclipse.png}
+
+\section{Ruby: Fundamentos del lenguaje}
+
+\subsection{Convenciones léxicas}
+
+\subsubsection{Espacios en blanco}
+
+Mientras una expresión del tipo $a + b$ es interpretada como $a+b$, donde $a$ es una variable. El resultado puede ser diferente en casos ambiguos. Por ejemplo, si $a$ es el nombre de una función, entonces una expresión:
+
+$a +b$
+
+es interpretada como:
+
+$a (+b)$
+
+\subsubsection{Final de instrucciones}
+
+Ruby interpreta $;$ y el espacio en blanco como el final de una instrucción. Debido a esto, Ruby interpreta los símbolos $+$, $-$  y \textbackslash como continuación de una instrucción.
+
+\subsubsection{Comentarios}
+
+Comentarios en Ruby son representados con $\#$ :
+
+\mint[linenos=false]{ruby}|# Este es un comentario|
+
+Comentarios de más de una línea usan $=begin$ y $=end$, los cuales deben estar al comienzo de una línea:
+
+
+\begin{minted}{ruby}
+=begin 
+Este es un comentario
+=end
+\end{minted}
+
+\subsubsection{Identificadores}
+
+Cualquier nombre de constante, variables y métodos usado como identificador es distinguido por Ruby si usa minúsculas o mayúsculas.
+
+
+\subsection{Literales}
+
+\subsubsection{Enteros}
+
+Los números enteros  son instancias de la clase \textit{Fixnum} o \textit{Bignum}.
+
+\begin{minted}{ruby}
+123                    # decimal
+0377                   # octal
+0xff                   # hexadecimal
+0b1011                 # binary
+?a                     # código para 'a'
+12345678901234567890   # Bignum: entero de longitud infinita
+\end{minted}
+
+\subsubsection{Flotantes}
+
+Los números de punto flotante son instancias de la clase Float.
+
+\begin{minted}{ruby}
+123.4                    
+1.0e6                    # notación científica
+4e+20                    # exponencial
+\end{minted}
+
+
+\subsubsection{Cadenas}
+
+Una cadena es un arreglo de bytes y una instancia de la clase String:
+
+\begin{minted}{ruby}
+"una cadena”    # permite sustitución y notación con \
+‘otra cadena’     # no permite sustitución y solo \ \ ó \’.
+\end{minted}
+
+\subsubsection{Concatenación}
+
+Cadenas adyacentes son concatenadas :
+
+\mint[linenos=false]{ruby}|''una'' ''cadena''      # es igual a ''una cadena''|
+
+\subsection{Variables}
+
+En Ruby existen 5 tipos de variables, usando caracteres especiales para diferenciar entre los distintos tipos de variables, lo que ayuda a identificar el tipo de variable visualmente:
+
+
+\begin{itemize}
+\item  Variable global
+\item  Variable de instancia
+\item  Variable de clase
+\item  Variable local
+\item   Constante
+\end{itemize}
+
+y además:
+\begin{itemize}
+\item  Pseudo-variable
+\end{itemize}
+
+
+\subsubsection{Variable global}
+
+Visibles a través de todo el programa y deben iniciar con el símbolo \$, por ejemplo:
+
+\mint[linenos=false]{ruby}|$soyGlobal|
+
+Una variable global no inicializada tiene el valor de \textit{nil}. Existen además variables globales predefinidas que contienen información sobre el programa en ejecución.
+
+\subsubsection{Variable de instancia}
+
+Las variables de instancia pertenecen a un objeto y son lo que también es conocido en objetos como atributos. Estas son visibles dentro de un objeto en particular y deben  comenzar con $@$, por ejemplo:
+
+\mint[linenos=false]{ruby}|@soyVariableDeInstancia|
+
+Al igual que las variables globales, estas tienen el valor de \textit{nil} si no han sido inicializadas.
+
+\subsubsection{Variable de clase}
+
+Las variables de clase son visibles, como su nombre lo dice, en la clase y para todos los objetos de la misma. Comienzan con $@@$, por ejemplo:
+
+\mint[linenos=false]{ruby}|@@variableDeClase|
+	
+Estas variables deben ser inicializadas antes de que puedan ser usadas en los métodos. El uso de una variable de clase no inicializada produce un error. Además, estas clases son compartidas por descendientes de las clases donde fueron definidas.
+
+\subsubsection{Variable local}
+
+Son válidas dentro del ámbito local definido y deben empezar con una minúscula o con el símbolo $\_$. El ámbito puede ser el que defina una clase, módulo, definición,do –end. 
+
+\subsubsection{Constante}
+
+Deben empezar con una letra mayúscula y pueden ser definidas dentro de una clase o módulo y serán visibles dentro de ese ámbito. Una constante definida fuera de un clase o módulo será vista globalmente. Es posible reasignar un valor a una constante, pero esto producirá una advertencia (pero no un error). 
+
+
+\subsubsection{Pseudo-variable}
+
+Pseudo-variables tienen la apariencia de variables locales pero su comportamiento es el de constantes. Ejemplo de estas variables son \textit{self}, \textit{true}, \textit{false}, \textit{nil}.
+
+
+\subsection{Operadores}
+
+\subsubsection{Asignación}
+
+La asignación función con el operador $=$. Asignar variables locales también sirve como declaración de la variable. La variable existe hasta el final del alcance donde la variable es declarada. 
+
+También se cuenta con asignación abreviada como en los lenguajes C/C++ y Java:
+
+
+\begin{minted}{ruby}
++=  -=  *=  /=  %=  **=  <<=  >>=  &=  |=  ^=  &&=  ||=
+\end{minted}
+
+\subsubsection{Asignación paralela}
+
+\mint[linenos=false]{ruby}|destino[, destino...][, *destino] = expr[, expr...][, *expr]|
+
+Identificadores destino reciben la asignación de la correspondiente expresión en el lado derecho. Si el último destino  (lado izquierdo) tiene como prefijo un *, el resto de los valores en el lado derecho se asigna en ese destino como un arreglo. Si el * esta en el último elemento del lado derecho, el conjunto de elementos son expandidos antes de su asignación.
+
+\subsubsection{Operadores lógicos}
+
+$\&\&$ o $and$.	Regresa \textit{true} si ambos operandos son verdaderos.  
+Si el operando izquierdo es falso, regresa ese valor, en caso contrario regresa el valor del operando derecho.
+
+$||$ o $or$. Regresa \textit{true} si cualquiera de los operandos es verdadero. 
+Si el valor del operando izquierdo es \textit{true}, regresa el valor de ese operando, de otro modo regresa el valor del operando derecho.
+
+Un aspecto interesante aquí es que los operadores \textit{and} y \textit{or} tienen una precedencia muy baja, de hecho tienen la menor de las precedencias entre los operadores.
+
+\subsection{Operador ternario}
+
+El operador ternario $?:$ es el operador condicional similar al de C/C++ y Java.
+
+\mint[linenos=false]{ruby}|a? b : c|
+
+\subsection{Operador \textit{defined?}}
+
+Este es un operador que puede determinar si una expresión esta definida. Regresa una descripción de la expresión, o nulo si la expresión no esta definida.
+
+\mint[linenos=false]{ruby}|defined? variable|
+
+Por ejemplo:
+
+\begin{minted}{ruby}
+defined? a
+defined? $_
+\end{minted}
+
+Puede ser usado para verificar una llamada a un método, opcionalmente incluyendo sus argumentos.
+
+\subsubsection{Prioridad de operadores}
+
+A continuación se presenta los operadores más comunes de Ruby en orden de precedencia, de mayor a menor:
+
+\begin{minted}{ruby}
+::
+[]
+**
++(unario) -(unario) 
+* / %
++ -
+<< >>
+&
+| ^
+> >= < <=
+<=> ==  != 
+&&
+||
+.. ...    # Operadores de rango (… excluyendo el límite derecho)
+?:
+=   # (y operadores abreviados como +=, -=, etc.)
+not
+and or
+\end{minted}
+
+\subsubsection{Operadores  que no pueden ser redefinidos}
+
+Los siguientes operadores no pueden ser redefinidos (no son métodos):
+
+\begin{minted}{ruby}
+...
+!
+not
+&&
+and
+||
+or
+::
+=
++=, -=,  # (y el resto de las asignaciones abreviadas)
+? :
+\end{minted}
+
+\subsection{Arreglos}
+
+Un arreglo en Ruby es una clase contenedora que contiene una colección de objetos. \textbf{Cualquier} tipo de objetos pueden ser almacenados en un arreglo, inclusive pudiendo contener elementos de distinto tipo en un mismo arreglo. Otra característica es que el arreglo aumenta de tamaño conforme se añaden elementos. Un arreglo es representado con sus elementos entre corchetes $[ ]$ :
+
+\mint[linenos=false]{ruby}|[ ]		#Arreglo vacío  |
+
+\mint[linenos=false]{ruby}|[1, 2, 3]	#Arreglo de 3 elementos |
+
+Los arreglos pueden ser asignados:
+\mint[linenos=false]{ruby}|ar1= []|
+
+\mint[linenos=false]{ruby}|ar2= [1, 2, 3]      # => [1, 2, 3]|
+
+
+
+Un arreglo puede añadir fácilmente un elemento mediante el operador $<<$. Ruby dinámicamente ajusta el tamaño del arreglo al añadir o remover los elementos:
+
+\mint[linenos=false]{ruby}|ar3=  ar2 << "otro"   # => [1, 2, 3, "otro"]  |
+
+El operador $<<$ modifica el operando izquierdo, por lo que la modificación de un arreglo puede hacerse directamente como:
+
+\mint[linenos=false]{ruby}|ar3<<"otro mas"   # => [1, 2, 3, "otro", "otro mas"]|
+
+De hecho, en la penúltima expresión \textit{ar3} en realidad está recibiendo la referencia de \textit{ar2} al cual se le añadió la cadena “otro”.
+
+También es posible asignar a una posición fuera del arreglo actual. Por ejemplo: 
+
+
+\mint[linenos=false]{ruby}|ma=[3,4,5]      # => [3, 4, 5] |
+
+Y luego:
+
+\mint[linenos=false]{ruby}|ma[3]=10        # => [3, 4, 5, 10]|
+
+E inclusive: 
+
+\begin{minted}{ruby}
+ma[11]="Al infinito y mas alla"     # => [3, 4, 5, 10, nil, nil, nil, 
+                        # nil, nil, nil, nil, "Al infinito y mas allá"]
+\end{minted}
+
+
+Como en C++ y Java, en Ruby el índice de un arreglo comienza con cero. 
+
+\begin{minted}{ruby}
+a = [1, 2, 3, [4, 5, 6]]   # => [1, 2, 3, [4, 5, 6]]
+
+a[0]        			# => 1
+\end{minted}
+
+El método \textit{size} puede ser utilizado para conocer el número de elementos del arreglo:
+
+\begin{minted}{ruby}
+a.size        # => 4
+a[3]          # => [4, 5, 6]
+a[3].size     # => 3
+a[3][0]       # => 4
+\end{minted}
+
+El tamaño del arreglo es validado:
+
+\mint[linenos=false]{ruby}|a[5]          # => nil  |
+
+
+Es posible hacer uso de valores negativos como índices, y estos se tomarán de la última posición (-1) hasta la posición negativa del tamaño del arreglo (también posición 0:
+\begin{minted}{ruby}
+a[-1]         	# => [4, 5, 6]
+a[a.size*-1]     # => 1
+\end{minted}
+
+
+\subsection{Probando Ruby}
+¿Porque no empezar a probar ruby siguiendo el tutorial el línea? Éste se encuentra disponible en : \url{https://ruby.github.io/TryRuby/}
+
+\includegraphics[scale=.3]{imagenes/Ruby_online.png}
+
+\subsection{Estructuras de control}
+
+\subsubsection{Condicional if}
+
+Se ejecuta si la condición es verdadera.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+if condicional [then]
+  instrucciones
+[elsif condicional [then]
+  instrucciones]...
+[else
+  instrucciones]
+end
+    \end{minted}
+El \textit{if} puede ser usado como un modificador de una declaración:
+
+  \begin{minted} [linenos=false]{ruby}
+code if condicional
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplos:
+
+\begin{minted}{ruby}
+if x < 5 then
+  declaracion1
+end
+
+if x < 5 then
+ declaracion1
+else
+ declaracion2
+end
+
+declaracion1 if y == 3
+
+x = if a>0 then b else c end
+\end{minted}
+
+\subsubsection{Condicional \textit{unless}}
+Ejecuta código si la condición es falsa, en caso contrario ejecuta otro bloque de instrucciones.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+unless condicional [then]
+  instrucciones
+[else
+    \end{minted}
+El \textit{unless} puede ser usado como un modificador de una declaración:
+ \mint[linenos=false]{ruby}|instrucciones unless condicional|\\
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplos:
+
+\begin{minted}{ruby}
+unless x >= 5 then
+ declaracion1
+end
+
+unless x < 5 then
+ declaracion1
+else
+ declaracion2
+end
+
+declaracion1 unless y != 3
+
+x = unless a<=0 then c else b end
+\end{minted}
+
+\subsubsection{\textit{Case}}
+
+Compara la expresión especificada en \textit{case} con la expresión especificada en \textit{when} y ejecuta el código correspondiente. La clausula \textit{else} se ejecuta en el caso de que ningún segmento \textit{when} sea ejecutado.
+
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+case expresión
+[when expresión[, expresión...] [then]
+  instrucciones]...
+[else
+  instrucciones]
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo\footnote{Recordar que el tipo \textit{char} no existe, aquí / / indica una expresión regular que en este caso solo contiene el patrón \textit{char}.  Finalmente, es un objeto de tipo \textit{Regexp}.}:
+\begin{minted}{ruby}
+case cad
+  when "algun valor"
+    puts "opcion 1"
+  when "otro valor"
+    puts "opcion 2"
+  when /char/ 
+    puts "opcion 3"
+  else
+    puts "opcion 4"
+end
+\end{minted}
+
+\subsubsection{Ciclo \textit{while}}
+Se ejecuta el conjunto de instrucciones mientras la condición es verdadera. La condición puede ser separada del conjunto de instrucciones mediante la palabra reservada \textit{do}, una línea nueva, el símbolo' \textbackslash ' , o un ';'.
+
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+while condicional [do]
+  instrucciones 
+end
+    \end{minted}
+El \textit{while} puede ser usado como un modificador de una declaración:
+
+\mint[linenos=false]{ruby}|instrucciones while condicional  |
+o:
+   \begin{minted} [linenos=false]{ruby}
+begin 
+  instrucciones 
+end while condicional
+    \end{minted}
+
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejecuta instrucciones mientras la condición es verdadera. En el caso del entre las clausulas \textit{begin} y \textit{end}, éste se ejecuta una vez \textbf{antes} de evaluar la condición.
+
+\subsubsection{Ciclo \textit{until}} 
+El ciclo \textit{until} se ejecuta el conjunto de instrucciones mientras la condición es falsa (hasta que la condición se cumpla). Puede ser separada del código por la palabra reservada \textit{do}, un salto de línea o un $';'$. De igual forma que el \textit{while}, \textit{until} puede ser usado como modificador de una declaración.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+until condicional [do]
+  instrucciones 
+end
+    \end{minted}
+o:
+\mint[linenos=false]{ruby}|instrucciones until condicional  |
+o:
+   \begin{minted} [linenos=false]{ruby}
+begin  
+  instrucciones 
+end until condicional
+    \end{minted}
+
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Ciclo \textit{for}}
+Ejecuta el conjunto de instrucciones por cada elemento en la expresión. La expresión en el for puede ir separada por la palabra reservada do, un salto de línea, o un $';'$.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+for variable in expresion [do]
+  instrucciones 
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Instrucciones break, next, redo, retry}
+
+\paragraph{\textit{break}}
+Termina un ciclo \textit{while} o \textit{until}. También finaliza un método con un bloque asociado si es usado dentro del bloque, con el método regresando el valor de nulo.
+
+\paragraph{\textit{next}}
+Salta al punto en que se evalúa la condición de un ciclo. También termina la ejecución de un bloque si es llamado dentro de éste.
+
+\paragraph{\textit{redo}}
+Salta al punto inmediatamente posterior a la evaluación del ciclo.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+for i in 0..5
+   if i < 2 then
+      puts "El valor de la variable es #{i}"
+      redo
+   end
+end
+\end{minted}
+\caption{Ejemplo \textit{redo} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\paragraph{\textit{retry}}
+En una iteración se reinicia la llamada a la iteración. Los argumentos son reevaluados.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+
+for i in 1..5
+   retry if  i > 2
+   puts "El valor de la variable es #{i}"
+end
+\end{minted}
+\caption{Ejemplo \textit{retry} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Instrucciones \textit{BEGIN} y \textit{END}}
+
+\paragraph{\textit{BEGIN}}
+Permite declarar un conjunto de instrucciones a ejecutarse antes de que el programa se ejecute.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+BEGIN {
+  instrucciones
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\paragraph{\textit{END}}
+Permite declarar un conjunto de instrucciones a ejecutarse antes de finalizar la ejecución del interprete.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+END {
+  instrucciones
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Algunos ejemplos:
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+
+# Ciclo 1 (while)
+i=0
+while i < list.size do
+  print "#{list[i]} "
+  i += 1
+end
+
+# Ciclo 2 (until)
+i=0
+until i == list.size do
+  print "#{list[i]} "
+  i += 1
+end
+
+# Ciclo 3 (for)
+for x in list do
+  print "#{x} "
+end
+
+# Ciclo 4 (loop)
+i=0
+n=list.size-1
+loop do
+  print "#{list[i]} "
+  i += 1
+  break if i > n
+end
+
+# Ciclo 6 (loop)
+i=0
+n=list.size-1
+loop do
+  print "#{list[i]} "
+  i += 1
+  break unless i <= n
+end
+  
+# Ciclo 7 (for)
+n=list.size-1
+for i in 0..n do
+  print "#{list[i]} "
+end
+
+10.times do
+  puts "hello"
+end
+Programa 37
+\end{minted}
+\caption{Ejemplos ciclos en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+
+car = "Patriot"
+
+manufacturer = case car
+   when "Focus" then "Ford"
+   when "Navigator" 
+        "Lincoln"
+   when "Camry" 
+        "Toyota"
+   when "Civic" 
+        "Honda"
+   when "Patriot" then "Jeep"
+   when "Jetta" then "VW"
+   when "Ceyene" then "Porsche"
+   when "Outback" 
+        "Subaru"
+   when "520i": "BMW"
+   when "Tundra": "Nissan"
+   else "Desconocido"
+end
+
+puts "El " + car  + " es fabricado por "  + manufacturer
+\end{minted}
+\caption{Ejemplo de \textit{case} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+
+calif = 70
+result = case calif 
+when 0..59 then "Reprobado"
+when 61..70 then "Aprobado... apenas" 
+when 71..80 
+    "Aprobado"
+when 81..100
+   "Excelente"
+else "Resultado inválido"
+end
+puts result
+\end{minted}
+\caption{Ejemplo 2 de \textit{case} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+
+for j in 1..5 do
+     for i in 1..5 do
+         print i,  " "
+     end
+puts
+end
+\end{minted}
+\caption{Ejemplo de \textit{for} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+for i in 1..8 do
+    puts i
+end
+
+\end{minted}
+\caption{Ejemplo 2 de \textit{for} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Entrada y Salida básica en Ruby}
+
+Ruby proporciona instrucciones básicas de entrada y salida. Para Desplegar en la consola, las instrucciones básicas son \textit{puts}, \textit{print} y \textit{printf}:
+
+\begin{itemize}
+\item \textit{puts}. Despliega en la consola y añade un enter al final.
+\item \textit{print}. Despliega en la consola pero no añade el enter o salto de línea al final.
+\item \textit{printf}. Permite formatear la salida de variables de forma similas a C y Java 5.
+\end{itemize}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+puts "puts funciona"
+puts " con saltos de linea."
+
+print "print funciona"
+print " sin saltos de linea."
+
+printf("\n\nprintf formatea números como %7.2f, y cadenas como %s.",3.14156,"esta")
+\end{minted}
+\caption{Ejemplo de salida en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+La manera más simple de leer una cadena en Ruby es ocupando la función \textit{gets}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+print "Introduce tu nombre: "
+nom= gets
+
+\end{minted}
+\caption{Ejemplo de entrada simple en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\subsection{Argumentos de cantidad variable}
+def varargs(arg1, *rest) 
+"Got #{arg1} and #{rest.join(', ')}" 
+end 
+varargs("one") → "Got one and " 
+varargs("one", "two") → "Got one and two" 
+varargs "one", "two", "three" → "Got one and two, three" 
+
+\fi
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+
+\subsection{Módulos en Ruby}
+Un \textbf{módulo} es definido con la sintaxis:
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+module <nombre-módulo>
+  <código>
+end 
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+De hecho, un módulo, aunque es similar a una clase no puede tener instancias ni subclases y añade un nuevo alcance para variables locales. Un módulo que es definido con el nombre de otro previamente definido añadirá sus definiciones al módulo inicial. En el diseño de Ruby, la clase \textit{Module} de \textit{module} es la superclase de la clase \textit{Class} de \textit{class} ! \cite{slagell2007ruby}.
+
+Cuando existe ambigüedad, es posible referirse a un método o identificador dentro de un módulo usando el operador $::$, por ejemplo:
+
+\mint[linenos=false]{ruby}|nombre-módulo::método |
+
+
+También es posible referirse directamente a los elementos dentro de un módulo sin necesidad de usar el nombre del módulo y el operador $::$ en cada ocasión. Para esto podemos incluir (\textit{include}) el módulo. Esta característica da además lugar a los \textit{mixins} que se verán posteriormente. Es importante notar que \textit{include} hace referencia a un módulo y no a un archivo. Si el módulo esta en un diferente archivo, este debe ser solicitado mediante la instrucción \textit{require} antes de poder ser incluido \cite{thomas2005programming}.
+
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+

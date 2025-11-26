@@ -1,0 +1,683 @@
+\chapter{Multihilos en Python}
+\section{Forking (Bifurcación)}
+Una manera relativamente simple de implementar procesos concurrentes en Python es mediante \textit{forking} o bifurcación de procesos.
+
+La bifurcación de procesos son una forma tradicional de ejecutar tareas concurrentes en Unix. La bifurcación esta basada en la idea de \textit{copia de programas}. Cuando un programa llama a una rutina bifurcada, el sistema operativo realiza una nueva copia del programa y su proceso en memoria e inicia la ejecución de la copia en paralelo con el programa original. 
+
+El programa original es llamado \textit{proceso padre}, mientras la copia creada es llamada \textit{proceso hijo}
+
+El soporte de Python para bifurcación se encuentra en el módulo \textit{os} y son en realidad llamadas encapsuladas a las operaciones del sistema para manejo de procesos.
+
+Para iniciar un nuevo proceso concurrente se llama a la función $os.fork()$, lo que genera una copia del programa. Esta llamada regresa el valor de cero en el proceso hijo y el ID del proceso del nuevo hijo en el proceso padre. Este valor de cero generalmente es usado para diferenciar el código de ejecución del proceso hijo.
+
+La bifurcación es parte del modelo Unix por lo que funciona bien en sistemas Unix, Linux y OS X, pero no funciona adecuadamente en Windows.
+
+Veamos un ejemplo simple de bifurcación de procesos.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#Bifurca procesos hijos hastq eu se introduce 's'
+
+import os
+
+def hijo():
+    print('Hola desde el proceso hijo', os.getpid()) 
+    os._exit(0) # si no regresa al ciclo padre
+
+def padre(): 
+    while True:
+        newpid = os.fork() 
+        if newpid == 0:
+            hijo() 
+        else:
+            print('Hola desde el proceso padre', os.getpid(), newpid) 
+        if input("Salir(s)") == 's': 
+            break
+        
+padre()
+\end{minted}
+\caption{Ejemplo de bifurcación de procesos (Forking).}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El siguiente ejemplo iniciará cinco copias y sale inmediatamente.  Cada copia tiene un retardo de un segundo y se ejecuta a pesar de que el proceso padre ha terminado. 
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+""""
+Inicia 5 copias del programa corriendo en paralelo con el original;
+cada copia cuenta hasta 5 en el mismo flujo de salida estándar, 
+bifurca copiando la memoria del proceso. 
+No trabaja en Windows sin Cygwin
+"""
+
+import os, time
+
+def contador(count):             #ejecuta un nuevo proceso
+    for i in range(count):
+        time.sleep(1)           # simula que trabaja
+        print('[%s] => %s' % (os.getpid(), i))
+
+for i in range(5): 
+    pid = os.fork()
+    if pid != 0:
+        print('Proceso %d generado' % pid)  # en proceso padre: continua
+    else: 
+        contador(5)              # sino in proceso hijo/nuevo 
+        os._exit(0)             # ejecuta función y sale
+
+print('Saliendo del proceso principal.') #proceso padre no necesita esperar
+
+\end{minted}
+\caption{Ejemplo de bifurcación de 5 procesos (Forking).}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{fork/exec}
+
+La combinación de \textit{fork} con ejecución de programas en sistemas operativos tipo Unix son otra forma simple de iniciar procesos concurrentes. Esto implica por un lado la creación de un proceso con la llamada al sistema operativo de ejecutar otro programa, para lo cual se puede ocupar alguna de los diferentes formatos de llamadas a funciones $os.exec$. Por ejemplo, una llamada a la función $os.execlp()$, le especifica al programa que se ejecute a partir de la línea de comandos usada para iniciar el programa. El nuevo programa se ejecutará y no regresa al programa original, que pudo haber terminado su ejecución. Este estilo de programación es similar al desarrollo de tareas paralelas en Unix.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import os
+
+parm = 0 
+while True:
+  parm += 1
+  pid = os.fork() 
+  if pid == 0:          # proceso de copia
+    os.execlp('python', 'python', 'hijo.py', str(parm))  
+    assert False, 'error iniciando programa'                
+  else:
+    print('Proceso hijo: ', pid) 
+    if input("Salir (s)") == 's': 
+      break
+
+\end{minted}
+\caption{Ejemplo de uso de os.execlp().}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Las variantes de $os.exec$ permite configurar variables de ambiente, pasar argumentos de comandos de diferentes formas, entre otras cosas.
+
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\newpage
+
+%
+%
+
+$os.execv(program, commandlinesequence)$
+
+The basic “v” exec form is passed an executable program’s name, along with a list or tuple of command-line argument strings used to run the executable (that is, the words you would normally type in a shell to start a program).
+
+$os.execl(program, cmdarg1, cmdarg2,... cmdargN)$
+
+The basic “l” exec form is passed an executable’s name, followed by one or more command-line arguments passed as individual function arguments. This is the same as os.execv(program, (cmdarg1, cmdarg2,...)).
+
+$os.execlp$
+
+$os.execvp$
+
+Adding the letter p to the execv and execl names means that Python will locate the executable’s directory using your system search-path setting (i.e., PATH).
+
+$os.execle$
+
+$os.execve$
+
+Adding a letter e to the execv and execl names means an extra, last argument is a dictionary containing shell environment variables to send to the program.
+
+$os.execvpe$
+
+$os.execlpe$
+
+Adding the letters p and e to the basic exec names means to use the search path and to accept a shell environment settings dictionary.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+import os, sys
+print('Hello from child', os.getpid(), sys.argv[1])
+
+\end{minted}
+\caption{Ejemplo .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+
+\section{Threads}
+
+El manejo de hilos en Python puede hacerse de con diferentes módulos. En nuestro caso, vamos a revisar 3 módulos: $_thread$, $threading$ y $queue$.
+
+
+\subsection{Módulo \_thread}
+
+Este módulo es la aproximación más simple al manejo de hilos. Es básicamente una interfaz al sistema de multihilos del sistema operativo.
+
+La función $\_thread.start\_new\_thread$ toma una función (o cualquier objeto invocable) y una tupla de argumento y e inicia un nuevo hilo para ejecutar la llamada a la función pasada como parámetro con los argumentos recibidos. 
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+"lanza hilos hasta que se introduce 's'" 
+
+import _thread
+
+def hijo(tid):
+  print('Hola desde el hilo', tid)
+
+def padre(): 
+  i= 0
+  while True: 
+    i += 1
+    _thread.start_new_thread(hijo, (i,)) 
+    if input("s para salir: ") == 's': 
+      break
+
+padre()
+
+\end{minted}
+\caption{Ejemplo con el módulo $\_thread$.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Todos los hilos se ejecutan en el mismo proceso. Un hilo puede también ejecutar una función lambda o un método enlazado de un objeto.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+import _thread
+
+def acción(i): 
+  print(i ** 32)
+
+class Potencia:
+  def __init__(self, i):
+    self.i = i 
+  def acción(self):
+    print(self.i ** 32)
+
+_thread.start_new_thread(acción, (2,))
+
+_thread.start_new_thread((lambda: acción(2)), ())
+
+obj = Potencia(2) 
+_thread.start_new_thread(obj.acción, ())
+
+\end{minted}
+\caption{Ejemplo con el módulo $\_thread$ con función lambda además de un método.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El siguiente ejemplo ejecuta múltiples hilos concurrentes.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+"""
+Inicia 5 copias de una función ejecutándose concurrentemente
+Usa time.sleep para que el hilo principal no finalice muy temprano, ya que en
+algunas plataformas esto mata a todos los otros hilos
+La stdout es compartida, las salidas de los hilos podría verse mezclada
+de forma arbitraria
+"""
+
+import _thread as thread, time
+
+def contador(miId, cont):       # función ejecutado en los hilos
+  for i in range(cont):
+    time.sleep(1)               
+    print('[%s] => %s' % (miId, i))
+
+for i in range(5):              # lanza 5 hilos
+  thread.start_new_thread(contador, (i, 5))   #cada hilo itera 5 veces
+
+time.sleep(6)
+print("Saliendo del hilo principal")
+
+\end{minted}
+\caption{Ejemplo con el módulo $\_thread$ con 5 hilos concurrentes.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsubsection{Acceso sincronizado a nombres y objetos compartidos}
+
+El módulo $\_thread$ incluye una forma de sincronización basada en el concepto de bloqueo (\textit{lock}). el hilo adquiere un bloqueo, hace sus cambios, y libera el bloqueo para que otros hilos lo obtengan. Únicamente un hilo puede obtener el bloqueo en un momento en particular. Si otros hilos lo solicitan mientras se encuentra activo el bloqueo, estos son detenidos hasta que se encuentre disponible.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+"""
+Acceso sincronizado a stdout: debido a que es compartido globalmente,
+la salida de los hilos puede mezclarse si no se sincroniza
+"""
+
+import _thread as thread, time
+
+def contador(miId, cont):       # función ejecutado en los hilos
+  for i in range(cont):
+    time.sleep(1)      
+    mutex.acquire()         
+    print('[%s] => %s' % (miId, i))
+    mutex.release()
+
+mutex = thread.allocate_lock()  # generar un objeto para bloqueo global
+for i in range(5):              # lanza 5 hilos
+  thread.start_new_thread(contador, (i, 5))   #cada hilo itera 5 veces
+
+time.sleep(6)
+print("Saliendo del hilo principal")
+
+\end{minted}
+\caption{Ejemplo de acceso sincronizado a stdout.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El bloqueo de hilos puede ser útil para comportamientos un poco más elaborados. El siguiente ejemplo usa una lista global de bloqueos para saber que hilos han terminado.
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+"""
+Usa mutexes para saber cuando los hilos han terminado en un hilo principal,
+en lugar de time.sleep.
+"""
+
+import _thread as thread
+
+stdoutmutex = thread.allocate_lock()
+mutexesFinalizados = [thread.allocate_lock() for i in range(10)]
+
+def contador(miId, cont): 
+  for i in range(cont):
+    stdoutmutex.acquire() 
+    print('[%s] => %s' % (miId, i)) 
+    stdoutmutex.release()
+  mutexesFinalizados[miId].acquire() # signal main thread
+
+for i in range(10): 
+  thread.start_new_thread(contador, (i, 100))
+
+for mutex in exitmutexes:
+  while not mutex.locked(): 
+    pass
+
+print('Salida de hilo principal')
+
+\end{minted}
+\caption{Ejemplo con una lista global para saber que un hilo ha terminado.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+O una versión más simple con una lista de enteros:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+"""
+Usa una lista de datos globales (no mutexes) para saber cuando los hilos han 
+terminado en un hilo principal; lista de hilos pero no sus elementos, se asume 
+que la lista no se moverá de la memoria una vez que se ha creado inicialmente
+"""
+
+import _thread as thread
+
+stdoutmutex = thread.allocate_lock()
+mutexesFinalizados = [False] * 10
+
+def contador(miId, cont): 
+  for i in range(cont):
+    stdoutmutex.acquire() 
+    print('[%s] => %s' % (miId, i)) 
+    stdoutmutex.release()
+  mutexesFinalizados[miId] = True # signal main thread
+
+for i in range(10): 
+  thread.start_new_thread(contador, (i, 100))
+
+while False in mutexesFinalizados: 
+    pass
+
+print('Salida de hilo principal')
+
+\end{minted}
+\caption{Ejemplo con una lista de enteros para saber que un hilo ha terminado.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsection{Módulo threading}
+
+El módulo threading es una interface de alto nivel basada en clases y objetos. Internamente usa el módulo $\_thread$ para implementar objetos que representen hilos y herramientas básicas de sincronización.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+"""
+Instancias de clase thread con estado y run() para la acción del hilo;
+usa módulo multhilo de alto nivel similar a Java con método join (sin mutexes ni variables
+compartidas globales) para saber cuando los hilos han terminado en el 
+hilo principal.
+
+"""
+import threading
+
+class MiHilo(threading.Thread):
+  def __init__(self, miId, cont, mutex):
+    self.miId = miId
+    self.cont = cont
+    self.mutex = mutex 
+    threading.Thread.__init__(self)
+  
+  def run(self):
+    for i in range(self.cont):
+        with self.mutex:
+          print('[%s] => %s' % (self.miId, i))
+
+stdoutmutex = threading.Lock() 
+hilos = []
+for i in range(10):
+  hilo = MiHilo(i, 100, stdoutmutex) 
+  hilo.start()
+  hilos.append(hilo)
+
+for hilo in hilos: 
+  hilo.join()
+
+print('saliendo del hilo principal.')
+
+\end{minted}
+\caption{Ejemplo de uso de módulo $threading$.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el ejemplo anterior vemos como se usa el método $join()$ para esperar a que el hilo salga; este método puede ser usado para prevenir que se salga del hilo principal  antes de los hilos hijos, en lugar de usar $time.sleep()$. 
+También se puede usar $threading.lock()$ para sincronizar el acceso al flujo de manera similar a $\_thread.allocate\_lock$
+
+En el siguiente ejemplo se muestra como se puede usas la clase $Thread$ para iniciar una función simple, o de hecho cualquier tipo de objeto invocable, sin el uso de subclases.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import threading, _thread 
+
+def accion(i):
+  print(i ** 32)
+
+# subclase con estado
+class MiHilo(threading.Thread): 
+  def __init__(self, i):
+    self.i = i
+    threading.Thread.__init__(self) 
+  
+  def run(self):                # redefine run con la acción
+    print(self.i ** 32) 
+  
+MiHilo(2).start()               #start() invoca run()
+
+# pasar acción en
+hilo = threading.Thread(target=(lambda: accion(2)))   #run() invoca target
+hilo.start()
+
+#lo mismo pero sin envoltura lambda para el estado
+threading.Thread(target=accion, args=(2,)).start()    # invocable mas sus args
+
+#simple módulo de hilo
+_thread.start_new_thread(accion, (2,))    
+
+\end{minted}
+\caption{Ejemplo de uso de módulo $threading$ usando la clase $Thread$ sin herencia.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Generalmente, hilos basados en clases pueden ser mejores si los hilos requieren un estado por hilo o pueden aprovechar los beneficios del paradigma OO en general. Las clases de hilos no necesariamente tienen que ser una subclase de $Thread$. Es posible inclusive combinar técnicas de clases anidadas y métodos enlazados. 
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+import threading, _thread
+#una clase sin heredar de hilo con su estado
+
+class Potencia:
+  def __init__(self, i):
+    self.i = i 
+    
+  def accion(self):
+    print(self.i ** 32)
+
+obj = Potencia(2) 
+threading.Thread(target=obj.accion).start()
+
+# alcance anidado para retener el estado
+def accion(i): 
+  def potencia():
+    print(i ** 32) 
+  return potencia
+
+threading.Thread(target=accion(2)).start()
+
+# ambas conmódulo básico de hilo
+_thread.start_new_thread(obj.accion, ()) 
+_thread.start_new_thread(accion(2), ())
+
+\end{minted}
+\caption{Ejemplo de uso de módulo $threading$ con referencia anidada.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\subsection{Módulo Queue}
+
+Programas con hilos pueden ser frecuentemente estructurados como un conjunto de hilos productores y consumidores, que se comunican colocando datos y tomándolos de una cola compartida.  Mientras la cola sincronice el acceso a si misma, esto automáticamente sincronizará las interacciones entre los hilos.
+
+Python cuenta con el módulo $queue$ que proporciona una estructura estándar de cola para objetos  en el que los elementos son añadidos por un lado y extraídos por el otro. La diferencia es que la cola de objetos es automáticamente controlada con operaciones de bloqueo de hilo y liberación, de forma que únicamente un hilo pueda modificar la cola en un momento determinado. 
+
+El siguiente ejemplo muestra 2 hilos consumidores que esperan por datos que aparecen en la cola compartida y 4 hilos productores que colocan datos en la cola periódicamente después de dormir por un intervalo de tiempo. De forma que este ejemplo está ejecutando 7 hilos concurrentes (incluyendo el hilo principal) donde 6 hilos acceden a la cola compartida de forma concurrente.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# hilos productor y consumidor comunicándose con una cola compartida
+
+numconsumidores = 2         # cantidad de consumidores para iniciar
+numproductores = 4          # cantidad de productores para iniciar
+nummensajes = 4             # mensajes para poner por productor
+  
+import _thread as thread, queue, time 
+
+print_seguro = thread.allocate_lock()  # prints en el else se podrían superponer
+cola_datos = queue.Queue()           #  compartido global, tamaño infinito
+
+def productor(idnum, cola_datos):
+  for num_mensaje in range(nummensajes):
+    time.sleep(idnum)
+    cola_datos.put('[productor id=%d, contador=%d]' % (idnum, num_mensaje))
+
+def consumidor(idnum, cola_datos): 
+  while True:
+    time.sleep(0.1)
+    try:
+      dato = cola_datos.get(block=False)
+    except queue.Empty: 
+      pass
+    else:
+      with print_seguro:
+        print('consumidor', idnum, 'obtuvo =>', dato)
+
+if __name__ == '__main__':
+  for i in range(numconsumidores):
+    thread.start_new_thread(consumidor, (i, cola_datos)) 
+  for i in range(numproductores):
+    thread.start_new_thread(productor, (i, cola_datos)) 
+  time.sleep(((numproductores-1) * nummensajes) + 1) 
+  print('Salida de hilo principal.')
+  
+\end{minted}
+\caption{Ejemplo de uso de módulo $queue$ productor/consumidor.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\newpage
+
+%
+%
+\subsection{Módulo subprocess}
+https://twitter.com/driscollis/status/1470503196976160771
+https://dzone.com/articles/interacting-with-a-long-running-child-process-in-p
+\subsection{Avanzado: interprocess communication}
+\subsection{Avanzado: Multiprocesamiento}
+
+
+
+
+
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

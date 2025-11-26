@@ -1,0 +1,1291 @@
+\chapter{Introducción a características de C++}
+
+%\section{Origen}
+
+Ahora comentaremos algunas características de C++ que no tienen que ver directamente con la programación orientada a objetos.
+
+\section{Comentarios en C++}
+
+	Los comentarios en C son:
+\mint[linenos=false]{c}|/*  comentario en C     */|
+
+	En C++ los comentarios pueden ser además de una sola línea:
+\mint[linenos=false]{cpp}|// este es un comentario en C++|
+
+Acabando el comentario al final de la línea, lo que quiere decir que el programador no se preocupa por cerrar el comentario.
+
+\section{Flujo de entrada/salida}
+
+En C, la salida y entrada estándar estaba dada por \textit{printf} y \textit{scanf} principalmente  (o funciones similares) para el manejo de los tipos da datos simples y las cadenas. En C++ se proporcionan a través de la biblioteca \textit{iostream}, la cual debe ser insertada a través de un \textit{\#include}. Las instrucciones son:
+
+\begin{itemize}
+\item \textit{cout}. Utiliza el flujo  salida estándar. Que se apoya del operador \(<<\), el cual se conoce como operador de inserción de flujo \textit{colocar en}.
+\item \textit{cin}. Utiliza el flujo de entrada estándar.
+Que se apoya del operador \(>>\) , conocido como operador de extracción de flujo \textit{obtener de}
+\end{itemize}
+
+Los operadores de inserción y de  extracción  de flujo no requieren cadenas de formato (\%s, \%f), ni especificadores de tipo. C++  reconoce de manera automática que tipos de datos son extraídos o introducidos.
+
+	En el caso del operador de extracción \(>>\) no se requiere el operador de dirección \&.
+
+	De tal forma un código de desplegado con \textit{printf} y \textit{scanf} de la forma (usando el área de nombres estándar):
+
+\mint[linenos=false]{c}|printf("Número: ");|
+\mint[linenos=false]{c}|scanf("\%d", &num);|
+\mint[linenos=false]{c}|printf("El valor leído es: " \%d\n", num);|
+
+Sería en C++ de la siguiente manera:
+
+\mint[linenos=false]{cpp}|cout << "Número";|
+\mint[linenos=false]{cpp}|cin >> num;|
+\mint[linenos=false]{cpp}|cout << "El valor leído es: " << num << '\n';|
+
+\section{Funciones en línea}
+
+Las funciones en línea, se refiere a introducir un calificador \textit{inline}  a una función de manera que le sugiera al compilador que genere una copia del código de la función en lugar de la llamada.
+
+Ayuda a reducir el número de llamadas a funciones reduciendo el tiempo de ejecución en algunos casos, pero en contraparte puede aumentar el tamaño del programa. 
+
+A diferencia de las macros, las funciones \textit{inline} si incluyen verificación de tipos y son reconocidas por el depurador. Un depurador puede ayudar a encontrar un error de lógica resultado de usar una macro, pero no puede atribuir los errores a alguna macro.
+
+Las funciones inline deben usarse sólo para funciones chicas que se usen frecuentemente.
+
+El compilador desecha las solicitudes \textit{inline} para programas que incluyan un ciclo, un \textit{switch} o un \textit{goto}. Tampoco se consideran si no tienen \textit{return} (aunque no regresen valores) o si contienen variables de tipo \textit{static}. Además, lógicamente no genera una función \textit{inline} para funciones recursivas.
+
+%tabla para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint{cpp}|inline <declaración de la función>|\\
+\hline
+\end{tabular}
+\end{center}
+
+
+\textcolor{blue}{Ejemplo:}
+
+   \begin{minted}{cpp}
+inline float suma (float a, float b) { 
+       return a+b;
+}
+
+inline int max( int a, int b) {
+		return (a > b) ? a :  b;
+}
+\end{minted}
+
+
+Nota: Las funciones \textit{inline} tienen conflictos con los prototipos, así que deben declararse completas sin prototipo en el archivo .h. Además, si la función en línea hace uso de otra función,  en donde se expanda la función en línea debe tener los \textit{include} correspondientes a esas funciones utilizadas.
+
+\section{Declaraciones de variables}
+
+Mientras que en C, las declaraciones deben ir en la función antes de cualquier línea ejecutable, en C++ pueden ser introducidas en cualquier punto, con la condición lógica de que la declaración esté antes de la utilización de lo declarado.
+
+En algunos compiladores podía declararse una variable en la sección de inicialización de la instrucción for, pero es incorrecto declarar una variable en la expresión condicional del \textit{while}, \textit{do-while}, \textit{for}, \textit{if} o \textit{switch}. El actual estándar de C++ no permite la declaración de variables dentro del for.
+	
+\textcolor{blue}{Ejemplo:}
+
+    \begin{listing}[ht] 
+    \begin{minted}
+        [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+#include <iostream>
+
+int main() {
+	int i=0;
+	
+	for (i=1; i<10; i++){
+		int j=10;
+		std::cout<<i<<" j: "<<j<<std::endl;
+   	}
+
+   	std::cout<<"\ni al salir del ciclo: "<<i; 
+	
+	return 0;
+}
+    \end{minted}
+    \caption{Ejemplo declaración de variables}
+    \label{listing:1}
+    \end{listing}
+
+O usando el área de nombres estándar:
+
+
+    \begin{listing}[ht] 
+    \begin{minted}
+        [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int i=0;
+	
+	for (i=1; i<10; i++){
+		int j=10;
+		cout<<i<<" j: "<<j<<endl;
+   	}
+
+   	cout<<"\ni al salir del ciclo: "<<i; 
+
+	return 0;
+}
+    \end{minted}
+    \caption{Ejemplo declaración de variables usando el área de nombres estándar}
+    \label{listing:1}
+    \end{listing}
+
+El alcance de las variables en C++ es por bloques. Una variable es vista a partir de su declaración y hasta la llave “\}” del nivel en que se declaró. Lo cual quiere decir que las instrucciones anteriores a su declaración no pueden hacer uso de la variable, ni después de finalizado el bloque.
+
+\section{Operador de resolución de alcance}
+
+Se puede utilizar el operador de resolución de alcance \textbf{::} se refiere a una variable (variable, función, tipo, enumerador u objeto), con un alcance de archivo (variable global). No tiene alcance de bloque, aunque esten variables definidas con el mismo nombre en varios niveles de bloques.
+
+	Esto le permite al identificador ser visible aún si el identificador se encuentra oculto.
+
+\textcolor{blue}{Ejemplo:}
+\begin{minted}{cpp}
+float h;
+
+void g(int h) {
+	float a;
+	int b;
+
+	a=::h;	// a se inicializa con la variable global h
+
+	b=h;	// b se inicializa con la variable local h
+}  
+\end{minted}
+
+\section{Valores por default}
+	Las funciones en C++ pueden tener valores por default. Estos valores son los que toman los parámetros en caso de que en una llamada a la función no se encuentren especificados.
+	
+	Los valores por omisión deben encontrarse en los parámetros que estén más a la derecha. Del mismo modo, en la llamada se deben empezar a omitir los valores de la extrema derecha.
+	
+\textcolor{blue}{Ejemplo:}
+ \begin{listing}[ht] 
+    \begin{minted}
+        [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+#include <iostream>
+
+using namespace std;
+
+int punto(int=5, int=4);
+
+int main () {
+
+	cout<<"valor 1: "<<punto()<<'\n';
+	cout<<"valor 2: "<<punto(1)<<'\n';
+	cout<<"valor 3: "<<punto(1,3)<<'\n';
+	return 0;
+}
+
+int punto( int x, int y){
+
+	if(y!=4)
+		return y;
+	if(x!=5)
+		return x;
+	return x+y;
+}
+    \end{minted}
+    \caption{Ejemplo de valores por default}
+    \label{listing:1}
+    \end{listing}
+
+	C++ no permite la llamada omitiendo un valor antes de la extrema derecha de los argumentos:
+
+\mint[linenos=false]{cpp}|punto( , 8);|
+
+Otro ejemplo de  valores o argumentos por default:
+
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+int b=1;
+int f(int);
+int h(int x=f(b));	// argumento default f(::b)
+
+int main () {
+	b=5;
+	cout<<b<<endl;
+	{
+		int b=3;
+		cout<<b<<endl;
+		cout<<h();		//h(f(::b))
+	}
+	
+	return 0;
+}
+
+int h(int z){
+	cout<<"Valor recibido: "<<z<<endl;
+	return z*z;
+}
+int f(int y){
+	return y;
+}
+\end{minted}
+\caption{Valores o argumentos por deafult.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+  
+\section{Parámetros por referencia}
+En C todos los pasos de parámetros son por valor, aunque se pueden enviar parámetros ''por referencia'' al enviar por valor la dirección de un dato (variable, estructura, objeto), de manera que se pueda acceder directamente el área de memoria del dato del que se recibió su dirección. Aunque se tienen que manejar en algunas ocasiones como apuntadores.
+
+C++ introduce parámetros por referencia \textbf{reales}. La manera en que se definen es agregando el símbolo \& de la misma manera que se coloca el *: después del tipo de dato en el prototipo y en la declaración de la función.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// Comparando parámetros por valor, por valor con  apuntadores ("referencia"), 
+// y paso por referencia real
+
+#include <iostream>
+using namespace std;
+
+int porValor(int);
+void porApuntador(int *);
+void porReferencia( int &);
+
+int main() {
+	int x=2;
+	cout << "x= " << x << " antes de llamada a porValor \n"
+		<< "Regresado por la función: "<< porValor(x)<<endl
+		<< "x= " << x << " despues de la llamada a porValor\n\n";
+
+	int y=3;
+	cout << "y= " << y << " antes de llamada a porApuntador\n";
+	porApuntador(&y);
+	cout << "y= " << y << " despues de la llamada a porApuntador\n\n";
+
+	int z=4;
+	cout << "z= " << z << " antes de llamada a porReferencia \n";
+	porReferencia(z);
+	cout<< "z= " << z << " despues de la llamada a porReferencia\n\n";	
+	return 0;
+}
+
+int porValor(int valor){
+	return valor*=valor;     //parámetro no modificado
+}
+
+void porApuntador(int *p){
+	*p *= *p;		// parámetro modificado
+}
+
+void porReferencia( int &r){
+	r *= r;		//parámetro modificado
+}
+   
+\end{minted}
+\caption{Otro ejemplo Parámetros por referencia.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Notar que no hay diferencia en el manejo de un parámetro por referencia y uno por valor, lo que puede ocasionar ciertos errores de programación.
+
+\subsubsection{Variables de referencia}
+	También puede declararse una variable por referencia que puede ser utilizada como un seudónimo o alias. Ejemplo:
+	
+    \begin{minted}{cpp}
+int max=1000, &sMax=max;	//declaro max y sMax es un alias de max
+sMax++;		//incremento en uno max a través de su alias
+    \end{minted}
+
+Esta declaración no reserva espacio para el dato, pues es como un apuntador pero se maneja como una variable normal. No se permite reasignarle a la variable por referencia otra variable. La variable por referencia debe ser inicializada en el momento de su declaración.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// variable por referencia
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int x=2, &y=x, z=8;
+
+	cout << "x= "<<x <<endl
+		<<"y= "<<y<<endl;
+
+	y=10;
+	cout << "x= "<<x <<endl
+		<<"y= "<<y<<endl;
+// Reasignar no esta permitido
+//	 \&  y= &z;
+//	cout << "z= "<<z <<endl
+//		<<"y= "<<y<<endl;
+
+	y++;
+	cout << "z= "<<z <<endl
+		<<"y= "<<y<<endl;
+   
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de variables por referencia.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\section{Asignación de memoria en C++}
+	En el \textbf{ANSI C}, se utilizan \textit{malloc}, \textit{calloc} y \textit{free} para asignar y liberar dinámicamente memoria:
+	
+	    \begin{minted}{c}
+	float *f;
+	f = (float *) malloc(sizeof(float));
+	. . .
+	free(f);
+    \end{minted}
+
+Se debe indicar el tamaño a través de \textit{sizeof} y utilizar una máscara (\textit{cast}) para designar el tipo de dato apropiado.
+
+	En C++, existen dos operadores para asignación y liberación de memoria dinámica: \textit{new} y \textit{delete}.
+	
+ \begin{minted}{cpp}
+	float *f;
+	f= new float;
+	. . .
+	delete f;
+    \end{minted}
+
+	El operador new crea automáticamente un área de memoria del tamaño adecuado. Si no se pudo asignar la memoria se regresa un apuntador nulo (\textit{NULL} ó 0). Nótese que en C++ se trata de operadores que forman parte del lenguaje, no de funciones de biblioteca.
+
+	El operador \textit{delete} libera la memoria asignada previamente por \textit{new}. No se debe tratar de liberar memoria previamente liberada o no asignada con \textit{new}.
+
+	Es posible hacer asignaciones de memoria con inicialización:	
+
+\mint[linenos=false]{cpp}|int *max= new int (1000);|
+
+También es posible crear arreglos dinámicamente:
+
+ \begin{minted}{cpp}
+    char *cad;
+	cad= new char [30];
+	. . .
+	delete [] cad;
+    \end{minted}
+
+Usar \textit{delete} \textbf{sin} los corchetes para arreglos dinámicos puede no liberar adecuadamente la memoria, sobre todo si son elementos de un tipo definido por el usuario.
+
+\textcolor{blue}{Ejemplo 1:}	
+
+ \begin{longlisting}%[ht] 
+    \begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+    
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int *p,*q;
+
+	p= new int; //asigna memoria
+
+	if(!p) {
+		cout<<"No se pudo asignar memoria\n";
+		return 0;
+	}
+	*p=100;
+	cout<<endl<< *p<<endl;
+
+	q= new int (123); //asigna memoria
+	cout<<endl<< *q<<endl;
+
+	delete p; //libera memoria
+//	*p=20;		Uso indebido de pues ya se liberó
+//	cout<<endl<< *p<<endl; la memoria
+	delete q;
+	return 0;
+}
+    \end{minted}
+    \caption{Ejemplo 1 de asignación de memoria en C++}
+    \label{listing:1}
+    \end{longlisting}
+
+\textcolor{blue}{Ejemplo 2:}
+ \begin{longlisting}%[ht] 
+    \begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+    
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	float *ap, *p=new float (3) ;
+	const int MAX=5;
+	ap= new float [MAX]; //asigna memoria
+	int i;
+	for(i=0; i<MAX; i++)
+		ap[i]=i * *p;
+	for(i=0; i<MAX; i++)
+		cout<<ap[i]<<endl;
+	delete p;
+    delete [] ap;
+	return 0;
+}
+\end{minted}
+    \caption{Ejemplo 2 de asignación de memoria en C++}
+    \label{listing:1}
+    \end{longlisting}
+
+
+\textcolor{blue}{Ejemplo 3:}
+
+ \begin{longlisting}%[ht] 
+    \begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+typedef struct {
+	int n1,
+		n2,
+		n3;
+}cPrueba;
+
+int main() {
+	cPrueba *pr1, *pr2;
+
+	pr1= new cPrueba;
+	pr1->n1=11;
+	pr1->n2=12;
+	pr1->n3=13;
+
+	pr2= new cPrueba(*pr1);
+	delete pr1;
+
+   cout<< pr2->n1<<" "<<pr2->n2 <<" "<<pr2->n3<<endl;
+
+	delete pr2;
+	return 0;
+}
+    \end{minted}
+    \caption{Ejemplo 3 de asignación de memoria en C++}
+    \label{listing:1}
+    \end{longlisting}
+
+\section{Plantillas}
+
+Cuando las operaciones son idénticas pero requieren de diferentes tipos de datos, podemos usar lo que se conoce como \textit{templates} o plantillas de función.
+
+El término de plantilla es porque el código sirve como base (o plantilla) a diferentes tipos de datos. C++ genera al compilar el código objeto de las funciones para cada tipo de dato involucrado en las llamadas.  Esta solución antes se hacia en C usando macros con \#define, pero no tenían verificación de tipos.
+
+Las definiciones de plantilla se escriben con la palabra clave \textit{template}, con una lista de parámetros formales entre $< >$ . Cada parámetro formal lleva la palabra clave \textit{class}. La instrucción \textit{type} puede también ser usada.
+
+Cada parámetro formal puede ser usado para sustituir a: tipos de datos básicos, estructurados o definidos por el usuario, tipos de los argumentos, tipo de regreso de la función y para variables dentro de la función.
+
+\textcolor{blue}{Ejemplo 1:}
+
+\begin{longlisting}
+    \begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+T mayor(T x, T y)
+{
+  return (x > y) ? x : y;
+};
+
+int main(){
+	int a=10, b=20, c=0;
+	float x=44.1, y=22.3, z=0 ;
+
+	c=mayor(a, b);
+	z=mayor(x, y);
+	cout<<c<<" "<<z<<endl;
+
+//	z=mayor(x,b); error no hay mayor( float, int)
+//	z=mayor(a, y); ""   ""   "" ""  (int, float)
+	
+	return 0;
+}
+    \end{minted}
+    \caption{Ejemplo.}
+   % \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Consideraciones:
+    
+\begin{itemize}
+\item 	Cada parámetro formal debe aparecer en la lista de parámetros de la función al menos una vez.
+\item     No puede repetirse en la definición de la plantilla el nombre de un parámetro formal. 
+\item     Tener cuidado al manejar mas de un parámetro en los templates.
+\end{itemize}
+   
+\textcolor{blue}{Ejemplo 2:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+void desplegaArr(T arr[], const int cont, T pr)
+{
+	for(int i=0; i<cont; i++)
+		cout<< arr[i] << " ";
+	cout<<endl;
+	cout<<pr<<endl;
+}
+
+int main() {
+	const int contEnt=4, contFlot=5, contCar=10;
+int ent[]={1,2,3,4};
+	float flot[]={1.1, 2.2, 3.3, 4.4, 5.5};
+	char car[]={"Plantilla"};	
+
+
+	cout<< "Arreglo de flotantes:\n";
+	desplegaArr(flot, contFlot,(float)3.33);
+
+	cout<< "Arreglo de caracteres:\n";
+	desplegaArr(car, contCar, 'Z');
+
+	cout<< "Arreglo de enteros:\n";
+	desplegaArr(ent, contEnt, 99);
+	
+	return 0;
+}
+
+\end{minted}
+\caption{Ejemplo 2 de uso de plantillas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo 3:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+template <class T, class TT>
+T mayor(T x, TT y)
+{
+  return (x > y) ? x : y;
+};
+
+int main(){
+
+	int a=10, b=20, c=0;
+	float x=44.1, y=22.3, z=0 ;
+
+	c=mayor(a, b);
+	z=mayor(x, y);
+
+	cout<<c<<" "<<z<<endl;
+//sin error al aumentar un parámetro formal.
+	z=mayor(x,b);
+	cout<<z<<endl;
+	z=mayor(a,y); //regresa entero pues a es entero (tipo T es entero para
+	cout<<z<<endl;		// este llamado.
+
+	z=mayor(y, a);
+	cout<<z<<endl;
+	c=mayor(y, a);//regresa flotante pero la asignaci¢n lo corta en entero.
+	cout<<c<<endl;
+	
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo 3 de uso de plantillas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Enumeraciones}
+
+Aunque las enumeraciones existen en ANSI C, en ese lenguaje son constantes asociadas al tipo entero; por lo que son una especie de alias hacia estos valores. En C++ una enumeración define realmente un tipo de dato.\footnote{Existe otro tipo de enumeración en C++ llamado $enum class$}
+% https://stackoverflow.com/questions/18335861/why-is-enum-class-preferred-over-plain-enum
+% http://www-cs-students.stanford.edu/~sjac/c-to-cpp-info/c-to-cpp-differ
+% https://dev.to/rawrasaurus/enumerations-in-c-traditional-enum-vs-enum-class-part-2-3jn6
+
+Las enumeraciones sirven para agrupar un conjunto de elementos dentro de un tipo definido. El manejo de enumeraciones en C++ es el siguiente:
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }; |\\
+\hline
+\end{tabular}
+\end{center}
+
+Por lo que para el código anterior, la enumeración sería:
+
+ \mint[linenos=false]{cpp}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO } |
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+enum Temporada { PRIMAVERA, VERANO, OTONO, INVIERNO };
+
+ int main() {
+		Temporada tem;
+		tem=PRIMAVERA;
+		cout<<"Temporada: " << tem<<endl;
+		
+        cout<<"\nListado de temporadas:";
+		int t;
+        for(t=PRIMAVERA; t<=INVIERNO; t++)
+			cout<<"Temporada: "<< t<<endl;
+        return 0;
+}
+\end{minted}
+\caption{Ejemplo de enumeración en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Espacios de nombre (\textit{namespaces})}
+
+Los espacios de nombres permiten agrupar entidades que de otro modo tendrían un alcance global. Es preferible tener un alcance de espacio de nombre que un alcance global. Un \textit{namespace} proporciona un un alcance para identificadores tales como tipos, funciones, variables, etc. Algunas características\footnote{Más información: \href{https://en.cppreference.com/w/cpp/language/namespace}{C++ reference: namespace}}:
+   
+\begin{itemize}
+\item  Se pueden tener múltiples bloques con el mismo \textit{namespace}, todas la declaraciones en bloques con el mismo nombre irán al mismo espacio de nombres.
+\item   Es posible tener espacios de nombre anidados.
+\item   Las declaraciones de espacios de nombre no dan acceso público o privado.
+\end{itemize}
+
+
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+namespace <nombre> {   
+   int x, y; // declaraciones de código donde  
+             // x , y son declaradas en el alcance de <nombre> 
+} 
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include <iostream> 
+using namespace std; 
+
+namespace ns1 { 
+    int valor()    { return 5; } 
+} 
+namespace ns2  { 
+    const double x = 100; 
+    double valor() {  return 2*x; } 
+} 
+  
+int main() { 
+    cout << ns1::valor() << '\n';  
+    cout << ns2::valor() << '\n';  
+    cout << ns2::x << '\n';         
+} 
+
+\end{minted}
+\caption{Ejemplo de uso de \textit{namespace}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Tipo de dato booleano}
+
+Este tipo de dato (\textit{bool}) maneja los valores verdadero o falso ( \textit{true} o \textit{false} ). Es un tipo de dato y sus literales son además parte de las palabras reservadas de C++. Puede ser declarado como sigue:
+
+\begin{minted}{cpp}
+    bool b1;
+    b1=true;
+    bool b2 = false;
+\end{minted}
+
+Sin embargo, al final el tipo booleano en C++ sigue siendo equivalente a su uso en el lenguaje C: cero para falso y diferente de cero es verdadero. Por lo que su uso no es obligatorio.
+
+\section{Uso de cadenas con \textit{string} }
+
+En C++ podemos hacer uso de cadenas por medio del tipo \textit{string}. En compiladortes actuales es suficiente con incluir la biblioteca \textit{iostream} aunque en realidad se encuentra directamente declarado en \textit{cstring}
+
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize,
+linenos]
+    {cpp}
+
+#include<iostream>
+using namespace std;
+
+int main() {
+   string nombre="Juan", apellido="Pérez";
+   cout << "Hola, " << nombre << " " << apellido << endl;
+   cout << "¿Cómo estás?" << endl;
+}
+
+\end{minted}
+\caption{Ejemplo de uso de cadenas \textit{string}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Ciclo foreach en C++ }
+
+C++ tiene un estilo de bucle \textit{for each} llamado \textit{for (auto element : container)}, el cual se utiliza para recorrer un contenedor de elementos. Este estilo de iteración se introdujo en C++11, presentado en 2011, y es una forma más simple y legible de recorrer un contenedor en comparación con el uso tradicional de un ciclo \textit{for} con un iterador.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+for (<tipo_de_dato>  <nombre_variable> : <tipo_contenedor>) {
+     <instrucciones>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+Por ejemplo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    int myArray[] = {1, 2, 3, 4, 5};
+
+    // Recorriendo el array con un ciclo for each
+    for (int element : myArray) {
+        cout << element << " ";
+    }
+    cout << endl;
+
+    // Recorriendo el array con un ciclo for each usando auto
+    for (auto element : myArray) {
+        cout << element << " ";
+    }
+    cout << endl;
+    return 0;
+}
+\end{minted} 
+
+\caption{Ejemplo de \textit{foreach} en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo se define un arreglo de enteros llamado \textit{myArray} y se inicializa con los valores $1, 2, 3, 4, 5$. Luego se utiliza el estilo de ciclo \textit{for each} para recorrer cada elemento del arreglo y se imprime cada elemento en pantalla. El código anterior imprimiría $1 2 3 4 5$ en pantalla.
+
+Es importante mencionar que el estilo de iteración \textit{for each} sólo es válido para contenedores que soporten el acceso aleatorio, tales como arreglos y vector, entre otros.
+
+
+
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+https://www.programiz.com/cpp-programming/strings
+
+Concatenación https://www.w3schools.com/cpp/cpp_strings_concat.asp
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+\section{Características relevantes de C++17 \protect\footnote{Partes de esta sección fueron desarrollados con apoyo de ChatGPT}}
+
+C++17 es la séptima versión del estándar de C++, fue aprobada en diciembre de 2017, y introduce varias características y mejoras en el lenguaje, algunas de las más importantes incluyen:
+
+
+\begin{itemize}
+\item \textbf{Inicialización de estructuras y clases}: Se permite inicializar estructuras y clases de manera similar a como se inicializan los arreglos y los objetos de cualquier tipo de contenedor. Esto se logra mediante la inclusión de una lista de inicializadores entre llaves \{\}.
+\item \textbf{Inicialización automática de variables}: Se permite inicializar variables automáticamente en el momento de su declaración, ahorrando la necesidad de escribir código adicional para inicializarlas.
+\item \textbf{Eliminación de if y switch}: Se permite eliminar el cuerpo de un if o un switch si su condición es siempre verdadera o falsa, respectivamente.
+
+\item \textbf{Programación concurrente y paralela}: Se ha añadido soporte para la programación concurrente y paralela mediante el uso de las librerías estándar de C++.
+\item \textbf{Mejoras en las plantillas}: Se han añadido mejoras en las plantillas, como la posibilidad de especificar un tipo de retorno automático para las funciones plantilla, lo que permite una mayor flexibilidad y legibilidad en el código.
+\item \textbf{Mejoras en la sintaxis}: Se han añadido mejoras en la sintaxis del lenguaje, como la posibilidad de usar el operador "auto" para deducir el tipo de una variable en una expresión.
+\end{itemize}
+
+C++17 ha mejorado significativamente el lenguaje, haciéndolo más conciso, fácil de leer y de escribir, y más adecuado para la programación concurrente y paralela. Estas mejoras hacen que el código sea más eficiente y escalable, y que sea más fácil para los desarrolladores escribir código correcto y seguro.
+
+\subsection{Inicialización de estructuras y clases}
+La inicialización de estructuras y clases es una característica introducida en C++17 que permite inicializar los miembros de una estructura o clase mediante una lista de inicializadores entre llaves \{\}. Esto es similar a cómo se inicializan los arreglos y los objetos de cualquier tipo de contenedor.
+
+La sintaxis para inicializar una estructura es la siguiente:
+
+%multiple lines
+\begin{minted}{cpp}
+
+struct MyStruct {
+    int x;
+    float y;
+};
+
+MyStruct myStruct {1, 3.14f};
+
+\end{minted}
+
+Para una clase:
+
+%multiple lines
+\begin{minted}{cpp}
+
+class MyClass {
+public:
+    int x;
+    float y;
+};
+
+MyClass myClass {1, 3.14f};
+
+\end{minted}
+
+
+En el ejemplo anterior se define una estructura llamada \textit{MyStruct} con dos miembros: ''x'' e ''y'', se declara una variable \textit{myStruct} de ese tipo y se inicializa con los valores 1 y 3.14f respectivamente. Y también se define una clase llamada \textit{MyClass} con dos miembros: ''x'' e ''y'', se declara una variable \textit{myClass} de ese tipo y se inicializa con los valores 1 y 3.14f respectivamente.
+
+Además, es posible inicializar solo algunos de los miembros de una estructura o una clase, dejando los demás con su valor por defecto:
+
+%multiple lines
+\begin{minted}{cpp}
+MyStruct myStruct {1};  // x = 1, y = 0.0f (valor por defecto)
+
+MyClass myClass {1};   // x = 1, y = 0.0f (valor por defecto)
+
+\end{minted}
+
+La inicialización de estructuras y clases es una característica muy útil que permite escribir código más conciso y legible, y también ayuda a prevenir errores comunes relacionados con la inicialización de variables.
+
+
+\subsection{Inicialización automática de variables}
+
+La inicialización automática de variables es una característica introducida en C++17 que permite inicializar una variable automáticamente en el momento de su declaración, sin necesidad de escribir código adicional para inicializarla. Esto se logra mediante el uso del operador \textit{auto} junto con el valor con el que se desea inicializar la variable.
+
+La sintaxis para inicializar una variable automáticamente es la siguiente:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}{| auto <variable>= <valor>;}
+ |\\
+\hline
+\end{tabular}
+\end{center}
+
+Se utiliza el operador \textit{auto} para inicializar automáticamente la variable con el valor, y el compilador deduce automáticamente el tipo de la variable.
+
+Se puede usar auto con cualquier tipo de dato, incluso con tipos compuestos como \textit{structs} o clases:
+
+%multiple lines
+\begin{minted}{cpp}
+struct MyStruct {
+    int x;
+    float y;
+};
+
+auto myStruct = MyStruct{1, 3.14f};
+
+class MyClass {
+public:
+    int x;
+    float y;
+};
+
+auto myClass = MyClass{1, 3.14f};
+\end{minted}
+
+En estos ejemplos, se utiliza el operador \textit{auto} para inicializar automáticamente las variables \textit{myStruct} y \textit{myClass} con los valores especificados en las estructuras \textit{MyStruct} y \textit{MyClass} respectivamente.
+
+La inicialización automática de variables es una característica muy útil que permite escribir código más conciso y legible, ya que el compilador deduce automáticamente el tipo de la variable a partir del valor con el que se inicializa. Esto también ayuda a prevenir errores comunes relacionados con la inicialización de variables, ya que el compilador se encarga de realizar la deducción del tipo de forma segura.
+
+\subsection{Eliminación de sentencias vacias if y switch}
+En C++17 se ha introducido la característica de ''Eliminación de sentencias vacías'' en las estructuras de control \textit{if} y \textit{switch}.
+
+Se refiere a la eliminación de las sentencias vacías de las estructuras de control \textit{if} y \textit{switch} cuando su condición es siempre verdadera o falsa.
+
+Por ejemplo, consideremos el siguiente código:
+
+%multiple lines
+\begin{minted}{cpp}
+int x = 5;
+
+if (x > 0)
+    x = x + 2;
+else
+    ; // sentencia vacía
+
+\end{minted}
+
+En este caso, la condición del \textit{if} es siempre verdadera, por lo que el cuerpo del \textit{else} no se ejecutará nunca. Es decir, la sentencia vacía '';'' en el cuerpo del \textit{else} no tiene efecto alguno. El compilador puede eliminarla automáticamente y generar código más eficiente.
+
+Con respecto al \textit{switch}, consideremos el siguiente código:
+
+%multiple lines
+\begin{minted}{cpp}
+int x = 5;
+
+switch (x) {
+    case 5:
+        x = x + 2;
+        break;
+    case 6:
+        ; // sentencia vacía
+        break;
+    default:
+        x = x - 2;
+}
+\end{minted}
+
+En este caso, el valor de x es siempre 5, por lo que el cuerpo de case 6 no se ejecutará nunca, es decir la sentencia vacía ";" no tiene efecto alguno. El compilador puede eliminarla automáticamente y generar código más eficiente.
+
+La eliminación de sentencias vacías ayuda a escribir código más conciso y legible ya que permite eliminar las estructuras de control innecesarias. Además, también ayuda a mejorar el rendimiento del código ya que el compilador puede generar código más eficiente al eliminar las sentencias vacías.
+
+
+\subsection{Mejoras en las plantillas}
+
+Las plantillas son una característica de C++ que permite escribir código genérico que se aplica a diferentes tipos de datos. C++17 ha introducido varias mejoras en las plantillas, que hacen que sea más fácil y flexible escribir código genérico.
+
+Una de las mejoras más importantes es la posibilidad de especificar un tipo de retorno automático para las funciones plantilla. Esto permite que el compilador deduzca automáticamente el tipo de retorno de una función plantilla a partir de los argumentos de entrada.
+
+La sintaxis para especificar un tipo de retorno automático para una función plantilla es la siguiente:
+
+%multiple lines
+\begin{minted}{cpp}
+template <typename T>
+auto add(T a, T b) -> decltype(a + b) {
+    return a + b;
+}
+
+\end{minted}
+
+En este ejemplo, la función \textit{add} es una plantilla que acepta dos argumentos de cualquier tipo ''T'' y devuelve el resultado de la suma de estos argumentos. La función utiliza el operador \textit{decltype} para especificar que el tipo de retorno de la función es el mismo que el tipo de los argumentos de entrada.
+
+Otra mejora importante en las plantillas es la posibilidad de especificar parámetros de plantilla de forma no estricta. Esto significa que se pueden especificar parámetros de plantilla que no son necesariamente tipos.
+
+La sintaxis para especificar parámetros de plantilla no estrictos es la siguiente:
+
+%multiple lines
+\begin{minted}{cpp}
+template <typename T, int N>
+void print_array(T (&arr)[N]) {
+    for (int i = 0; i < N; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+\end{minted}
+
+
+En este ejemplo, la función \textit{print\_array} es una plantilla que acepta un arreglo \textit{arr} de cualquier tipo ''T'' y un entero ''N'' que indica el tamaño del arreglo. La función imprime el contenido del arreglo en pantalla.
+
+Estas mejoras en las plantillas hacen que el código sea más fácil y flexible de escribir, ya que permite deducir automáticamente el tipo de retorno y no solo utilizar tipos como parámetros. Esto permite una mayor flexibilidad y legibilidad en el código.
+
+\subsection{Mejoras en la sintaxis}
+
+C++17 ha introducido varias mejoras en la sintaxis del lenguaje que hacen que sea más fácil y legible escribir código. Algunas de las mejoras más importantes son:
+
+Inicializadores de lista en la declaración de variables: Es posible inicializar una variable en el momento de su declaración utilizando una lista de inicializadores entre llaves {}. Esto es similar a cómo se inicializan los arreglos y los objetos de cualquier tipo de contenedor.
+
+%multiple lines
+\begin{minted}{cpp}
+int x = {5};
+std::vector<int> v = {1, 2, 3};
+\end{minted}
+
+Mejoras en el operador ternario: El operador ternario se ha mejorado para permitir la asignación y el llamado a funciones dentro de su sintaxis.
+
+%multiple lines
+\begin{minted}{cpp}
+int x = 5;
+int y = x > 0 ? x + 2 : x - 2;
+
+std::string message = x > 0 ? "Positive" : "Negative";
+
+\end{minted}
+
+Mejoras en el operador de propagación: El operador de propagación "..." permite pasar los elementos de un contenedor como argumentos individuales a una función o constructor.
+
+%multiple lines
+\begin{minted}{cpp}
+std::vector<int> v = {1, 2, 3};
+std::initializer_list<int> l = {4, 5, 6};
+
+foo(1, 2, 3);
+foo(v.begin(), v.end());
+foo(l);
+
+\end{minted}
+
+Mejoras en el uso de corchetes y llaves: La sintaxis de corchetes y llaves se ha mejorado para permitir su uso como una forma de expresar bloques de código y para inicializar variables.
+
+%multiple lines
+\begin{minted}{cpp}
+for (int i : {1, 2, 3}) {
+    std::cout << i << std::endl;
+}
+
+\end{minted}
+
+Estas mejoras en la sintaxis ayudan a escribir código más legible y fácil de entender, y también ayudan a prevenir errores comunes.
+
+\subsection{Manejo de cadenas con \textit{string}}
+
+Las cadenas de caracteres son elementos fundamentales en la programación, y en C++, se gestionan a través de la clase \textit{std::string}. Esta clase proporciona una interfaz conveniente para manipular cadenas de manera eficiente. A continuación, se presentan un ejemplo completo que ilustran cómo utilizar cadenas en C++.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+
+#include <iostream>
+#include <string>
+
+int main() {
+    // Crear una cadena e inicializarla
+    std::string cadena = "Hola, mundo";
+
+    // Imprimir la cadena original
+    std::cout << "Cadena original: " << cadena << std::endl;
+
+    // Obtener la longitud de la cadena
+    size_t longitud = cadena.length();
+    std::cout << "Longitud de la cadena: " << longitud << " caracteres" << std::endl;
+
+    // Acceder a caracteres individuales mediante índices
+    char primerCaracter = cadena[0];
+    char ultimoCaracter = cadena[longitud - 1];
+    std::cout << "Primer caracter: " << primerCaracter << std::endl;
+    std::cout << "Último caracter: " << ultimoCaracter << std::endl;
+
+    // Concatenar cadenas
+    std::string otraCadena = "¡Bienvenido!";
+    std::string concatenacion = cadena + " " + otraCadena;
+    std::cout << "Cadenas concatenadas: " << concatenacion << std::endl;
+
+    // Comparar cadenas
+    std::string otraCadena2 = "Hola, mundo";
+    if (cadena == otraCadena2) {
+        std::cout << "Las cadenas son iguales" << std::endl;
+    } else {
+        std::cout << "Las cadenas son diferentes" << std::endl;
+    }
+
+    std::string cadena1 = "Hola";
+    std::string cadena2 = "Hola";
+    int comparacion = cadena1.compare(cadena2); // comparacion = 0
+    std::cout << "Comparación: "<<comparacion << std::endl;
+    
+    // Encontrar subcadenas
+    size_t posicion = cadena.find("mundo");
+    if (posicion != std::string::npos) {
+        std::cout << "La subcadena 'mundo' comienza en la posición: " 
+          << posicion << std::endl;
+    } else {
+        std::cout << "La subcadena 'mundo' no se encontró" << std::endl;
+    }
+    
+    // Se pueden convertir cadenas a otros tipos de datos 
+    // utilizando métodos como stoi o stof
+    std::string numero = "123";
+    int valor = std::stoi(numero); // valor = 123
+    std::cout << "Valor: " << valor << std::endl;
+
+    std::string decimal = "3.1415";
+    float pi = std::stof(decimal); // pi = 3.1415
+    std::cout << "pi: " << pi << std::endl;
+
+    // Conversión a cadena con el método to_string()
+    cadena = std::to_string(pi);
+    std::cout << cadena << std::endl;
+    
+    return 0;
+}
+
+\end{minted} 
+
+\caption{Ejemplo de uso de \textit{string} en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En este programa, se ha creado una cadena inicial, se han explorado diversas operaciones comunes de cadenas y se han comentado para proporcionar claridad. Desde la creación e inicialización de cadenas hasta la comparación y búsqueda de subcadenas, estos ejemplos abarcan aspectos esenciales del uso de cadenas en C++. \textit{size\_t} es un tipo de datos sin signo en C++ utilizado para representar el tamaño o la longitud de estructuras de datos, como arreglos o cadenas.
+
+\fi
+%%%%%%%%%%
+% C++_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+

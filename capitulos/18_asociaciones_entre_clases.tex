@@ -1,0 +1,541 @@
+\chapter{Asociaciones entre clases}
+
+\section{Introducción}
+
+Una clase puede estar relacionada con otra clase, o en la práctica un objeto con otro objeto.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ En el modelado de objetos a la relación entre clases se le conoce como \textbf{asociación}; mientras que a la relación entre objetos se llama instancia de una asociación. 
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\textit{Una clase \textbf{Estudiante} está asociada con una clase \textbf{Universidad}.
+}
+Una asociación es una \textbf{conexión} física o conceptual entre objetos. Las relaciones\footnote{ El término de relación es usado muchas veces como sinónimo de asociación, debido a que el concepto surge de las relaciones en bases de datos relacionales. Sin embargo el término más apropiado es el de asociación, ya que existen en objetos otros tipos de relaciones, como la relación de agregación y la de herencia.} se consideran de naturaleza \textbf{bidireccional}; es decir, ambos lados de la asociación tienen acceso a clase del otro lado de la asociación. Sin embargo, algunas veces únicamente es necesaria una asociación en una dirección (unidireccional).
+
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/asociacion.png}
+    \caption{Ejemplo de asociación en UML}
+    \label{fig:my_label}
+\end{figure}
+
+Comúnmente las asociaciones se representan en los lenguajes de programación orientados a objetos como apuntadores o referencias. Donde un apuntador  a una clase B en una clase A indicaría la asociación que tiene A con B; aunque no así la asociación de B con A.
+
+Para una asociación bidireccional es necesario al menos un par de apuntadores, uno en cada clase. Para una asociación unidireccional basta un solo apuntador en la clase que mantiene la referencia.
+
+En el caso de las asociaciones se asumirá que cada objeto puede seguir existiendo de manera independiente, a menos que haya sido creado por el objeto  de la clase asociada, en cuyo caso deberá ser eliminado por el destructor del objeto que la creó. Es decir:
+	
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Explicación} 
+\end{center} 
+\\ \hline
+ Si el objeto \textbf{A} crea al objeto \textbf{B}, es responsabilidad de \textbf{A} eliminar a la instancia \textbf{B} antes de que \textbf{A} sea eliminada. En caso contrario, si \textbf{B} es independiente de la instancia \textbf{A}, \textbf{A} debería enviar un mensaje al objeto \textbf{B} para que asigne \textit{NULL} al apuntador de \textbf{B} o para que tome una medida pertinente, de manera que no quede apuntando a una dirección inválida.
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+Es importante señalar que las medidas que se tomen pueden variar de acuerdo a las necesidades de la aplicación, pero bajo ningún motivo se deben dejar accesos a áreas de memoria no permitidas o dejar objetos "volando", sin que nadie haga referencia a ellos.
+
+Mencionamos a continuación estructuras clásicas que pueden ser vistas como una asociación:
+
+    
+\begin{enumerate}
+\item Ejemplo de asociación \textbf{unidireccional}: lista ligada.
+\item Ejemplo de asociación \textbf{bidireccional}: lista doblemente ligada.
+\end{enumerate}
+
+\section{Asociaciones reflexivas }
+
+Es posible tener un tipo de asociación conocida como asociación \textbf{reflexiva}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+Si una clase mantiene una asociación consigo misma se dice que es una \textbf{asociación reflexiva}.    
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo: \textit{Persona} puede tener asociaciones entre sí, si lo que nos interesa es representar a las personas que guardan una relación entre sí, por ejemplo si son parientes. Es decir, un objeto mantiene una asociación con otro objeto de la misma clase.
+
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/asociacion_Reflexiva.png}
+    \caption{Asociación reflexiva}
+    \label{fig:my_label}
+\end{figure}
+
+En términos de implementación significa que la clase tiene una referencia a si misma. De nuevo podemos poner de ejemplo a la clase Nodo en una lista ligada.
+
+\section{Multiplicidad de una asociación}
+
+La \textbf{multiplicidad} de una asociación especifica cuantas instancias de una clase se pueden asociar a una sola instancia de otra clase. 
+
+Se debe determinar la multiplicidad para cada clase en una asociación.
+
+\subsection{Tipos de asociaciones según su multiplicidad}
+
+\textbf{''uno a uno''}: donde dos objetos se asocian de forma exclusiva, uno con el otro.
+    Ejemplo: 
+Uno: Un alumno tiene una boleta de calificaciones.
+Uno: Una boleta de calificaciones pertenece a un alumno.
+
+\textbf{''uno a muchos''}: donde uno de los objetos puede estar asociado con muchos otros objetos.
+Ejemplo: 
+Uno: un libro solo puede estar prestado a un alumno.
+Muchos: Un usuario de la biblioteca puede tener muchos libros prestados.
+
+\textbf{''muchos a muchos''}: donde cada objeto de cada clase puede estar asociado con muchos otros objetos.
+Ejemplo: 
+Muchos: Un libro puede tener varios autores. 
+Muchos: Un autor puede tener varios libros.
+
+Podemos apreciar en un diagrama las diversas multiplicidades:
+
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/multiplicidad.png}
+    \caption{Ejemplo de multiplicidad}
+    \label{fig:my_label}
+\end{figure}
+
+Finalmente, es importante señalar que el control de las asociaciones no se encuentra en general apoyado por los lenguajes de programación, a pesar de ser una necesidad natural en el modelado orientado a objetos, por lo que toda la responsabilidad recae sobre el programador.
+
+	
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Asociaciones en C++}
+
+Ejemplo: un programa que guarda una asociación bidireccional entre clases A y B.
+
+\begin{minted}{cpp}
+class A{
+	//lista de atributos
+
+	B	*pB;
+};
+
+class B{
+	//lista de atributos
+	A	*pA;
+};
+\end{minted}
+
+En el ejemplo anterior se presenta una asociación bidireccional, por lo que cada clase tiene su respectivo apuntador a la clase contraria de la asociación. Además, deben proporcionarse métodos de acceso a la clase asociada por medio del apuntador. 
+
+\subsection{Multiplicidad de una asociacion en C++}
+
+La forma de implementar en C++ este tipo de relaciones puede variar, pero la más común es por medio de apuntadores a objetos. Suponiendo que tenemos asociaciones bidireccionales: 
+
+\begin{itemize}
+\item \textbf{''uno a uno''}. Un apuntador de cada lado de la asociación, como se ha visto anteriormente.
+\item \textbf{''uno a muchos''}. Un apuntador de un lado y un arreglo de apuntadores a objetos definido dinámica o estáticamente.
+\end{itemize}
+
+\begin{minted}{cpp}
+class A{
+	...
+	B *pB;
+};
+
+class B{
+	A *p[5];  
+//ó 
+A **p;
+}
+\end{minted}
+
+Otra forma es manejar una clase que agrupe a pares de direcciones en un objeto independiente de la clase. Por ejemplo una lista o tabla de referencias.
+	
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/muchos.png}
+    \caption{Implementación de multiplicidad mediante tabla de referencias}
+    \label{fig:my_label}
+\end{figure}	
+
+
+\begin{itemize}
+\item \textbf{''muchos a muchos''}.  Normalmente se utiliza un objeto u objetos independientes que mantiene las asociaciones entre los objetos, de manera similar a la gráfica anterior.
+\end{itemize}
+
+
+Ejemplo:
+Se muestra un código simplificado para manejo de asociaciones.
+
+\textbf{Clase Libro}
+\begin{minted}{cpp}
+#ifndef LIBRO_H_
+#define LIBRO_H_
+
+class Persona;
+
+class Libro {
+	public:
+	char nombre[10];
+	Persona *pPersona;
+
+	Libro();
+	~Libro();
+};
+
+#endif /*LIBRO_H_*/
+
+
+#include <iostream>
+#include "Persona.h"
+#include "Libro.h"
+
+Libro::Libro(){
+	nombre[0]='\0';
+	pPersona=NULL;
+}
+
+Libro::~Libro(){ 
+	if(pPersona!=NULL)
+	for(int i=0; i<5; i++)
+		if (pPersona->pLibrosPres[i]==this)
+			pPersona->pLibrosPres[i]=NULL;
+
+}
+\end{minted}
+
+\textbf{Clase Persona}
+\begin{minted}{cpp}
+#ifndef PERSONA_H_
+#define PERSONA_H_
+
+class Libro;
+
+class Persona {
+	public:
+	Libro *pLibrosPres[5];
+
+	Persona();
+	~Persona();
+};
+
+#endif /*PERSONA_H_*/
+
+#include <iostream>
+#include "Libro.h"
+#include "Persona.h"
+
+Persona::Persona(){
+	int i;
+
+	for(i=0; i<5; i++)
+		pLibrosPres[i]=NULL;
+}
+
+Persona::~Persona(){
+		int i;
+	for(i=0; i<5; i++)
+		if(pLibrosPres[i]!=NULL)
+			  pLibrosPres[i]->pPersona=NULL;  
+}
+\end{minted}
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+	
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Asociaciones en Java}
+
+Como en Java el manejo de objetos es mediante referencias, la implementación de la asociación se simplifica en la medida que la sintaxis de Java es más simple.
+
+Ejemplo: un código que guarda una asociación bidireccional entre clases A y B.
+
+\begin{minted}{java}
+class A{
+	//lista de atributos
+
+	B	pB;
+}
+
+class B{
+	//lista de atributos
+	A	pA;
+}
+\end{minted}
+
+	En el ejemplo anterior se presenta una relación bidireccional, por lo que cada clase tiene su respectiva referencia a la clase contraria de la relación. Además, deben proporcionarse métodos de acceso a la clase relacionada por medio de la referencia. 
+
+	Una asociación unidireccional del ejemplo anterior sería más simple. Veamos el código si se requiere únicamente una relación de A a B.
+	
+
+Ejemplo:
+
+\begin{minted}{java}
+class A{
+	//lista de atributos
+	B	pB;
+}
+
+class B{
+	//lista de atributos
+}
+\end{minted}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Recordar} 
+\end{center} 
+\\ \hline
+  Si el objeto \textbf{A} crea al objeto \textbf{B}, es responsabilidad de \textbf{A} eliminar a la instancia \textbf{B} antes de que \textbf{A} sea eliminada. En caso contrario, si \textbf{B} es independiente de la instancia \textbf{A}, \textbf{A} debería enviar un mensaje al objeto \textbf{B} para que asigne \textit{null} al apuntador de \textbf{B} o para que tome una medida pertinente, de manera que no quede apuntando a una dirección inválida.
+\\ \hline
+\end{tabular}
+\end{center}
+
+En Java, ya que cuenta con un recolector de basura, la importancia radicaría en asegurarnos de  no mantener enlaces a objetos que ya no son necesarios.
+
+\subsection{Multiplicidad de una asociación en Java}
+
+La forma de implementar en Java este tipo de relaciones puede variar, pero la más común es por medio de referencias a objetos. Suponiendo que tenemos relaciones bidireccionales: 
+
+
+\begin{itemize}
+\item \textbf{''uno a uno''}. Una referencia de cada lado de la relación, como se ha visto anteriormente.
+\item \textbf{''uno a muchos''}. Una referencia de un lado y un arreglo de referencias a objetos del otro lado.
+\end{itemize}
+
+\begin{minted}{java}
+class A{
+	...
+	B pB;
+}
+class B{
+	A p[];  
+}
+\end{minted}
+
+Al igual que en C++, es posible manejar una clase independiente que agrupe a pares de direcciones en un objeto independiente de la clase\footnote{Ver figura en tema correspondiente de C++}. Por ejemplo, en una estructura de lista.
+
+\begin{itemize}
+\item \textbf{''muchos a muchos''}.  Normalmente se utiliza un objeto u objetos independientes que mantiene las relaciones entre los objetos, de manera similar a la solución descrita en el punto anterior.
+\end{itemize}
+
+Ejemplo:
+Se muestra un código simplificado para manejo de asociaciones.
+
+\begin{minted}{java}
+//clase Libro
+class Libro {
+	private String nombreLibro;
+	public Alumno pAlumno;
+
+	public Libro(){
+		//al momento de crearse la instancia, no existe
+		// relación con ningún Alumno
+		pAlumno=null;
+	}
+
+	protected void finalize(){
+		//si es diferente de null, el libro está
+		//asignado a algún Alumno
+		if(pAlumno!=null)
+			//busca la referencia de Alumno a 
+			//Libro para ponerla en null
+			for(int i=0; i<5; i++)
+				if (pAlumno.pLibrosPres[i]==this)
+					pAlumno.pLibrosPres[i]=null;
+	}
+}
+
+//clase Alumno
+class Alumno {
+	public Libro pLibrosPres[];
+	public Alumno(){
+		int i;
+		//se asume una multiplicidad de 5
+		pLibrosPres = new Libro[5]
+		for(i=0; i<5; i++)
+			pLibrosPres[i]=null;
+	}
+
+	protected void finalize(){
+
+		//pone en null todas las asociaciones de los Libros 
+		// a su instancia de Alumno que se elimina
+		for(int i=0; i<5; i++)
+			if(pLibrosPres[i]!=null)
+				pLibrosPres[i].pAlumno=null;
+	}
+}
+\end{minted}
+
+	Este es un ejemplo parcial de cómo se soluciona el manejo de asociaciones entre clases, ya que además se deben de agregar métodos para establecer y eliminar la asociación, en ambas clases si es una asociación bidireccional, o en una clase únicamente si se trata de una asociación unidireccional. Esos deben de ser los únicos métodos que tengan el control sobre los atributos que mantienen la asociación y no deberían ser manejados directamente, por lo que no deben ser públicos como aquí se presentaron.
+
+	Una definición más completa - sin implementación - de la clase \textit{Libro} se aprecia a continuación:
+	
+\begin{minted}{java}
+class Libro {
+	private String nombreLibro;
+	private String clave;
+	public Alumno pAlumno;
+
+	public Libro(){ 	}
+
+	public Libro( Alumno pAlumno){ 	}
+
+	public String getNombreLibro(){ 	}
+
+	public void setNombreLibro(String n){	}
+
+	public String getClave(){ 	}
+
+	public void setClave(String cve){ 	}
+
+	public boolean setAsociacion(Alumno pAlumno){ 	}
+
+	public boolean unsetAsociacion(){ 	}
+
+	public Alumno getAlumno(){	}
+
+	protected finalize {}
+}
+\end{minted}
+
+	Este sería un estilo más apropiado para el desarrollo de asociaciones, aunque existen otros más elaborados.
+	
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Asociaciones entre Clases en lenguajes dinámicos como Python o Ruby}
+
+El manejo de asociaciones en Python o Ruby puede hacerse de forma similar a como se mencionó en Java. De hecho es todavía más simple la definición debido a que no es necesaria la declaración de tipos.
+
+Ejemplo: un código en Ruby que guarda una asociación bidireccional entre clases A y B.
+
+\begin{minted}{ruby}
+class A
+	#lista de atributos
+	@pB
+end
+
+class B
+	#lista de atributos
+	@pA
+end
+\end{minted}
+
+Veamos el código si se requiere únicamente una relación de A a B:
+
+\begin{minted}{ruby}
+class A
+	#lista de atributos
+	@pB
+end
+
+class B
+	#lista de atributos
+end
+\end{minted}
+
+\subsection{Multiplicidad de una asociación}
+
+La forma de implementar en lenguajes dinámicos este tipo de relaciones puede variar, pero la más común es por medio de referencias a objetos, de forma similar a la usada en Java. 
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Actividad} 
+\end{center} 
+\\ \hline
+\textbf{Ejercicio 1:}
+
+Programa una lista ligada de enteros orientada a objetos. Desarrollarla con una clase \textit{Lista} que contenga al menos los métodos: 
+\begin{itemize}
+    \item insertaInicio(Nodo)
+    \item insertaFinal(Nodo)
+    \item eliminaInicio()
+    \item eliminaFinal()
+    \item recorreLista()
+\end{itemize}
+
+\textit{Lista} está asociada con la clase \textit{Nodo} en una asociación (de nombre \textit{primerNodo}) unidireccional hacia \textit{Nodo} con multiplicidad de 0 a 1.
+La clase \textit{Nodo} contiene un atributo:
+\begin{itemize}
+    \item dato  - de tipo entero
+\end{itemize}
+y los métodos:
+\begin{itemize}
+    \item getDato()
+    \item setDato(dato)
+    \item getSiguiente()
+    \item setSiguiente(Nodo sig)
+\end{itemize}
+
+El \textit{Nodo} mantiene una asociación reflexiva unidireccional con una multiplicidad de 0 a 1.
+\\ \hline
+
+\textbf{Ejercicio 2:} 
+Crear una clase \textit{Alumno} que contiene un atributo \textit{matrícula}, \textit{grupo} y un objeto \textit{nombre}. Además mantiene una asociación bidireccional de ''uno a muchos'' con objetos de una clase \textit{Libro}. La clase \textit{Libro} contiene el \textit{nombre del libro}, \textit{edición}, \textit{año} y tiene un arreglo de 3 objetos de la clase \textit{Nombre} para identificar al autor.
+
+El método \textit{prestamo()} establecería la asociación y el método \textit{devolución()} eliminaría la asociación entre un alumnos y un libro.
+
+El código de prueba debe presentar un menú que permita establecer y deshacer asociaciones entre alumnos y libros. Un alumno puede tener hasta 3 libros prestados al mismo tiempo.
+\\ \hline
+
+
+\textbf{Ejercicio 3:} Modificar el ejercicio anterior y en lugar de que \textit{grupo} sea un atributo simple, deberá ser una clase \textit{Grupo} que contenga \textit{carrera}, el \textit{semestre} y que mantenga una relación con un máximo de 30 alumnos. Cuando se elimine al último alumno, el grupo debe desaparecer. 
+\\ \hline
+\end{tabular}
+
+\end{center}
+
+

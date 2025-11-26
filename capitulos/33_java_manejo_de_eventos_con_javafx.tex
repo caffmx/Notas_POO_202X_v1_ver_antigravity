@@ -1,0 +1,764 @@
+\chapter{Java: Manejo de eventos con JavaFX}
+\section{Introducción}
+
+Al igual que con \textit{AWT} o \textit{Swing}, no se trata nada más del diseño de la interfaz de usuario. También se tiene que considerar como se incorpora el comportamiento que el usuario tiene sobre la interfaz, esto se conoce como manejo de eventos. 
+
+Por ejemplo, al dar \textit{click} a una aplicación se necesita incorporar código que procese esa acción. El botón entonces es el \textbf{objeto fuente del evento} donde la acción se origina, el evento por si solo es un objeto. Es necesario crear un objeto capaz de manejar el evento de acción sobre un botón. Este objeto es  llamado un manejador de eventos (\textit{event handler}). Ver figura \ref{fig:javafx_evento}
+
+\begin{figure}
+    \centering
+    \includegraphics[]{imagenes/javaFX_manejo_eventos.png}
+    \caption{ Proceso de manejo de evento }
+    \label{fig:javafx_evento}
+\end{figure}	
+
+Para poder ser manejador de un evento de acción se requiere:
+   
+\begin{itemize}
+\item El objeto debe ser una instancia de la interfaz \textit{EventHandler \textless T extends Event\textgreater}. Esta interfaz define el comportamiento común para todos los manejadores. Por su parte, \textit{\textless T extends Event\textgreater} especifica que \textit{T} es un tipo genérico que es un subtipo de \textit{Event}.
+\item El objeto manejador de \textit{EventHandler} debe estar registrado con el objeto fuente del evento con el método $fuente.setOnAction(manejador)$.
+\end{itemize}
+
+La interfaz \textit{EventHandler\textless ActionEvent\textgreater} contiene el método $handle(ActionEvent)$ para procesar el evento de acción. Nuestra clase manejadora debe redefinir este método para responder al evento.
+
+El siguiente \textcolor{blue}{ejemplo} procesa el evento de acción para 2 botones y despliega el mensaje correspondiente al ser presionados:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
+
+public class ManejoDeEventos extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        
+        // Crea un panel y establece sus propiedades
+        HBox panel = new HBox(10);
+        panel.setAlignment(Pos.CENTER);
+        Button btHola = new Button("Hola");
+        Button btAdiós = new Button("Adiós");
+        ClaseManejadoraHola manejador1 = new ClaseManejadoraHola();
+        btHola.setOnAction(manejador1);
+        ClaseManejadoraAdiós manejador2 = new ClaseManejadoraAdiós();
+        btAdiós.setOnAction(manejador2);
+        panel.getChildren().addAll(btHola, btAdiós);
+       
+        // Crea una escena y la coloca en el escenario
+        Scene escena = new Scene(panel);
+        escenarioPrimario.setTitle("ManejoDeEventos"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+
+class ClaseManejadoraHola implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent e) {
+        System.out.println("Hola");
+    }
+} 
+
+class ClaseManejadoraAdiós implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent e) {
+        System.out.println("Adiós");
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX manejo de evento acción para 2 botones .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como se aprecia, se declararón dos clases manejadoras, cada una implementa \textit{EventHandler \textless ActionEvent\textgreater} para procesar el evento de acción \textit{ActionEvent}. El objeto \textit{manejador1} es una instancia de \textit{ClaseManejadoraHola}, y es registrado en el botón \textit{btHola}. Cuando el botón es presionado, el método $handle(ActionEvent)$ en \textit{ClaseManejadoraHola} es invocado para procesar el evento. El mismo proceso se sigue para el otro botón.
+
+\section{Más sobre eventos}
+
+Un evento es un objeto creado desde la fuente de un evento. Disparar un evento significa crear un evento y delegarlo al manejador para que maneje el evento.
+
+Al ejecutar una interfaz gráfica en Java, el programa interactúa con el usuario y los eventos conducen la ejecución. Esto se conoce como programación manejada por eventos (\textit{event-driven}). Un evento puede ser visto como una señal para el programa de que algo ha pasado. Los eventos son disparados por acciones externas del usuario, como movimientos del \textit{mouse}, \textit{clicks}, teclas presionadas. Un programa puede reaccionar o ignorar los eventos.
+
+El componente que crea un evento y lo dispara es el objeto fuente u origen del evento. Un evento es una instancia de una clase de evento. La clase raíz de las clases evento en Java es $java.util.EventObject$. Pero la clase raíz de las clases de evento en JavaFX es $javafx.event.Event$, por lo que un evento en JavaFX es un objeto de esta clase o una de sus subclases. Algunas de las cuales se muestran a continuación:
+
+
+\begin{itemize}
+\item EventObject
+  \begin{itemize}
+    \item Event
+    \begin{itemize}
+        \item ActionEvent
+        \item InputEvent
+        \begin{itemize}
+            \item MouseEvent
+            \item KeyEvent
+        \end{itemize}
+        \item WindowEvent
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Un objeto de evento contiene propiedades propias del tipo de evento que maneja. Un objeto de evento puede identificar su origen mediante el método $getSource()$. Como se puede ver, las subclases de evento tratan con específicos tipos de eventos.
+
+\section{Registro de manejadores y manejo de eventos}
+
+
+Un manejador es un objeto que debe ser registrado en el objeto fuente del evento, y debe ser una instancia de una interfaz apropiada de manejo de eventos.
+
+Java usa un modelo basado en delegación para el manejo de eventos: un objeto fuente dispara un evento, y un objeto interesado en el evento lo maneja. Este último evento es llamado manejador de eventos (\textit{event handler}) o escuchador de eventos (\textit{event listener}). Para que un objeto sea un manejador de un evento para un objeto fuente se tiene que cumplir:
+
+\begin{itemize}
+    \item El objeto manejador debe ser una instancia de la correspondiente interfaz manejadora de evento, para asegurar que el manejador tiene el método correcto para procesar el evento. 
+    \begin{itemize}
+        \item JavaFX tiene definida una interfaz manejadora unificada \textit{EventHandler \textless T extends Event\textgreater} para un evento \textit{T}. 
+        \item La interfaz manejadora contiene el método \textit{handle(T e)} para procesar el evento.
+        \item  Por ejemplo, la interfaz manejadora para \textit{ActionEvent} es \textit{EventHandler \textless ActionEvent\textgreater}; cada manejador para  \textit{ActionEvent} debe implementar el método \textit{handle(ActionEvent e)} para procesar un \textit{ActionEvent}.
+    \end{itemize}
+    \item El objeto manejador debe ser registrado por el objeto fuente. Los métodos a registrar dependen del tipo de evento.
+    \begin{itemize}
+        \item Para \textit{ActionEvent} el método es $setOnAction()$.
+        \item Para el evento de presionar una tecla, el método es $setOnKeyPressed()$.
+        \item Para el evento del mouse presionado, el método es $setOnMousePressed()$.
+    \end{itemize}
+\end{itemize}
+
+Vamos a ver ahora un \textcolor{blue}{ejemplo} donde dos botones controlan el tamaño de un círculo. Vemos el código primero sin manejo de eventos:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
+public class ControlDeCírculoAúnSinManejoDeEventos extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        StackPane panel = new StackPane();
+        Circle círculo = new Circle(50);
+        círculo.setStroke(Color.BLACK);
+        círculo.setFill(Color.WHITE);
+        panel.getChildren().add(círculo);
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER);
+        Button btAumentar = new Button("Aumentar");
+        Button btReducir = new Button("Reducir");
+        hBox.getChildren().add(btAumentar);
+        hBox.getChildren().add(btReducir);
+
+        BorderPane borderPanel = new BorderPane();
+        borderPanel.setCenter(panel);
+        borderPanel.setBottom(hBox);
+        BorderPane.setAlignment(hBox, Pos.CENTER);
+
+        Scene escena = new Scene(borderPanel, 200, 150);
+        escenarioPrimario.setTitle("ControlDeCírculo"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX dos botones sin manejo de eventos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Para lograr las acciones deseadas vamos a introducir los siguientes cambios:
+
+\begin{itemize}
+\item Definir una clase \textit{PanelCírculo} para desplegar el círculo en un panel, proporcionando métodos para alagar y reducir modificando el radio del círculo.
+\item Crear un objeto de \textit{PanelCírculo} y declarar un atributo que haga referencia a este objeto en la clase \textit{ControlDeCírculo}. Los métodos en esta clase ahora accesan al objeto de \textit{PanelCírculo} a través de este atributo.
+\item Definir una clase manejadora \textit{AgrandarManejador} que implementa \textit{EventHandler \textless ActionEvent\textgreater}. Para hacer accesible la variable de referencia \textit{PanelCírculo} desde el método $handle()$, se define  \textit{AgrandarManejador} como una clase anidada de clase  \textit{ControlDeCírculo}.
+\item Se registra el manejador para el botón \textit{btAgrandar} y se implementa el método $handle()$ en \textit{AgrandarManejador} para invocar \textit{panelCírculo.agrandar()}.
+\item Para reducir se hacen pasos similares de creación y registro del manejador correspondiente y la creación de la clase manejadora implementando la interfaz \textit{EventHandler \textless ActionEvent \textgreater}.
+\end{itemize}
+
+El código de nuestro \textcolor{blue}{ejemplo} quedaría como sigue:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
+public class ControlDeCírculo extends Application {
+    private PanelCírculo panelCírculo = new PanelCírculo();
+
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER);
+        Button btAgrandar = new Button("Agrandar");
+        Button btReducir = new Button("Reducir");
+        hBox.getChildren().add(btAgrandar);
+        hBox.getChildren().add(btReducir);
+        
+        // Crear y registrar el manejador para reducir
+        btReducir.setOnAction(new ReducirManejador());
+        // Crear y registrar el manejador para agrandar
+        btAgrandar.setOnAction(new AgrandarManejador());
+        
+        BorderPane borderPanel = new BorderPane();
+        borderPanel.setCenter(panelCírculo);
+        borderPanel.setBottom(hBox);
+        BorderPane.setAlignment(hBox, Pos.CENTER);
+
+        // Crear una escena y colocarla en el escenario
+        Scene escena = new Scene(borderPanel, 200, 150);
+        escenarioPrimario.setTitle("ControlDeCírculo"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+
+    class AgrandarManejador implements EventHandler<ActionEvent> {
+
+        @Override 
+        public void handle(ActionEvent e) {
+            panelCírculo.agrandar();
+        }
+    }
+    
+        class ReducirManejador implements EventHandler<ActionEvent> {
+
+        @Override 
+        public void handle(ActionEvent e) {
+            panelCírculo.reducir();
+        }
+    }
+}
+
+class PanelCírculo extends StackPane {
+    private Circle círculo = new Circle(50);
+
+    public PanelCírculo() {
+        getChildren().add(círculo);
+        círculo.setStroke(Color.BLACK);
+        círculo.setFill(Color.WHITE);
+    }
+
+    public void agrandar() {
+        círculo.setRadius(círculo.getRadius() + 2);
+    }
+
+    public void reducir() {
+        círculo.setRadius(círculo.getRadius() > 2 ?
+            círculo.getRadius() - 2 : círculo.getRadius());
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX dos botones con manejo de eventos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Usando clases anónimas}
+
+Las clases anónimas son una muy buena opción para implementar una interfaz que contiene algunos métodos, ya que estas clase generalmente solo requieren de una instancia y no es necesario nombrar la clase. Ejemplo\footnote{\href{https://docs.oracle.com/javase/tutorial/java/javaOO/anonymousclasses.html}{Anonymous classes}}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+ 
+public class ClaseAnónimaEjemplo extends Application {
+       
+    @Override
+    public void start(Stage escenarioPrimario) {
+        escenarioPrimario.setTitle("¡Hola clases anónimas!");
+        Button btn = new Button();
+        btn.setText("Decir 'Hola'");
+        
+        //clase anónima dentro de setOnAction
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("¡Hola!");
+            }
+        });
+        
+        StackPane raíz = new StackPane();
+        raíz.getChildren().add(btn);
+        escenarioPrimario.setScene(new Scene(raíz, 300, 250));
+        escenarioPrimario.show();
+    }
+}
+\end{minted}
+\caption{Ejemplo Java FX manejador de eventos con clase anónimas.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro ejemplo, en este caso el programa usa una clase anónima donde redefine la implementación de clase \textit{TextField} para los métodos $replaceText()$ y $replaceSelection()$, creando un campo de texto que solo acepta valores numéricos:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Group; 
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+
+public class ClaseAnónimaTextFieldAdaptado extends Application {
+    
+    final static Label etiqueta = new Label();
+ 
+    @Override
+    public void start(Stage escenarioPrimario) {
+        Group raíz = new Group();
+        Scene escena = new Scene(raíz, 300, 150);
+        escenarioPrimario.setScene(escena);
+        escenarioPrimario.setTitle("Ejemplo de campo de texto");
+ 
+        GridPane cuadrícula = new GridPane();
+        // asigna las propiedades de relleno de espacio con un objeto de Insets
+        cuadrícula.setPadding(new Insets(10, 10, 10, 10));
+        cuadrícula.setVgap(5);
+        cuadrícula.setHgap(5);
+ 
+        escena.setRoot(cuadrícula);
+        final Label dinero = new Label("$");
+        GridPane.setConstraints(dinero, 0, 0);
+        cuadrícula.getChildren().add(dinero);
+        
+        final TextField tfSum = new TextField() {
+            @Override
+            public void replaceText(int inicio, int fin, String texto) {
+                if (!texto.matches("[a-z, A-Z]")) {
+                    super.replaceText(inicio, fin, texto);                     
+                }
+                etiqueta.setText("Introduce un valor numérico");
+            }
+ 
+            @Override
+            public void replaceSelection(String texto) {
+                if (!texto.matches("[a-z, A-Z]")) {
+                    super.replaceSelection(texto);
+                }
+            }
+        };
+ 
+        tfSum.setPromptText("Introduce el total");
+        tfSum.setPrefColumnCount(10);
+        GridPane.setConstraints(tfSum, 1, 0);
+        cuadrícula.getChildren().add(tfSum);
+        
+        Button btEnviar = new Button("Enviar");
+        GridPane.setConstraints(btEnviar, 2, 0);
+        cuadrícula.getChildren().add(btEnviar);
+        
+        btEnviar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                etiqueta.setText(null);
+            }
+        });
+        
+        GridPane.setConstraints(etiqueta, 0, 1);
+        GridPane.setColumnSpan(etiqueta, 3);
+        cuadrícula.getChildren().add(etiqueta);
+        
+        escena.setRoot(cuadrícula);
+        escenarioPrimario.show();
+    }
+ 
+}
+\end{minted}
+\caption{Ejemplo JavaFX con clases anónimas y uso de \textit{TextField}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Usando expresiones lambda}
+
+Las expresiones lambda introducidad en Java 8 son una forma de simplificar más el código para el manejo de eventos. Veamos un ejemplo de implementación de un manejador con expresiones lambda:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+
+public class EjemploManejadorLambda extends Application {
+    @Override
+    public void start(Stage escenarioPrimario) {
+        
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER);
+        Button btNuevo = new Button("Nuevo");
+        Button btAbrir = new Button("Abrir");
+        Button btGrabar = new Button("Grabar");
+        Button btImprimir = new Button("Imprimir");
+        hBox.getChildren().addAll(btNuevo, btAbrir, btGrabar, btImprimir);
+        
+        // Crear y registrar el manejador de cada butón con expresiones lambda
+		// Notar las diferentes formas es expresiones lambda
+        btNuevo.setOnAction((ActionEvent e) -> {
+            System.out.println("Proceso Nuevo");
+        });
+
+        btAbrir.setOnAction((e) -> {
+            System.out.println("Proceso Abrir");
+        });
+
+        btGrabar.setOnAction(e -> {
+            System.out.println("Proceso Grabar");
+        });
+
+        btImprimir.setOnAction(e -> System.out.println("Proceso Imprimir"));
+
+        Scene escena = new Scene(hBox, 300, 50);
+        escenarioPrimario.setTitle("Ejemplo de Manejador con Expresiones Lambda");
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX y manejador de eventos con expresiones lambda.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{\textcolor{blue}{Ejemplo} con evento de mouse}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class EjemploEventoMouse extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        
+        Pane panel = new Pane();
+        Text texto = new Text(20, 20, "Presiona y arrastra un texto cualquiera");
+        panel.getChildren().addAll(texto);
+
+        texto.setOnMouseDragged(e -> {
+            texto.setX(e.getX());
+            texto.setY(e.getY());
+        });
+        
+        Scene escena = new Scene(panel, 300, 100);
+        escenarioPrimario.setTitle("Ejemplo de Evento de Mouse"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX con evento de mouse.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{\textcolor{blue}{Ejemplo} con evento de teclado}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class EjemploEventoTeclado extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        
+        Pane panel = new Pane();
+        panel.setMinSize(300, 300);
+        Text texto = new Text(20, 20, "A");
+        panel.getChildren().add(texto);
+        texto.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+            case DOWN: texto.setY(texto.getY() + 10); break;
+            case UP: texto.setY(texto.getY() - 10); break;
+            case LEFT: texto.setX(texto.getX() - 10); break;
+            case RIGHT: texto.setX(texto.getX() + 10); break;
+            default:
+                if (Character.isLetterOrDigit(e.getText().charAt(0)))
+                    texto.setText(e.getText());
+            }
+        });
+
+        Scene escena = new Scene(panel);
+        escenarioPrimario.setTitle("Ejemplo Evento Teclado"); 
+        escenarioPrimario.setScene(escena);      
+        escenarioPrimario.show(); 
+        texto.requestFocus(); // texto se enfoca para recibir la entrada de teclado
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX con evento de teclado.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{\textcolor{blue}{Ejemplo} con evento de teclado y mouse}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
+public class EjemploEventoTecladoMouse extends Application {
+    private PanelCírculo panelCírculo = new PanelCírculo();
+    
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        // mantener dos botones en un HBox
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER);
+        Button btAgrandar = new Button("Agrandar");
+        Button btReducir = new Button("Reducir");
+        hBox.getChildren().add(btAgrandar);
+        hBox.getChildren().add(btReducir);
+        
+        // Crear y registrar manejadores
+        btAgrandar.setOnAction(e -> panelCírculo.agrandar());
+        btReducir.setOnAction(e -> panelCírculo.reducir());
+
+        panelCírculo.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                panelCírculo.agrandar();
+            } else if (e.getButton() == MouseButton.SECONDARY) {
+                panelCírculo.reducir();
+            }
+        });
+
+        panelCírculo.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.U) {
+                panelCírculo.agrandar();
+            } else if (e.getCode() == KeyCode.D) {
+                panelCírculo.reducir();
+            }
+        });
+
+        BorderPane panelBorde = new BorderPane();
+        panelBorde.setCenter(panelCírculo);
+        panelBorde.setBottom(hBox);
+        BorderPane.setAlignment(hBox, Pos.CENTER);
+
+        Scene escena = new Scene(panelBorde, 200, 150);
+        escenarioPrimario.setTitle("EjemploEventoTecladoMouse"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+        panelCírculo.requestFocus();
+    }
+}
+
+// vista en ejemplo anterior
+class PanelCírculo extends StackPane {
+    private Circle círculo = new Circle(50);
+
+    public PanelCírculo() {
+        getChildren().add(círculo);
+        círculo.setStroke(Color.BLACK);
+        círculo.setFill(Color.WHITE);
+    }
+
+    public void agrandar() {
+        círculo.setRadius(círculo.getRadius() + 2);
+    }
+
+    public void reducir() {
+        círculo.setRadius(círculo.getRadius() > 2 ?
+            círculo.getRadius() - 2 : círculo.getRadius());
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX con evento de teclado y mouse.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{\textcolor{blue}{Ejemplo} con  listener en un objeto observable}
+
+Es posible añadir un \textit{listener} para procesar un cambio en un valor en un objeto observable. Una instancia de \textit{Observable} es conocida como un \textbf{objeto observable}.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
+public class EjemploPropiedadObservable {
+    public static void main(String[] args) {
+        DoubleProperty balance = new SimpleDoubleProperty();
+        balance.addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable ov) {
+                System.out.println("El nuevo valor es " + balance.doubleValue());
+            }
+        });
+        balance.set(4.5);
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX con un objeto observable.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\Chapter{Python  GUI (tkinter o PyQt5 -- android supported}
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

@@ -1,0 +1,3965 @@
+\chapter{Herencia}
+\section{Introducción}
+
+La \textbf{herencia} es un mecanismo potente de abstracción que permite compartir similitudes entre clases manteniendo al mismo tiempo sus diferencias.
+
+	Es una forma de reutilización de código, tomando clases previamente creadas y formando a partir de ellas nuevas clases, heredándoles sus atributos y métodos. Las nuevas clases pueden ser modificadas agregándoles nuevas características.
+
+	Los términos para distinguir los tipos de clases pueden variar. Por ejemplo, en C++ la clase de la cual se toman sus características se conoce como \textbf{clase base}; mientras que la clase que ha sido creada a partir de la clase base se conoce como \textbf{clase derivada}. Existen otros términos para estas clases:
+
+\begin{table}[]
+\centering
+\begin{tabular}{lllll}
+\cline{1-2}
+\multicolumn{1}{|l|}{Clase base}  & \multicolumn{1}{l|}{Clase derivada} &  &  &  \\ \cline{1-2}
+\multicolumn{1}{|l|}{Superclase}  & \multicolumn{1}{l|}{Subclase}       &  &  &  \\ \cline{1-2}
+\multicolumn{1}{|l|}{Clase padre} & \multicolumn{1}{l|}{Clase hija}     &  &  &  \\ \cline{1-2}
+                                  &                                     &  &  & 
+\end{tabular}
+\end{table}
+
+En Java es más común usar el término de superclase y subclase.
+ 
+Una clase derivada es potencialmente una clase base, en caso de ser necesario.
+
+	Cada objeto de una clase derivada también es un objeto de la clase base. En cambio, un objeto de la clase base no es un objeto de la clase derivada.
+
+	La implementación de herencia a varios niveles forma un árbol jerárquico similar al de un árbol genealógico.  Esta es conocida como \textbf{jerarquía de herencia}.
+
+	\textbf{Generalización}. Una clase base o superclase se dice que es más general que la clase derivada o subclase.
+
+	\textbf{Especialización}. Una clase derivada es por naturaleza una clase más especializada que su clase base.
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Herencia: Implementación en C++}
+	La herencia en C++ es implementada permitiendo a una clase incorporar a otra clase dentro de su declaración. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+class <claseDerivada>: <acceso>  <claseBase> {
+	//cuerpo clase derivada
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}	
+
+\textcolor{blue}{Ejemplo:}
+   \textit{ Una clase vehículo que describe a todos aquellos objetos vehículos que viajan en carreteras. Puede describirse a partir del número de ruedas y de pasajeros.
+	De la definición de vehículos podemos definir objetos más específicos (especializados). Por ejemplo la clase camión. }
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+using namespace std;
+
+class Vehiculo{
+	int ruedas;
+	int pasajeros;
+public:
+	void setRuedas(int);
+	int  getRuedas();
+	void setPasajeros(int);
+	int  getPasajeros();
+};
+
+void Vehiculo::setRuedas(int num){
+	ruedas=num;
+}
+int Vehiculo::getRuedas(){
+	return ruedas;
+}
+void Vehiculo::setPasajeros(int num){
+	pasajeros=num;
+}
+
+int Vehiculo::getPasajeros(){
+	return pasajeros;
+}
+
+//clase Camion con herencia  de Vehículo
+class Camion: public Vehiculo {
+	int carga;
+	public:
+	void setCarga(int);
+	int getCarga();
+	void muestra();
+};
+
+void Camion::setCarga(int num){
+	carga=num;
+}
+int Camion::getCarga(){
+	return carga;
+}
+void Camion::muestra(){
+	cout<<"Ruedas: "<< getRuedas()<<endl;
+	cout<<"Pasajeros: "<< getPasajeros()<<endl;
+	cout<<"Capacidad de carga: "<<getCarga()<<endl;
+}
+
+int main(){
+	Camion ford;
+	ford.setRuedas(6);
+	ford.setPasajeros(3);
+	ford.setCarga(3200);
+	ford.muestra();
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de herencia en C++, jerarquía de Vehículo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Control de Acceso a miembros en C++}
+
+	Existen tres palabras reservadas para el control de acceso: \textit{public}, \textit{private} y \textit{protected}. Estas sirven para proteger los miembros de la clase en diferentes formas. 
+
+El control de acceso, como ya se vio anteriormente, se aplica a los métodos, atributos, constantes y tipos anidados que son miembros de la clase.
+
+Resumen de tipos de acceso:
+
+\begin{itemize}
+\item \textbf{private}. Un miembro privado únicamente puede ser utilizado por los métodos miembro y funciones amigas de la clase donde fue declarado.                                                                               
+\item \textbf{protected}. Un miembro protegido puede ser utilizado únicamente por los métodos miembro y funciones amigas de la clase donde fue declarado o por los métodos miembro y funciones amigas de las clases derivadas. El acceso protegido es como un nivel intermedio entre el acceso privado y público.
+\item \textbf{public}. Un miembro público puede ser utilizado por cualquier método. Una estructura es considerada por C++ como una clase que tiene todos sus miembros públicos.        
+\end{itemize}
+                                                                                                               
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo de control de acceso
+
+class S{
+	char *f1();
+	int a;
+ 	protected:
+	int b;
+	int f2();
+ 	private:
+	int c;
+	int f3();
+	public:
+	int d, f;
+	char *f4(int);
+};
+
+int main(){
+	S obj;
+	obj.f1(); //error
+	obj.a=1;	//error
+	obj.f2();//error
+	obj.b=2; //error
+	obj.c=3; //error
+	obj.f3(); //error
+	obj.d=5;
+	obj.f4(obj.f);
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de herencia y control de acceso a miembros en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Control de acceso en herencia en C++}
+
+Hasta ahora se ha usado la herencia con un solo tipo de acceso, utilizando el especificador \textit{public}. Los miembros públicos de la clase base son miembros públicos de la clase derivada, los miembros protegidos permanecen protegidos para la clase derivada.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo de control de acceso en herencia
+
+class Base{
+	int a;
+	protected:
+	int b;
+ 	public:
+	int c;
+};
+
+class Derivada: public Base {
+	void g();
+};
+
+void Derivada::g(){
+	a=0; //error, es privado
+	b=1; //correcto, es protegido
+	c=2; //correcto, es público
+}
+\end{minted}
+\caption{Ejemplo control de acceso en herencia en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Para accesar a los miembros de una clase base desde una clase derivada, se pueden ajustar los permisos por medio de un calificador \textit{public}, \textit{private} o \textit{protected}.
+
+	Si una clase base es declarada como \textbf{pública} de una clase derivada, los miembros públicos y protegidos son accesibles desde la clase derivada, no así los miembros privados.
+
+	Si una clase base es declarada como \textbf{privada} de otra clase derivada, los miembros públicos y protegidos de la clase base serán miembros privados de la clase derivada. Los miembros privados de la clase base permanecen inaccesibles.
+
+	Si se omite el calificador de acceso de una clase base, se asume \textbf{por omisión} que el calificador es \textit{public} en el caso de una estructura y \textit{private} en el caso de una clase.
+
+	Ejemplo de sintaxis:
+
+\begin{minted}{cpp}
+class base {
+ ...
+};
+
+class d1: private base {
+...
+};
+
+class d2: base {
+...
+};
+
+class d3: public base {
+...
+};
+\end{minted}
+
+Es recomendable declarar explícitamente la palabra reservada \textit{private} al tomar una clase base como privada para evitar confusiones:
+
+\begin{minted}{cpp}
+class x{
+ 	public:
+    f();
+};
+
+class y: x {   //privado por omisión
+	...
+};	
+
+void g( y *p){
+	p->f();  //error
+}
+\end{minted}
+
+	Finalmente, si una clase base es declarada como \textbf{protegida} de una clase derivada, los miembros públicos de la clase base se convierten en miembros protegidos de la clase derivada.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//acceso por herencia
+#include <iostream>
+using namespace std;
+
+class X{
+	protected:
+	int i;
+	int j;
+	
+	public:
+	void preg_ij();
+	void pon_ij();
+};
+
+void X::preg_ij() {
+	cout<< "Escriba dos números: ";
+	cin>>i>>j;
+}
+
+void X::pon_ij() {
+	cout<<i<<' '<<j<<endl;
+}
+
+//en Y, i y j de X siguen siendo miembros protegidos
+//Si se llegara a cambiar este acceso a private i y j se heredarian como
+// miembros privados de Y, además de los métodos públicos
+class Y: public X{
+	int k;
+public:
+	int preg_k();
+	void hacer_k();
+};
+
+int Y:: preg_k(){
+	return k;
+}
+
+void Y::hacer_k() {
+	k=i*j;
+}
+
+// Z tiene acceso a i y j de X, pero no a k de Y
+// porque es private por omisión
+// Si Y heredara de x como private, i y j serían privados en Y,
+// por lo que no podrían ser accesados desde Z
+class Z: public Y {
+public:
+	void f();
+};
+
+// Si Y heredara a X con private, este método ya no funcionaría
+// no se podría acceder a i ni a j.
+void Z::f() {
+	i=2;
+	j=3;
+}
+
+// si Y hereda de x como private, no es posible accesar a los métodos
+//públicos desde objetos de Y ni de Z.
+int main() {
+	Y var;
+	Z var2;
+
+	var.preg_ij();
+	var.pon_ij();
+	var.hacer_k();
+	cout<<var.preg_k()<<endl;
+	var2.f();
+	var2.pon_ij();
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo control de acceso en herencia con C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Constructores de clase base en C++}
+
+El constructor de la clase base puede ser llamado desde la clase derivada, para inicializar los atributos heredados. La sintaxis es igual que el inicializador de objetos componentes.
+
+	Los constructores y operadores de asignación de la clase base no son heredados por las clases derivadas. Pero pueden ser llamados por los de la clase derivada.
+
+	Un constructor de la clase derivada llama primero al constructor de la clase base. Si se omite el constructor de la clase derivada, el constructor por omisión de la clase derivada llamará al constructor de la clase base.
+
+	Los destructores son llamados en orden inverso a las llamadas del constructor: un destructor de una clase derivada será llamado antes que el de su clase base.
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+<clase>::<constructor>(<lista de argumentos>) : 
+  <contructor de clase base>(<lista de argumentos sin el tipo>)
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// POINT.H
+#ifndef POINT_H
+#define POINT_H
+
+class Point {
+public:
+   Point(float = 0.0, float = 0.0);
+   ~Point();    
+protected:      
+   float x, y;  
+};
+
+#endif /*POINT_H_*/
+
+// POINT.CPP
+#include <iostream>
+#include "point.h"
+using namespace std;
+Point::Point(float a, float b){
+   x = a;
+   y = b;
+
+   cout << "Constructor Point: "
+	<< '[' << x << ", " << y << ']' << endl;
+}
+
+Point::~Point(){
+   cout << "Destructor Point:  "
+        << '[' << x << ", " << y << ']' << endl;
+}
+
+// CIRCLE.H
+#ifndef CIRCLE_H
+#define CIRCLE_H
+
+#include "point.h"
+
+class Circle : public Point {
+public:
+   Circle(float r = 0.0, float x = 0, float y = 0);
+   ~Circle();      
+private:
+   float radius;   
+};
+
+#endif /*CIRCLE_H_*/
+
+// CIRCLE.CPP
+#include "circle.h"
+
+using namespace std;
+
+Circle::Circle(float r, float a, float b)
+   : Point(a, b)   // llamada al constructor de clase base
+{
+   radius = r;
+
+   cout << "Constructor Circle: radio es "
+        << radius << " [" << a << ", " << b << ']' << endl;
+}
+
+Circle::~Circle(){
+   cout << "Destructor Circle:   radio es "
+        << radius << " [" << x << ", " << y << ']' << endl;
+}
+
+// Main.CPP
+#include <iostream.h>
+#include "point.h"
+#include "circle.h"
+
+int main(){
+   // Muestra llamada a constructor y destructor de Point
+   {
+      Point p(1.1, 2.2);
+   }
+
+   cout << endl;
+   Circle circle1(4.5, 7.2, 2.9);
+   cout << endl;
+   Circle circle2(10, 5, 5);
+   cout << endl;
+   return 0;
+}
+\end{minted}
+\caption{Ejemplo constructor de clase base en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsection{Manejo de objetos de la clase base como objetos de una clase derivada y viceversa en C++}
+
+	Un objeto de una clase derivada pública, puede ser manejado como un objeto de su clase base. Sin embargo, un objeto de la clase base no es posible tratarlo de forma automática como un objeto de clase derivada.
+
+	La opción que se puede utilizar, es enmascarar un objeto de una clase base a un apuntador de clase derivada. El problema es que no debe ser desreferenciado (accedido) así, primero se tiene que hacer que el objeto sea referenciado por un apuntador de su propia clase.
+
+	Si se realiza la conversión explícita de un apuntador de clase base - que apunta a un objeto de clase base - a un apuntador de clase derivada y, posteriormente, se hace referencia a miembros de la clase derivada, es un error pues esos miembros no existen en el objeto de la clase base.
+	
+
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// POINT.H
+// clase Point
+#ifndef POINT_H_
+#define POINT_H_
+using namespace std;
+
+class Point {
+   friend ostream &operator<<(ostream &, const Point &);
+	public:
+   Point(float = 0, float = 0);      
+   void setPoint(float, float);      
+   float getX() const { return x; }  
+   float getY() const { return y; }  
+	protected:         
+   float x, y;     
+};
+
+#endif /*POINT_H_*/
+
+
+// POINT.CPP
+#include <iostream>
+#include "point.h"
+
+Point::Point(float a, float b){
+   x = a;
+   y = b;
+}
+
+void Point::setPoint(float a, float b){
+   x = a;
+   y = b;
+}
+
+ostream &operator<<(ostream &output, const Point &p){
+   output << '[' << p.x << ", " << p.y << ']';
+
+   return output;   
+}
+
+
+// CIRCLE.H
+// clase Circle
+#ifndef CIRCLE_H
+#define CIRCLE_H
+
+#include <iostream>
+#include <iomanip>
+#include "point.h"
+
+class Circle : public Point {  // Circle hereda de Point
+   	friend ostream &operator<<(ostream &, const Circle &);
+	public:
+   	Circle(float r = 0.0, float x = 0, float y = 0);
+
+   	void setRadius(float);      
+   	float getRadius() const;    
+   	float area() const;         
+	protected:
+   	float radius;
+};
+#endif /*CIRCLE_H_*/
+
+
+// CIRCLE.CPP
+#include "circle.h"
+
+Circle::Circle(float r, float a, float b)
+   : Point(a, b)   // llama al constructor de la clase base
+{ radius = r; }
+
+void Circle::setRadius(float r) { radius = r; }
+
+float Circle::getRadius() const { return radius; }
+
+float Circle::area() const
+{ return 3.14159 * radius * radius; }
+
+// salida en el formato:
+// Center = [x, y]; Radius = #.##
+ostream &operator<<(ostream &output, const Circle &c){
+   output << "Center = [" << c.x << ", " << c.y
+          << "]; Radius = " << setprecision(2) << c.radius;
+
+   return output;
+}
+
+//Prueba.cpp 
+// Probando apuntadores a clase base a apuntadores a clase derivada
+#include <iostream>
+#include <iomanip.h>
+#include "point.h"
+#include "circle.h"
+
+int main(){
+	Point *pointPtr, p(3.5, 5.3);
+	Circle *circlePtr, c(2.7, 1.2, 8.9);
+ 
+	cout << "Point p: " << p << "\nCircle c: " << c << endl;
+
+	// Maneja a un Circle como un Circle
+	pointPtr = &c;   // asigna la direccion de Circle a pointPtr
+	circlePtr = (Circle *) pointPtr;  // mascara de base a derivada
+	cout << "\nArea de c (via circlePtr): "
+	<< circlePtr->area() << endl;
+
+	// Es riesgoso manejar un Point como un Circle
+	// getRadius() regresa basura
+	pointPtr = &p;   // asigna direccion de Point a pointPtr
+	circlePtr = (Circle *) pointPtr;  // mascara de base a derivada
+	cout << "\nRadio de objeto apuntado por circlePtr: "
+	<< circlePtr->getRadius() << endl;
+
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de objetos de clase derivada como clase base en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+\ifadvanced
+
+\subsubsection{El operador $dynamic\_cast$}
+  
+El operador \textit{dynamic\_cast} es una forma de realizar una conversión de punteros o referencias de una clase base a una clase derivada en tiempo de ejecución. Este operador se utiliza para comprobar si un objeto de una clase base es realmente un objeto de una clase derivada específica
+\footnote{La contraparte es el operador \textit{static\_cast} es otra forma de realizar una conversión de apuntadores o referencias en C++. A diferencia del \textit{dynamic\_cas}t, el \textit{static\_cast} realiza la conversión de forma estática en tiempo de compilación, es decir, no verifica si la conversión es válida.}.
+
+La sintaxis para utilizar el operador \textit{dynamic\_cast} es:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| dynamic_cast<tipo_derivado>(puntero_o_referencia_base)
+  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Supongamos que tenemos una clase base \textit{Empleado} y dos clases derivadas \textit{EmpleadoPorHora} y \textit{EmpleadoFijo}.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+
+using namespace std;
+
+class Empleado {
+public:
+    virtual double salario() = 0;
+};
+
+class EmpleadoPorHora : public Empleado {
+    private:
+        double horasTrabajadas;
+        double tarifaPorHora;
+    public:
+        // constructor con inicialización directa de miembros previa a
+        // la ejecución del constructor
+        EmpleadoPorHora(double horasTrabajadas, double tarifaPorHora) 
+          : horasTrabajadas(horasTrabajadas), tarifaPorHora(tarifaPorHora) {}
+        double salario() {
+            return horasTrabajadas * tarifaPorHora;
+        }
+};
+
+class EmpleadoFijo : public Empleado {
+    private:
+        double salarioMensual;
+    public:
+        EmpleadoFijo(double salarioMensual) : salarioMensual(salarioMensual) {}
+        double salario() {
+            return salarioMensual;
+        }
+};
+
+
+int main() {
+    Empleado* empleados[2];
+    empleados[0] = new EmpleadoPorHora(40, 15);
+    empleados[1] = new EmpleadoFijo(2000);
+    for (int i = 0; i < 2; i++) {
+        EmpleadoPorHora* empleadoPH = dynamic_cast<EmpleadoPorHora*>(empleados[i]);
+        if (empleadoPH) {
+            cout << "Empleado por Hora: "<< empleadoPH->salario()<< endl;
+        }
+        EmpleadoFijo* empleadoF = dynamic_cast<EmpleadoFijo*>(empleados[i]);
+        if (empleadoF) {
+            cout << "Empleado Fijo: "<< empleadoF->salario()<< endl;
+        }
+    }
+    return 0;
+}
+
+\end{minted}
+\caption{Ejemplo usando \textit{dynamic\_cast}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el ejemplo anterior se crea un arreglo de apuntadores a \textit{Empleado} y se asignan las instancias de las clases derivadas \textit{EmpleadoPorHora} y \textit{EmpleadoFijo}. Luego, en el ciclo \textit{for} se recorre el arreglo y se utiliza el operador \textit{dynamic\_cast} para verificar si el puntero es una instancia de \textit{EmpleadoPorHora} o \textit{EmpleadoFijo}, y de esta manera acceder a sus métodos específicos. El \textit{dynamic\_cast} retorna un apuntador al tipo especificado si la conversión es válida, o nulo si no es así.
+
+\fi
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+
+\subsection{Redefinición de métodos en C++}
+
+	Algunas veces, los métodos heredados no cumplen completamente la función que quisiéramos que realicen en las clases derivadas. Es posible en C++  \textbf{redefinir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue redefinida. 
+
+Es posible sin embargo, utilizar el método original de la clase base por medio del operador de resolución de alcance.
+
+	Se sugiere redefinir métodos que no vayan a ser empleados en la clase derivada, inclusive sin código para inhibir cualquier acción que no nos interese\footnote{n teoría esto no debería ser necesario anular operaciones si nos apegamos a la regla del 100\% (\textbf{de conformidad con la definición})}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+La redefinición de métodos \textbf{no} es una sobrecarga porque se definen exactamente con la misma firma.  
+\\ \hline
+\end{tabular}
+\end{center}
+	
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// EMPLOY.H
+#ifndef EMPLOY_H
+#define EMPLOY_H
+
+using namespace std; 
+
+class Employee {
+	public:
+   	Employee(const char*, const char*);  
+   	void print() const;  
+   	~Employee();         
+	private:
+   	char *firstName;     
+   	char *lastName;      
+};
+#endif /*EMPLOY_H_*/
+
+// EMPLOY.CPP
+#include <string.h>
+#include <iostream>
+#include <assert.h>
+#include "employ.h"
+
+Employee::Employee(const char *first, const char *last){
+   firstName = new char[ strlen(first) + 1 ];
+   assert(firstName != 0);     strcpy(firstName, first);
+
+   lastName = new char[ strlen(last) + 1 ];
+   assert(lastName != 0); 
+   strcpy(lastName, last);
+}
+
+void Employee::print() const
+{ cout << firstName << ' ' << lastName; }
+
+Employee::~Employee(){
+   delete [] firstName;   
+   delete [] lastName;    
+}
+
+// HOURLY.H
+#ifndef HOURLY_H
+#define HOURLY_H
+
+#include "employ.h"
+
+class HourlyWorker : public Employee {
+	public:
+   	HourlyWorker(const char*, const char*, float, float);
+   	float getPay() const;  
+ 	void print() const;    
+	private:
+   	float wage;            
+   	float hours;           
+};
+
+#endif /*HOURLY_H_*/
+
+// HOURLY_B.CPP
+#include <iostream>
+#include <iomanip.h>
+#include "hourly.h"
+
+HourlyWorker::HourlyWorker(const char *first, const char *last, float initHours, 
+ float initWage) : Employee(first, last) {
+   hours = initHours;
+   wage = initWage;
+}
+
+float HourlyWorker::getPay() const { return wage * hours; }
+
+void HourlyWorker::print() const {
+   cout << "HourlyWorker::print()\n\n";
+
+   Employee::print();   // llama a función de clase base
+
+   cout << " es un trabajador por hora con sueldo de"
+        << " $" << setprecision(2) << getPay() << endl;
+}
+
+// main.CPP
+#include <iostream>
+#include "hourly.h"
+
+int main(){
+   HourlyWorker h("Bob", "Smith", 40.0, 7.50);
+   h.print();
+   return 0;
+}
+\end{minted}
+\caption{Ejemplo de refefinición de métodos en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+	
+
+\subsection{Herencia múltiple en C++}
+
+	Es posible que una clase requiere recibir miembros de más de una clase. Esto es posible haciendo uso de \textbf{herencia múltiple}. 
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+  Herencia múltiple es la capacidad de una clase derivada de heredar miembros de varias clases base.
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+class <nombre clase derivada> : <clase base 1> , <clase base 2>, 
+   ...<clase base n> {
+	...
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+class A{
+	public:
+	int i;
+	void a(){}
+};
+
+class B{
+	public:
+	int j;
+	void b(){}
+};
+
+class C{
+	public:
+	int k;
+	void c(){}
+};
+
+class D: public A, public B, public C {
+	public:
+	int l;
+	void d(){}
+};
+ 
+int main() {
+	D var1;
+	
+	var1.a();
+	var1.b();
+	var1.c();
+	var1.d();
+	return 0;
+}
+
+\end{minted}
+\caption{Ejemplo de herencia múltiple con C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%<INSERTAR FIGURA 13>
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// BASE1.H
+#ifndef BASE1_H
+#define BASE1_H
+
+class Base1 {
+	public:
+   	Base1(int x) { value = x; }
+   	int getData() const { return value; }
+	protected:         
+	int value;   
+};
+
+#endif /*BASE1_H_*/
+
+// BASE2.H
+#ifndef BASE2_H
+#define BASE2_H
+
+class Base2 {
+	public:
+   	Base2(char c) { letter = c; }
+   	char getData() const { return letter; }
+	protected:        
+   	char letter;   
+};
+
+#endif /*BASE2_H_*/
+
+// DERIVED.H
+#ifndef DERIVED_H
+#define DERIVED_H
+
+// herencia múltiple
+class Derived : public Base1, public Base2 {
+   	friend ostream &operator<<(ostream &, const Derived &);
+	public:
+   	Derived(int, char, float);
+   	float getReal() const;
+	private:
+   	float real;   
+};
+
+#endif /*DERIVED_H_*/
+
+// DERIVED.CPP
+#include <iostream>
+#include "base1.h"
+#include "base2.h"
+#include "derived.h"
+
+Derived::Derived(int i, char c, float f): Base1(i), Base2(c) { 
+	real = f; 
+}
+
+float Derived::getReal() const { 
+	return real; 
+}
+
+ostream &operator<<(ostream &output, const Derived &d) {
+   output << "     Entero: " << d.value
+          << "\n   Caracter: " << d.letter
+          << "\nNúmero real: " << d.real;
+
+   return output;   
+}
+
+// main.CPP
+#include <iostream>
+#include "base1.h"
+#include "base2.h"
+#include "derived.h"
+
+int main(){
+	Base1 b1(10), *base1Ptr;   	
+	Base2 b2('Z'), *base2Ptr;  	
+	Derived d(7, 'A', 3.5);
+   	
+   	cout << "Objeto b1 contiene entero "
+		<< b1.getData()
+		<< "\nObjeto b2 contiene caracter "
+		<< b2.getData()
+		<< "\nObjeto d contiene:\n" << d;
+	cout << "\n\nmiembros de clase derivada pueden ser"
+		<< " accesados individualmente:"
+		<< "\n  Entero: " << d.Base1::getData()
+		<< "\n  Caracter: " << d.Base2::getData()
+		<< "\n  Número real: " << d.getReal() << "\n\n";
+	// Probar:  cout<<d.getData();  Es un error?
+   	cout << "Miembros derivados pueden ser tratados como "
+		<< "objetos de su clase base:\n";
+
+   	base1Ptr = &d;
+   	cout << "base1Ptr->getData() "
+		<< base1Ptr->getData();
+
+   	base2Ptr = &d;
+   	cout << "\nbase2Ptr->getData() "
+	<< base2Ptr->getData() << endl;
+   	return 0;
+}
+\end{minted}
+\caption{Otro ejemplo de herencia múltiple en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Aquí  se tiene un problema de \textbf{ambigüedad} al heredar dos métodos con el mismo nombre de clases diferentes. Se resuelve poniendo antes del nombre del miembro el nombre de la clase:   $objeto.<clase::>miembro$. El nombre del objeto es necesario, pues no se esta haciendo referencia a un miembro estático.
+
+\subsubsection{Ambigüedades}
+
+En el ejemplo anterior se vio un caso de ambigüedad al heredar de clases distintas un miembro con el mismo nombre. Normalmente se deben tratar de evitar esos casos, pues vuelven confusa nuestra jerarquía de herencia. 
+
+	Existen otro casos donde es posible que se de la ambigüedad. 
+	
+	
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo de ambigüedad en la herencia
+class B{
+public:
+	int b;
+};
+
+class D: public B, public B { //error
+};
+
+void f( D *p) {
+	p->b=0;  //ambiguo
+}
+
+int main(){
+	D obj;
+	f(&obj);
+	return 0; 
+}
+\end{minted}
+\caption{Ejemplo de ambigüedad en herencia múltiple con C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+	El código anterior tiene un error  en la definición de herencia múltiple, ya que no es posible heredar más de una vez una misma clase de manera directa.	 Sin embargo, si es posible heredar las características de una clase más de una vez indirectamente:
+
+%***INSERTAR FIGURA 14***
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo de ambigüedad en la herencia
+#include <iostream>
+using namespace std;
+
+class A{
+	public:
+	int next;
+};
+
+class B: public A{
+};
+
+class C: public A{
+};
+
+class D: public B, public C {
+	int g();
+};
+
+int D::g(){
+	//next=0;  Error: asignación ambigua
+	return B::next == C::next;
+}
+
+class E: public D{
+ 	public:
+	int x;
+	int getx(){
+		return x;
+	}
+};
+
+int main(){
+    D obj;
+	E obje;
+
+	obj.B::next=10;
+	obj.C::next=20;
+//  obj.A::next=11; 	Error: acceso ambiguo
+//	obj.next=22;		Error: acceso ambiguo
+	cout<<"next de B: "<<obj.B::next<<endl;
+	cout<<"next de C: "<<obj.C::next<<endl;
+
+	obje.x=0;
+	obje.B::next=11;
+	obje.C::next=22;
+	cout<<"obje next de B: "<<obje.B::next<<endl;
+	cout<<"obje next de C: "<<obje.C::next<<endl;
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de ambigüedad en herencia múltiple con C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Este programa hace que las instancias de la clase D tengan objetos de clase base duplicados y provoca los accesos ambiguos. Este problema se resuelve con\textbf{ herencia virtual}.
+	
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ \textbf{Herencia de clase base virtual}: Si se especifica a una clase base como virtual, solamente un objeto de la clase base existirá en la clase derivada. 
+\\ \hline
+\end{tabular}
+\end{center}	
+
+Para el ejemplo anterior, las clases B y C deben declarar a la clase A como clase base virtual:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+class B: virtual public A {...}
+
+class C: virtual public A {...}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+El acceso entonces a los miembros puede hacerse usando una de las clases de las cuales heredo el miembro:
+
+\begin{minted}{cpp}
+obj.B::next=10;
+obj.C::next=20;
+\end{minted}
+
+O simplemente accediéndolo como un miembro no ambiguo:ejercicio: probar los ejemplo y modificar la definición a clases base virtuales.
+
+\mint[linenos=false]{cpp}| obj.next=22; |
+
+	En cualquier caso se tiene solo una copia del miembro, por lo que cualquier modificación del atributo \textit{next} es sobre una única copia del mismo.
+	
+	
+\subsubsection{Constructores en herencia múltiple}
+
+Si hay constructores con argumentos, es posible que sea necesario llamarlos desde el constructor de la clase derivada. Para ejecutar los constructores de las clases base, pasando los argumentos, es necesario especificarlos después de la declaración de la función de construcción de la clase derivada, separados por coma. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+<Constructor clase derivada>(<argumentos>) : <base1> (<argumentos>), 
+   <base2> (<argumentos>), ... , <basen> (<argumentos>) {
+	...
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Donde como en la herencia simple, el nombre base corresponde al nombre de la clase, o en este caso, clases base.
+
+El orden de llamada a constructores de las clases base se puede alterar a conveniencia. Una \textbf{excepción} a considerar es cuando se resuelve ambigüedad de una clase base pues en ese caso el constructor de la clase base ambigua únicamente se ejecuta una vez. Si no es especificado por el programador, se ejecuta el constructor sin parámetros de la clase base ambigua. Si se requiere pasar parámetros, se debe especificar la llamada antes de las llamadas a constructores de clase base directas. Este es el único caso en que es posible llamar a un constructor de una clase que no es un ancestro directo\cite{timothy2008introduction}. 
+	
+	
+	
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Herencia: implementación en Java}
+
+La clase de la cual se toman sus características se conoce como \textbf{superclase}; mientras que la clase que ha sido creada a partir de la clase base se conoce como \textbf{subclase}. 
+
+La herencia en Java difiere ligeramente de la sintaxis de implementación de herencia en C++.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+class <subclase> extends  <superclase> {
+	//cuerpo subclase
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+
+\textit{Una clase vehículo que describe a todos aquellos objetos vehículos que viajan en carreteras. Puede describirse a partir del número de ruedas y de pasajeros.
+	De la definición de vehículos podemos definir objetos más específicos (especializados). Por ejemplo la clase camión.}
+	
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo de herencia
+class Vehiculo{
+	private int ruedas;
+	private int pasajeros;
+	
+	public void setRuedas(int num){
+		ruedas=num;
+	}
+
+	public int getRuedas(){
+		return ruedas;
+	}
+
+	public void setPasajeros(int num){
+		pasajeros=num;
+	}
+
+	public int getPasajeros(){
+		return pasajeros;
+	}
+
+}
+
+//clase Camion con herencia  de Vehiculo
+public class Camion extends Vehiculo {
+	private int carga;
+
+	public void setCarga(int num){
+		carga=num;
+	}
+	
+	public int getCarga(){
+		return carga;
+	}
+
+	public void muestra(){
+		// uso de métodos heredados
+		System.out.println("Ruedas: " + getRuedas());
+		System.out.println("Pasajeros: " + getPasajeros());
+		// método de la clase Camion
+		System.out.println("Capacidad de carga: " + getCarga());
+	}
+
+	public static void main(String argvs[]){
+		Camion ford= new Camion();
+		ford.setRuedas(6);
+		ford.setPasajeros(3);
+		ford.setCarga(3200);
+		ford.muestra();
+	}
+
+}
+\end{minted}
+\caption{Ejemplo de herencia en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el programa anterior se puede apreciar claramente como una clase Vehículo hereda sus características a la subclase \textit{Camion}, pudiendo este último aprovechar recursos que no declara en su definición.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Tema sugerido} 
+\end{center} 
+\\ \hline
+   BlueJ en apéndice A. (\ref{bluej}) 
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Clase \textit{Object}}
+
+En Java toda clase que se define tiene herencia implícita de una clase llamada \textit{Object}. En caso de que la clase que crea el programador defina una herencia explícita a una clase, hereda las características de la clase \textit{Object} de manera indirecta\footnote{En este caso hay que considerar que las características de la clase \textit{Object} pudieron haber sido modificadas a través de la jerarquía de herencia.}.
+
+Ver clase \textit{Object} en: \url{https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html}
+
+\subsection{Control de acceso a miembros en Java}
+
+	Existen tres palabras reservadas para el control de acceso a los miembros de una clase: \textit{public}, \textit{private} y \textit{protected}. Estas sirven para proteger los miembros de la clase en diferentes formas. 
+
+El control de acceso, como ya se vio anteriormente, se aplica a los métodos, atributos, constantes y tipos anidados que son miembros de la clase.
+
+Resumen de tipos de acceso:
+
+\begin{itemize}
+\item \textit{private}. Un miembro privado únicamente puede ser utilizado por los métodos miembro de la clase donde fue declarado. Un miembro privado no es posible que sea manejado ni siquiera en sus subclases.
+\item \textit{protected}. Un miembro protegido puede ser utilizado únicamente por los métodos miembro de la clase donde fue declarado, por los métodos miembro de las clases derivadas o clases que pertenecen al mismo paquete. El acceso protegido es como un nivel intermedio entre el acceso privado y público.
+\item \textit{public}. Un miembro público puede ser utilizado por cualquier método. Este es visible en cualquier lugar que la clase sea visible
+\end{itemize}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo de control de acceso
+
+class Acceso{
+	protected int b;
+	protected int f2() {
+		return b;
+	}
+
+	private int c;
+	private int f3() {
+		return c;
+	}
+
+	public int d, f;
+	public int f4(){ 
+		return  d;
+	}
+
+}
+
+public class EjemploAcceso {
+	
+	public static void main(String argvs[]){
+		Acceso obj= new Acceso();
+
+		obj.f2(); //es válido, ya que por omisión 
+		obj.b=2; //las dos clases están en el mismo paquete
+
+		obj.c=3; //error es un atributo privado
+		obj.f3(); //error es un método privado
+
+		obj.d=5;
+		obj.f4();
+	}
+}
+
+\end{minted}
+\caption{Ejemplo de control de acceso en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+El ejemplo anterior genera errores de compilación al tratar de acceder desde otra clase a miembros privados. Sin embargo, los miembros protegidos si pueden ser accedidos porque están considerados implícitamente dentro del mismo paquete.
+	
+\subsection{Control de acceso de clase public en Java}
+
+Este controlador de acceso \textit{public}, opera a nivel de la clase para que esta se vuelva visible y accesible desde cualquier lugar, lo que permitiría a cualquier otra clase hacer uso de los miembros de la clase pública.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+public class TodosMeVen {
+// definición de la clase
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+La omisión de este calificador limita el acceso a la clase para que solo sea utilizada por clases pertenecientes al mismo paquete. 
+
+Además, se ha mencionado que en un archivo fuente únicamente puede existir una clase pública, la cual debe coincidir con el nombre del archivo. La intención es que cada clase que tenga un objetivo importante debería ir en un archivo independiente, pudiendo contener otras clases no públicas que le ayuden a llevar a cabo su tarea.
+
+\subsection{Constructores de superclase}
+
+Los constructores no se heredan a las subclases. El constructor de la superclase puede ser llamado desde la clase derivada, para inicializar los atributos heredados y no tener que volver a introducir código de inicialización ya escrito en la superclase. 
+
+La llamada explícita al constructor de la superclase se realiza mediante la referencia \textbf{super} seguida de los argumentos –si los hubiera- del constructor de la clase base. La llamada a este constructor debe ser hecha en la primera línea del constructor de la subclase. Si no se introduce así, el constructor de la clase derivadada llamará automáticamente al constructor por omisión (sin parámetros) de la superclase.
+
+En el ejemplo siguiente podrá apreciarse esta llamada al constructor de la superclase.
+\subsection{Manejo de objetos de subclase como objetos de superclase en Java}
+
+Un objeto de una clase derivada, puede ser manejado como un objeto de su superclase. Sin embargo, un objeto de la clase base no es posible tratarlo como un objeto de clase derivada.
+
+Un objeto de una subclase puede ser asignado a una variable de referencia de su superclase sin necesidad de indicar una conversión explícita mediante enmascaramiento. Cuando si se necesita utilizar enmascaramiento es para asignar de vuelta un objeto que aunque sea de una clase derivada, este referenciado por una variable de clase base. Esta conversión explícita es verificada por la máquina virtual, y si no corresponde el tipo real del objeto, no se podrá hacer la asignación y se generará una excepción en tiempo de ejecución.
+
+Ejemplo:
+
+\begin{minted}{java}
+Superclase s= new superclase(), aptSuper;
+Subclase sub= new subclase(), aptSub;
+
+//válido
+aptSuper = sub;
+
+aptSub = (Subclase) aptSuper;
+
+//inválido
+aptSub= (Subclase) s;
+\end{minted}
+
+Podemos ver en el ejemplo anterior, que un objeto puede “navegar” en la jerarquía de clases hacia sus superclases, pero no puede ir a una de sus subclases, ni utilizando el enmascaramiento. Esto se hace por seguridad, ya que la subclase seguramente contendrá un mayor número de elementos que una instancia de superclase y estos no podrían ser utilizados porque causarían una inconsistencia.
+
+Por último, es importante señalar que mientras un objeto de clase derivada este referenciado como un objeto de superclase, deberá ser tratado como si el objeto fuera únicamente de la superclase; por lo que no podrá en ese momento tener referencias a atributos o métodos definidos en la clase derivada.
+
+Un código completo se muestra a continuación. \ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// definición de clase point
+public class Point {
+   protected double x, y; // coordenadas del punto
+
+   // constructor
+   public Point( double a, double b ) { 
+	   setPoint( a, b ); 
+   }
+
+   // asigna a x,y las coordenadas del punto
+   public void setPoint( double a, double b ) {
+      x = a;
+      y = b;
+   }
+
+   // obtiene coordenada x
+   public double getX() { 
+	   return x; 
+   }  
+
+   // obtiene coordenada y
+   public double getY() { 
+		return y; 
+	}
+
+   // convierte información a cadena
+	public String toString(){ 
+		return "[" + x + ", " + y + "]"; 
+	}
+}
+// Definición de clase círculo
+public class Circle extends Point {  // Hereda de Point
+   protected double radius;
+
+   // constructor sin argumentos
+   public Circle()   {
+      super( 0, 0 );  // llamada a constructor de clase base
+      setRadius( 0 );  
+   }
+
+   // Constructor
+   public Circle( double r, double a, double b )   {
+      super( a, b );  // llamada a constructor de clase base
+      setRadius( r );  
+   }
+
+   // Asigna radio del círculo
+   public void setRadius( double r ) 
+      { radius = ( r >= 0.0 ? r : 0.0 ); }
+
+   // Obtiene radio del círculo
+   public double getRadius() { return radius; }
+
+   // Cálculo área del círculo
+   public double area() { return 3.14159 * radius * radius; }
+
+   // Convierte información en cadena
+   public String toString() {
+      return "Centro = " + "[" + x + ", " + y + "]" +
+             "; Radio = " + radius;
+   }
+}
+// Clase de Prueba de las clases Point y Circle
+public class Prueba {
+
+   public static void main( String argvs[] )  {
+      Point pointRef, p; 
+      Circle circleRef, c;
+
+      p = new Point( 3.5, 5.3 );
+      c = new Circle( 2.7, 1.2, 8.9 );
+
+      System.out.println( "Punto p: " + p.toString() );
+      System.out.println( "Circulo c: " + c.toString());
+   
+      // Tratamiento del círculo como instancia de punto
+      pointRef = c;   // asigna círculo c a pointRef
+      // en realidad Java lo reconoce dinámicamente como objeto Circle
+      System.out.println( "Circulo c (via pointRef): " + pointRef.toString());
+   
+      // Manejar a un círculo como círculo 
+      // (obteniéndolo de una referencia de punto)
+      // asigna círculo c a pointref. Se repite la operación por claridad
+      pointRef = c;   
+      circleRef = (Circle) pointRef;  // enmascaramiento de superclase a subclase
+      System.out.println( "Circulo c (via circleRef): " + circleRef.toString());
+      System.out.println( "Area de c (via circleRef): " + circleRef.area());
+
+      // intento de referenciar a un objeto point
+      // desde una referencia de Circle (genera una excepcion)
+      circleRef = (Circle) p;
+   }
+}
+\end{minted}
+\caption{Ejemplo de objetos de sub clase como de superclase en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\subsection{Sobreescritura de métodos (Overriding)}
+
+Frecuentemente, los métodos heredados no implementan el comportamiento específico requerido por la subclase. Java permite \textbf{sobreescribir} (o redefinir) un método de la clase base en la clase derivada. Al invocar el método desde una instancia de la subclase, se ejecutará la nueva versión.
+
+Es una buena práctica utilizar la anotación \texttt{@Override} para asegurar que el compilador verifique la firma del método. Sin embargo, aún es posible acceder a la lógica original de la clase base utilizando la referencia \texttt{super}.
+
+\ejemplo
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+    framesep=2mm,
+    baselinestretch=1.1,
+    bgcolor=lightgray,
+    fontsize=\footnotesize,
+    linenos] % linenos añade números de línea, muy útil para docencia
+    {java}
+// Clase base: Empleado
+public class Empleado {
+    // Se recomienda usar protected si se planea acceso directo en herencia,
+    // o mantener private y usar getters.
+    protected String nombre;
+    protected String apellido;
+
+    public Empleado(String nombre, String apellido){
+        // Asignación directa, no es necesario new String()
+        this.nombre = nombre;
+        this.apellido = apellido;
+    }
+
+    public void imprimirDatos() { 
+        System.out.println("Empleado: " + nombre + " " + apellido);
+    }
+}
+
+// Clase derivada: TrabajadorPorHora
+public class TrabajadorPorHora extends Empleado {
+    private double sueldoHora; // double tiene mayor precisión que float
+    private double horas;            
+    
+    public TrabajadorPorHora(String nombre, String apellido, 
+                             double horas, double sueldoHora) {
+        super(nombre, apellido); // Llama al constructor de la clase base
+        this.horas = horas;
+        this.sueldoHora = sueldoHora;
+    }
+
+    public double calcularPago() { 
+        return sueldoHora * horas; 
+    }
+
+    @Override // Buena práctica: asegura que estamos sobreescribiendo
+    public void imprimirDatos() {
+        System.out.println("--- Detalle Trabajador por Hora ---");
+        
+        // Reutilizamos la lógica de la clase padre
+        super.imprimirDatos();   
+
+        System.out.println("Sueldo calculado: $" + calcularPago());
+    }
+}
+
+// Clase de prueba
+public class TestEmpleados {
+
+    public static void main(String[] args) {
+        Empleado e = new Empleado("Juan", "García");
+        TrabajadorPorHora h = new TrabajadorPorHora("Ana", "Pérez", 40.0, 15.50);
+
+        e.imprimirDatos(); // Ejecuta versión de Empleado
+        h.imprimirDatos(); // Ejecuta versión sobreescrita de TrabajadorPorHora
+    }
+} 
+\end{minted}
+\caption{Ejemplo de sobreescritura de métodos y uso de \texttt{super}.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Calificador \textit{final}}
+
+Es posible que tengamos la necesidad de que cierta parte de una clase  no pueda ser modificada en futuras extensiones de la jerarquía de herencia. Para esto es posible utilizar el calificador \textit{final}.
+
+Si un método se especifica en una clase X como \textit{final}:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| <acceso> final <tipo> nombreMétodo( <parámetros>)  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Se esta diciendo que el método no podrá ser redefinido en las subclases de X.
+	
+Aunque se omita este calificador, si se trata de un método de clase (estático) o privado, se considera final y no podrá ser redefinido.
+
+Por otro lado, es posible que no queramos dejar la posibilidad de extender una clase, para lo que se utiliza el calificador \textit{final} a nivel de clase:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+<acceso> final class nombreClase {
+
+	//definición de la clase
+
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+De esta forma, la clase no permite generar subclases a partir de ella.  De hecho, el API de Java incluye muchas clases \textit{final}, por ejemplo la clase java.lang.String no puede ser especializada.
+
+\subsection{Interfaces en Java}
+
+Java únicamente cuenta con manejo de herencia simple, y la razón que se ofrece es que la herencia múltiple presenta algunos problemas de ambigüedad que complica el entendimiento del programa, sin que este tipo de herencia justifique las ventajas obtenidas de su uso.
+
+	Sin embargo, es posible que se necesiten recibir características de más de un origen. Java soluciona esto mediante el uso de interfaces, que son una forma para declarar tipos especiales de clase que, aunque con ciertas limitaciones, no ofrecen las complicaciones de la herencia múltiple.
+
+	Una interfaz tiene un formato muy similar a una clase, sus principales características:
+
+    
+\begin{itemize}
+\item Una interfaz proporciona los nombres de los métodos (método abstracto), pero no sus implementaciones\footnote{En esta caso si se considera la declaración de prototipos.}.
+\item Los métodos son públicos por omisión.
+\item     Una clase puede implementar varias interfaces, aunque solo pueda heredar una clase.
+\item     No es posible crear instancias de una interfaz.
+\item     La clase que implementa la interfaz debe escribir el código de todos los métodos, de otra forma no se podrá generar instancias de esa clase.
+
+\end{itemize}
+
+El formato general para la declaración de una interfaz es el siguiente:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+[public] interface <nombreInterfaz> {
+	//descripción de miembros
+	//los métodos no incluyen código:
+	<acceso> <tipo> <nombreMetodo> ( <parámetros> ) ;
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+El cuerpo de la interfaz generalmente es una lista de prototipos de métodos, pero puede contener atributos si se requiere\footnote{El parámetro debe incluir el nombre, el cual no es obligatorio que coincida en la implementación.}.
+
+Una clase implementa una interfaz a través de la palabra reservada \textit{implements} después de la especificación de la herencia (si la hubiera) :
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+class <SubClase> extends <Superclase> implements   <nombreInterfaz> {
+	//definición de la clase
+	//debe incluirse la definición de los métodos de la interfaz
+	//con la implementación del código de dichos métodos.
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Además, una interfaz puede ser extendida de la misma forma que una clase, aprovechando las interfaces previamente definidas, mediante el uso de la cláusula \textit{extends}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+[public] interface <nombreInterfaz> extends <InterfazBase> {
+
+	//descripción de miembros
+
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+De forma distinta a la jerarquía de clases, donde se tiene una jerarquía lineal que parte siempre de una clase simple \textit{Object}, una clase soporta herencia múltiple de interfaces, resultando en una jerarquía con múltiples raíces de diferentes interfaces.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//interfaz
+interface IStack {                                               
+    void push(Object item);
+    Object pop();
+}
+
+//clase implementa la interfaz
+class StackImpl implements IStack {                               
+    protected Object[] stackArray;
+    protected int tos;
+
+    public StackImpl(int capacity) {
+        stackArray = new Object[capacity];
+        tos = -1;
+    }
+
+	//implementa el método definido en la interfaz
+    public void push(Object item)                                 
+        { stackArray[++tos] = item; }
+
+	//implementa el método definido en la interfaz
+    public Object pop() {                                         
+        Object objRef = stackArray[tos];
+        stackArray[tos] = null;
+        tos--;
+        return objRef;
+    }
+
+    public Object peek() { return stackArray[tos];}
+}
+
+// extendiendo una interfaz
+interface ISafeStack extends IStack {                             
+    boolean isEmpty();
+    boolean isFull();
+}
+
+
+//esta clase hereda la implementación de la pila StackImpl
+// e implementa la nueva interfaz extendida ISafeStack
+class SafeStackImpl extends StackImpl implements ISafeStack {     
+
+    public SafeStackImpl(int capacity) { super(capacity); }
+    
+    //implementa los métodos de la interfaz
+    public boolean isEmpty() { return tos < 0; }                  
+    public boolean isFull() { return tos >= stackArray.length;
+ 	}  
+}
+
+public class StackUser {
+
+    public static void main(String args[]) {                      
+        SafeStackImpl safeStackRef = new SafeStackImpl(10);
+        StackImpl stackRef = safeStackRef;
+        ISafeStack isafeStackRef = safeStackRef;
+        IStack istackRef = safeStackRef;
+        Object objRef = safeStackRef;
+
+        safeStackRef.push("Dolar");                             
+        stackRef.push("Peso");
+
+		// tipo de dato simple es convertido a Integer:
+        stackRef.push(1);
+        System.out.println(stackRef.peek().getClass());
+
+        System.out.println(isafeStackRef.pop());
+        System.out.println(istackRef.pop());
+        
+        System.out.println(objRef.getClass());
+    }
+}
+\end{minted}
+\caption{Ejemplo de interfaz en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%<INSERTAR FIGURA ISTACK>
+
+Por otro lado, una interfaz también puede ser utilizada para definir nuevos tipos. Una interfaz así o una clase que implementa a una interfaz de este estilo es conocida como \textbf{Supertipo}.
+
+Es importante resaltar tres diferencias en las relaciones de herencia y como esta funciona entre clases e interfaces:
+ 
+\begin{enumerate}
+\item  \textbf{Implementación lineal de jerarquía de herencia entre clases}: una clase extiende a otra clase.
+\item  \textbf{Jerarquía de herencia múltiple entre interfaces}: una interfaz extiende otras interfaces.
+\item  \textbf{Jerarquía de herencia múltiple entre interfaces y clases}: una clase implementa interfaces.
+\end{enumerate}
+\subsubsection{Interfaces en Java con implementación predeterminada de métodos}
+
+A partir de Java 8 permite el uso de métodos implementados en interfaces. Estos pueden ser métodos estáticos o un tipo especial de método llamado \textit{Default}\footnote{\url{https://www.techempower.com/blog/2013/03/26/everything-about-java-8/}, \url{https://stackoverflow.com/questions/18286235/what-is-the-default-implementation-of-method-defined-in-an-interface}}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+[public] interface <nombreInterfaz> {
+	//implementación predeterminada de método
+	<acceso> default <tipo> <nombreMetodo> ( <parámetros> ) {
+            //código del método
+    }
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ahora, las clases que implementan la interfaz no tienen que proporcionar su propia implementación del método o métodos. Si no lo hacen, se utilizará la implementación predeterminada.
+
+\subsubsection{Ambigüedad con implementación de métodos en interfaces}
+Si una clase hereda de una interfaz que tiene un método por defecto y también hereda de una clase base que tiene un método con la misma firma, se utilizará la implementación de la clase base, y no se generará una ambigüedad.
+
+Pero si de dos interfaces distintas se hereda un método implementado con la misma firma, si existe ambigüedad. Para evitarla, la clase que implementa a las interfaces tiene queproporcionar su propia implementación del método:
+
+Ejemplo:
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+interface InterfazA {
+    default void metodo() {
+        System.out.println("InterfazA");
+    }
+}
+
+interface InterfazB {
+    default void metodo() {
+        System.out.println("InterfazB");
+    }
+}
+
+// Ambigüedad si descomentas esta línea:
+// class MiClase implements InterfazA, InterfazB {}
+
+class MiClase implements InterfazA, InterfazB {
+    // Si proporcionas tu propia implementación, no hay ambigüedad
+    @Override
+    public void metodo() {
+        System.out.println("Implementación en MiClase");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MiClase instancia = new MiClase();
+        instancia.metodo(); // Imprime "Implementación en MiClase"
+    }
+}
+
+\end{minted}
+\caption{Ejemplo de interfaz con potencial ambigüedad en métodos predefinidos en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsubsection{Y ¿atributos en las interfaces?}
+Hasta Java 7, las interfaces solo podían contener constantes (variables estáticas finales) como atributos. Estos atributos se consideraban \textbf{automáticamente} como \textit{public}, \textit{static}, y \textit{final}. Un ejemplo sería:
+%multiple lines
+\begin{minted}{java}
+public interface MiInterfaz {
+    int MI_CONSTANTE = 42; // Atributo (public, static, final)
+}
+\end{minted}
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+En resumen, en Java, una interfaz puede contener lo siguiente:
+
+    \begin{enumerate}
+        \item \textbf{Variables Constante}s: Por defecto son públicas, estáticas y finales.
+        \item \textbf{Métodos Abstractos}: Estos métodos son por defecto abstractos y públicos.
+        \item \textbf{Métodos Predeterminados}: A partir de Java 8. Estos son métodos no abstractos y proporcionan una implementación predeterminada.
+        \item \textbf{Métodos Estáticos}: A partir de Java 8, Estos son métodos que pertenecen a la interfaz en lugar de a las instancias de la interfaz.
+        \item \textbf{Métodos Privados}: Introducidos en Java 9, estos métodos sólo pueden ser utilizados dentro de la interfaz y otros métodos de interfaz.
+        \item \textbf{Métodos Estáticos Privados}: Estos son métodos estáticos que son privados para la interfaz.
+    \end{enumerate}
+
+Tener en cuenta que las interfaces en Java no tienen estado, y cualquier variable que crees son realmente constantes. Además, una interfaz no puede contener un constructor ya que no puede ser utilizada para crear objetos. Si se requiere que una clase tenga un cierto atributo, se necesita usar una clase abstracta. La idea de usar atributos en una interfaz generalmente se considera una mala práctica en Java.
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Herencia: Implementación en Ruby}
+
+Ruby, al igual que Java, no cuenta con herencia múltiple, por lo que únicamente es posible indicar una clase como superclase. Para esto se utiliza el símbolo $<$ antes del nombre de la superclase. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+class <SubClase> < <SuperClase>
+  # codigo de la subclase
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Retomando el  ejemplo del la jerarquía de Vehículo y Camión, visto anteriormente. 
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+# ejemplo de herencia 
+class Vehiculo
+	@ruedas
+	@pasajeros
+	attr_accessor :ruedas, :pasajeros  
+end
+
+# clase Camion con herencia de Vehiculo
+class Camion < Vehiculo
+	@carga
+	attr_accessor :carga
+	
+	public
+	def muestra
+		# uso de métodos heredados y generados automáticamente 
+		# por attr_accessor
+
+		puts "Ruedas: #{ruedas}"
+		puts "Pasajeros: #{pasajeros}"
+		# método de la clase Camion
+		puts "Capacidad de carga: #{carga}"
+	end
+end
+
+# Código de prueba
+ford= Camion.new
+ford.ruedas =6
+ford.pasajeros=3
+ford.carga=3200
+ford.muestra
+\end{minted}
+\caption{Ejemplo de herencia en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Clase \textit{Class}}
+
+Las clases en Ruby son considerados objetos de primera clase\footnote{Pueden ser usados en el lenguaje de programación como cualquier otro objeto.}. Cada clase declarada en Ruby es una instancia de la clase \textit{Class} \cite{thomas2005programming}. 
+
+El proceso que se sigue es el siguiente: cuando una clase es definida, un objeto de la clase \textit{Class} es creado y asignado a una constante global con el nombre usado en la definición. Cuando un nuevo objeto de la clase es instanciado ($nombreClase.new$), el método \textit{new}  de \textit{Class} es ejecutado por omisión.\footnote{De hecho, el método \textit{new}  de la clase \textit{Class} puede ser redefinido, aunque no es una práctica recomendada.} 
+
+A continuación se presenta la información general de la clase Class \cite{thomas2005programming}:
+
+\begin{alltt}
+class methods
+inherited 		aClass.inherited( aSubClass )
+This is a singleton method (per class) invoked by Ruby when a subclass 
+of aClass is created. The new subclass is passed as a parameter.
+
+class Top
+  def Top.inherited(sub)
+	print "New subclass: ", sub, "\\n"
+  end
+end
+
+
+class Middle < Top
+end
+
+
+class Bottom < Middle
+end
+
+produces:
+
+New subclass: Middle
+New subclass: Bottom
+
+new 	Class.new( aSuperClass=Object ) -> aClass
+Creates a new anonymous (unnamed) class with the given superclass (or 
+Object if no parameter is given).
+
+instance methods
+new 	aClass.new( [ args ]* ) -> anObject
+Creates a new object of aClass's class, then invokes that object's 
+initialize method, passing it args.
+
+superclass 	aClass.superclass -> aSuperClass or nil
+Returns the superclass of aClass, or nil.
+
+Class.superclass 	» 	Module
+Object.superclass 	» 	nil
+\end{alltt}
+
+\subsection{Clase \textit{Object}}
+
+La clase padre de todas las clases en Ruby es la clase \textit{Object}, por lo que sus métodos están disponibles para todos los objetos a menos que estos se encuentren redefinidos.
+
+A continuación se presenta una lista de los métodos de \textit{Object}:
+
+
+\begin{alltt}
+==   ===   =~   __id__   __send__   class   clone   dclone   display
+dup   enum_for   eql?   equal?   extend   freeze   frozen?   hash   
+id   inspect   instance_eval   instance_of?   instance_variable_defined?   
+instance_variable_get   instance_variable_get   instance_variable_set   
+instance_variable_set   instance_variables   is_a?   kind_of?   method   
+methods   new   nil?   object_id   private_methods   protected_methods   
+public_methods   remove_instance_variable   respond_to?   send   
+singleton_method_added   singleton_method_removed   singleton_method_undefined   
+singleton_methods   taint   tainted?   to_a   to_enum   to_s   to_yaml   
+to_yaml_properties   to_yaml_style   type   untaint 
+\end{alltt}
+    
+\subsection{Control de acceso a miembros en Ruby}
+
+Como ya se ha mencionado, también en Ruby existen tres palabras reservadas para el control de acceso a los \textbf{métodos} de una clase: \textit{public}, \textit{private} y \textit{protected}. Estas sirven para proteger los métodos de la clase en diferentes formas. 
+
+Resumen de tipos de acceso:
+
+\begin{itemize}
+\item private. Un método \textbf{privado} no puede ser llamado mediante un objeto. Por esta razón, los métodos privados solo pueden ser utilizados en la definición de la clase.
+\item protected. Un método \textbf{protegido} puede ser utilizado únicamente por objetos de la clase donde se define el método, así como por sus subclases.
+\item public. Un método \textbf{público} puede ser utilizado por cualquier método. Éste es visible en cualquier lugar que la clase sea visible. Los métodos son públicos por omisión, con excepción del método initialize, el cual es privado. 
+\end{itemize}
+
+El comportamiento de acceso privado y protegido es diferente de los lenguajes C++ y Java. En Ruby, un método protegido puede ser llamado por cualquier instancia de la clase donde se define o de sus subclases. Por su parte, un método privado puede ser llamado solamente en el contexto un objeto de la clase. Los métodos privados no puede ser ejecutados directamente ni siquiera por otro objeto de la misma clase \cite{thomas2005programming}. El uso de \textit{self}  tampoco es válido para métodos privados.
+
+Ejemplo:
+
+\begin{minted}{ruby}
+class MiClase
+      def metodo1    # default es 'public'
+        #...
+      end
+
+  protected          # subsecuentes métodos serán 'protected'
+
+      def metodo2    #  'protected'
+        #...
+      end
+
+  private            # subsecuentes métodos serán 'private'
+
+      def metodo3    #  'private'
+        #...
+      end
+
+  public             # subsecuentes métodos serán 'public'
+
+      def metodo4    # 'public'
+        #...
+      end
+end
+\end{minted}
+
+o
+
+\begin{minted}{ruby}
+class MiClase
+  def metodo1
+  end
+	...
+  public    :metodo1, :metodo4
+  protected :metodo2
+  private   :metodo3
+end
+\end{minted}
+
+\subsection{Inicializadores de superclase}
+
+En Ruby, de manera similar a Java, es posible llamar al método inicializador de la superclase usando \textit{super} seguido de la lista de argumentos.
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class Persona
+
+  attr_accessor :nombre, :edad, :sexo
+
+  def initialize(nombre, edad, sexo)
+    @nombre, @edad, @sexo = nombre, edad, sexo
+  end
+
+end
+
+
+class Estudiante < Persona
+
+  attr_accessor :matr, :horas
+
+  def initialize(nombre, edad, sexo, matr, horas)
+    super(nombre, edad, sexo)
+    @matr = matr
+    @horas = horas
+  end
+
+  # ...
+
+end
+
+# Creando dos objetos
+a = Persona.new("Ironman", 37, "m")
+b = Estudiante.new("Spiderman", 36, "m", "000-13-5031", 24)
+
+\end{minted}
+\caption{Ejemplo de herencia e inicializador en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Manejo de objetos de la subclase como objetos de una superclase en Ruby}
+
+El manejo de objetos de subclase como objetos de superclase no es posible en Ruby, debido a que los identificadores no tienen un tipo de dato.
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+# definicion de clase point
+class Point 
+   attr_reader :x, :y
+   
+   protected
+   @x
+   @y # coordenadas del punto
+   # constructor
+   def initialize a, b  
+	   setPoint a, b  
+   end
+   # asigna a x,y las coordenadas del punto
+   public 
+   def setPoint a, b
+      @x = a
+      @y = b
+   end  
+   # convierte informacion a cadena
+	def to_s 
+		return "[ #{@x}, #{@y} ]"
+	end
+end
+
+# Definicion de clase circulo
+class Circle < Point # Hereda de Point
+   attr_reader :radius
+   @radius
+
+   # Constructor
+   def initialize r, a, b
+      super a, b  # llamada a constructor de clase base
+      setRadius r   
+   end
+
+   # Asigna radio del circulo
+   def setRadius r 
+      @radius = ( r >= 0 ? r : 0 ) 
+   end
+ 
+   # Calculo area del circulo
+   def area  
+   	  return 3.14159 * radius * radius
+   end
+
+   # Convierte informacion en cadena
+   def to_s 
+      return "Centro = [ #{@x},  #{@y} ]; Radio = #{@radius}"
+   end
+end
+
+# código de Prueba de las clases Point y Circle
+def prueba
+	  p = Point.new 3.5, 5.3 
+      c = Circle.new  2.7, 1.2, 8.9 
+      puts "Punto p: " + p.to_s
+      puts "Circulo c: " + c.to_s 
+      # Tratamiento del circulo como instancia de punto
+      pointRef = c;   # asignar circulo c a pointRef no hace diferencia porque 
+      # los identificadores no tienen tipo
+      # en realidad Ruby lo reconoce dinámicamente como objeto Circle sin importar 
+      # el identificador
+      puts "Circulo c (via pointRef): " + pointRef.to_s
+   
+      # asigna circulo c a pointref. Se repite la operacion por claridad
+      pointRef = c;   
+      circleRef = pointRef  # es asignación de referencias sin importar el tipo
+end
+
+prueba
+\end{minted}
+\caption{Ejemplo de objetos de sub clase como de superclase en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Redefinición de métodos}
+
+Ruby permite \textbf{redefinir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue redefinida. Es posible sin embargo, utilizar el método de la clase base por medio la palabra \textit{super}. A diferencia de Java, aquí solo es necesaria esta palabra (y si se necesita la lista de argumentos) para llamar al método correspondiente de la clase base desde la clase derivada.
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+#clase empleado
+class Empleado 
+	@firstName
+	@lastName      
+
+	def initialize first, last
+	   @firstName = String.new(first)
+	   @lastName = String.new(last)
+	end
+
+	def print 
+		puts @firstName.to_s + " " + @lastName.to_s
+	end
+end
+
+#clase TrabajadorporHora
+class TrabajadorPorHora < Empleado 
+	@wage
+	@hours
+	           
+	def initialize first, last, initHours, initWage
+		super first, last
+		@hours = initHours
+		@wage = initWage
+	end
+
+	def getPay 
+		@wage * @hours 
+	end
+
+	def print
+		puts "Metodo print de Trabajador por hora"
+		super   # llama a función de clase base
+        puts " es un trabajador por hora con sueldo de" +" $" + getPay.to_s
+	end
+end
+
+#prueba de clases
+e= Empleado.new "nombre", "apellido"
+
+h= TrabajadorPorHora.new "Juanito", "Perez", 40.0, 7.50
+e.print
+h.print();
+\end{minted}
+\caption{Ejemplo de refefinición de métodos en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\subsection{Mixins en Ruby}
+
+En lugar de interfaces, Ruby tiene \textit{mixins}, que es es la capacidad de un módulo de ser añadido a una clase o a otro módulo con la operación \textit{include} \cite{matsumoto2002ruby}. De hecho, un \textit{mixin} en Ruby puede verse como una interfaz pero con sus métodos implementados. Además, es posible heredar características de uno o más \textit{mixins} (módulos) obteniendo con esto un resultado similar al de la herencia múltiple. El concepto de \textit{mixin} apareció en el lenguaje \textit{Flavors}. El nombre fue inspirado en una máquina de helados que ofrecía en sabores básicos mezclados con ingredientes extras, estos helados eran llamados \textit{“Mix-In”}.\footnote{\textit{''For a real ice cream treat, try Steve's Ice Cream (191 Elm Street, Sommerville).  Steve's homemade ice cream is perhaps the best in town.  Cones are \$.35 and \$.55, and for \$.10 each you can choose ''mix-ins,''
+consisting of M\&M's, Heath bars, and many others.  If you want fruit mixed in it costs \$.10 more.  Sundaes are \$.75 and \$1.25, banana splits are \$1.75, and egg creams are \$.40.  The portions at Steve's are large, and so are the lines, so expect to do a little waiting.  It's worth it.''} \cite{silver1975} pág. 224}
+
+ Aunque también pueden ser añadidos a un objeto específico usando \textit{extend}.
+
+Es importante señalar que en la definición del módulo pueden incluirse atributos y restricciones de acceso, mismos que serán pasados a la clase que incluye dicho módulo. Una vez definido el módulo, éste puede ser añadido a una clase de la siguiente forma:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+class unaClase
+  include <nombre-módulo>
+   ...
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+#modulo
+module Stack                                                
+    def push(item) end
+    def pop; end
+end
+
+#clase incluye modulo
+class StackImpl 
+    include Stack                                
+    @stackArray
+    @tos
+	public
+	def initialize 
+        @stackArray = [] 
+        @tos = -1
+	end
+
+    #implementa el método definido en el módulo
+    def push item
+        @stackArray[@tos+=1] = item
+    end
+
+    #implementa el método definido en el módulo
+    def pop                                         
+        objRef = @stackArray[@tos]
+        @stackArray[@tos] = nil
+        @tos-=1
+        return objRef
+    end
+
+    def peek 
+        return @stackArray[@tos]
+    end
+end
+
+# extendiendo un módulo puede ser hecho en el mismo módulo
+# dinámicamente o en otro módulo. Pero en este caso las queremos separadas
+
+=begin
+module Stack                              
+    def isEmpty
+    end
+    def isFull
+    end
+end
+=end
+
+module SafeStack                              
+    def isEmpty
+	end
+    def isFull
+    end
+end
+
+# esta clase hereda la implementación de la pila StackImpl
+# e implementa la nueva interfaz extendida SafeStack
+class SafeStackImpl < StackImpl 
+    include SafeStack      
+
+    def initialize 
+        super 
+    end
+    
+    # implementa los métodos de la interfaz
+    def isEmpty 
+        return tos < 0
+    end                  
+    def isFull 
+        tos >= stackArray.length
+    end
+end 
+
+def stackUser 
+    safeStackRef = SafeStackImpl.new 
+    
+    safeStackRef.push("Dolar");                             
+    safeStackRef.push "Peso"
+    puts safeStackRef.pop
+    puts safeStackRef.pop
+      
+    puts safeStackRef.class
+end
+
+stackUser
+\end{minted}
+\caption{Ejemplo de mixins en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Aunque la instrucción \textit{include} nos puede recordar a la misma instrucción en C/C++, en realidad es diferente. $\#include$ en C/C++ es ejecutada por el preprocesador e indica que el archivo correspondiente debe ser insertado momentos previos a la compilación. 
+
+Además, en Ruby, no se copia el código, sino que se hace una referencia de la clase al módulo incluido. Múltiples clases pueden tener referencia al mismo módulo y si este módulo es modificado, inclusive mientras el programa esta ejecutándose, todas las clases se verán afectadas en su comportamiento \cite{thomas2005programming}. Mucha de la fuerza del uso de \textit{mixins} esta en la  funcionalidad que añade a las clases, pero en código bien diseñado este poder puede verse aún más si el código en el \textit{mixin} interactúa con el código de las clases.  
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Herencia: Implementación en Python}
+
+El manejo de herencia en Python se hace de la siguiente manera\footnote{\href{https://docs.python.org/3/tutorial/classes.html#inheritance}{Multiple Inheritance}}:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class <ClaseDerivada>(<ClaseBase>):
+    <instrucciones>
+    \end{minted}
+\\
+Si la clase se encuentra en otro módulo:
+\\
+   \begin{minted} [linenos=false]{python}
+class <ClaseDerivada>(<Módulo>.<ClaseBase>):
+    <instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Todas las clases en Python 3 derivan de la clase \textit{object}. Los métodos de la clase base pueden ser redefinidos. Un objeto ejecutando métodos puede ser que llame a métodos de la clase base o métodos redefinidos en la jerarquía de herencia, de manera similar a los métodos virtuales en C++.
+
+Si fuera necesario llamar a un método de clase base que se haya redefinido en una clase derivada puede hacerse.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{python}| <ClaseBase>.<método>(self, <argumentos>)  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Dos métodos útiles en herencia son $isinstance(<objeto>, <clase>)$, el cual devuelve verdadero si un objeto pertenece a una clase o subclase especificada (directa, indirecta o virtual); de forma similar, $issubclass(<clase>, <infoclase>)$ regresa verdadero si $<clase>$ es una subclase (directa, indirecta o virtual) de $<infoclase>$\footnote{Aquí, una clase es considerada subclase de si misma.}.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+	def __init__(self, nombre, apellido):
+		self.nombre = nombre
+		self.apellido = apellido
+
+	def nombreCompleto(self):
+		return self.nombre + " " + self.apellido
+
+class Empleado(Persona):
+
+	def __init__(self, nombre, apellido, staffnum):
+		Persona.__init__(self,nombre, apellido)
+		self.staffnum = staffnum
+
+	def getEmpleado(self):
+		return self.nombreCompleto() + ", " + self.staffnum
+
+# script de ejecución inicial
+x = Persona("Una", "Persona")
+y = Empleado("Un", "Empleado", "121212")
+
+print(x.nombreCompleto())
+print(y.getEmpleado())
+\end{minted}
+\caption{Ejemplo de herencia en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Inicializadores de superclase}
+
+En Python también es posible llamar al método inicializador de la superclase usando \textit{super} seguido de la lista de argumentos.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+class Persona:
+	def __init__(self, nombre, edad, sexo):
+		self.nombre = nombre
+		self.edad = edad
+		self.sexo = sexo
+
+	def __str__(self):
+		return self.nombre + " " + str(self.edad)+ " "+ self.sexo
+
+class Estudiante(Persona):
+	def __init__(self, nombre, edad, sexo, matr, horas):
+		# en Python 3 no se necesita pasar self al llamar
+		# a super() ni la sintaxis super(subclase, self)
+		# de Python 2
+		super().__init__(nombre, edad, sexo)
+		self.matricula = matr
+		self.horas = horas
+	def __str__(self):
+		return super().__str__() + " " + self.matricula + " " + str(self.horas)
+
+#creando dos objetos
+a = Persona("Ironman", 37, "m")
+b = Estudiante("Spiderman", 36, "m", "000-13-5031", 24)
+
+print(a)
+print(b)
+\end{minted}
+\caption{Ejemplo con inicializadores de superclase en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Herencia Múltiple (\textit{mixins}) en Python}
+
+Python soporta una forma limitada de herencia múltiple. Algunos autores se refieren a la implementación de Python de herencia múltiple como mixins\footnote{ \href{https://www.ianlewis.org/en/mixins-and-python}{Mixins and Python}}. La definición de una clase con herencia múltiple tiene la siguiente forma:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class <ClaseDerivada>(<ClaseBase1>, <ClaseBase2>, ... ):
+    <instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Base1 :
+	def __init__(self, x):
+		self.value=x
+
+	def getData(self):
+		return self.value
+
+class Base2 :
+	def __init__(self, c):
+		self.letter=c
+
+	def getData(self):
+		return self.letter
+
+# herencia múltiple
+class Derived (Base1, Base2) :
+
+	def __init__(self, i, c, f):
+		Base1.__init__(self, i)
+		Base2.__init__(self, c)
+		self.real=f
+
+	def getReal(self) :
+		return self.real
+
+#script de inicio de ejecución
+b1 = Base1(10)
+b2 = Base2('Z')
+d = Derived(7, 'A', 3.5)
+
+print("Objeto b1 contiene entero ", b1.getData())
+print("Objeto b2 contiene caracter ", b2.getData())
+print("Objeto d contiene ", d.getData())
+\end{minted}
+\caption{Ejemplo de mixins en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En Python, la jerarquía de herencia es definida de derecha a izquierda por lo que hay que tener en cuenta que el resultado puede variar si una clase de más a la izquierda redefine métodos o atributos. Por eso se considera a la clase de la extrema derecha como la “clase base principal”, mientras que las otras clases agregan características (es por este aspecto por el que se maneja a veces como mixins). \textit{En caso de redefinir un método, se ejecutará el que se encuentre más a la extrema izquierda (el último en ser redefinido)}
+
+Tener en cuenta que la llamada a múltiples inicializadores de clase en herencia múltiple si puede en la práctica generar conflictos. Lo sugerido es en caso de herencia múltiple siempre hacer llamadas a inicializadores de clase base mediante el nombre de la clase base (en lugar de super) \textbf{a través de toda la jerarquía de herencia}, no únicamente en la clase que tiene herencia múltiple
+
+
+
+
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+\ifadvanced
+
+\subsubsection{Problema: Firmas de Métodos Incompatibles}
+Si cada $\_\_init\_\_$ tiene parámetros fijos, el sistema se rompe. $super()$ llama al siguiente método en el MRO, pero no sabe qué parámetros espera ese método.
+%Ejemplo fallido
+\begin{minted}{python}
+# EJEMPLO INCORRECTO - ESTO DARÁ UN ERROR
+class Motor:
+    def __init__(self, cilindros):
+        self.cilindros = cilindros
+
+class Chasis:
+    def __init__(self, material):
+        self.material = material
+
+class Coche(Motor, Chasis):
+    def __init__(self, cilindros, material, color):
+        # ¿Cómo llamamos a super? ¿Con qué parámetros?
+        # super().__init__(cilindros) # Falla porque Chasis no espera 'cilindros'
+        # super().__init__(material)  # Falla porque Motor no espera 'material'
+        self.color = color
+\end{minted}
+
+Este código está destinado a fallar porque no hay una forma de que $super().\_\_init\_\_$ satisfaga a \textit{Motor} y a \textit{Chasis} al mismo tiempo.
+
+\textbf{La Solución Cooperativa con **kwargs}
+
+Para solucionarlo, modificamos todos los inicializadores para que acepten $$**kwargs$. Cada método "consume" los argumentos que necesita del diccionario \textit{kwargs} y pasa el resto al siguiente nivel.
+
+Veamos el ejemplo de una jerarquía con parámetros específicos para cada clase.
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class SerVivo:
+    def __init__(self, *, nombre, **kwargs):
+        print(f"SerVivo necesita 'nombre'. Recibe: {nombre}")
+        super().__init__(**kwargs) # Pasa los kwargs restantes
+        self.nombre = nombre
+
+class Ave(SerVivo):
+    def __init__(self, *, envergadura, **kwargs):
+        print(f"Ave necesita 'envergadura'. Recibe: {envergadura}")
+        super().__init__(**kwargs) # Pasa los kwargs restantes
+        self.envergadura = envergadura
+
+class Mamifero(SerVivo):
+    def __init__(self, *, tipo_pelaje, **kwargs):
+        print(f"Mamifero necesita 'tipo_pelaje'. Recibe: {tipo_pelaje}")
+        super().__init__(**kwargs) # Pasa los kwargs restantes
+        self.tipo_pelaje = tipo_pelaje
+
+class Murcielago(Ave, Mamifero):
+    def __init__(self, *, habilidad_ecolocalizacion, **kwargs):
+        print(f"Murcielago necesita 'habilidad_ecolocalizacion'. Recibe: {habilidad_ecolocalizacion}")
+        super().__init__(**kwargs) # Pasa los kwargs restantes
+        self.habilidad_ecolocalizacion = habilidad_ecolocalizacion
+
+# --- Probemoslo ---
+print("Creando un murciélago con todos los parámetros...")
+# Al crear el objeto, debemos proveer TODOS los parámetros que la cadena necesita.
+mi_murcielago = Murcielago(
+    nombre="Batty",
+    tipo_pelaje="Corto",
+    envergadura=0.3,
+    habilidad_ecolocalizacion=True
+)
+
+# Verificamos que todos los atributos se asignaron correctamente
+print("\n--- Atributos del Murciélago ---")
+print(f"Nombre: {mi_murcielago.nombre}")
+print(f"Pelaje: {mi_murcielago.tipo_pelaje}")
+print(f"Envergadura: {mi_murcielago.envergadura}m")
+print(f"Ecolocalización: {mi_murcielago.habilidad_ecolocalizacion}")
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}	
+
+\textbf{¿Cómo funcionó? 
+}
+    \begin{itemize}
+        \item $Murcielago(nombre=..., tipo\_pelaje=..., ...)$: Se llama al inicializador de \textit{Murcielago} con un diccionario de 4 argumentos.
+        \item $Murcielago.\_\_init\_\_$: Toma su argumento $habilidad\_ecolocalizacion$. Llama a $super().\_\_init\_\_$ pasándole los 3 argumentos restantes $(nombre, tipo_pelaje, envergadura)$.
+        \item $Ave.\_\_init\_\_ (siguiente en el MRO)$: Recibe los 3 argumentos. Toma envergadura y llama a $super().\_\_init\_\_$ con los 2 restantes $(nombre, tipo\_pelaje)$.
+        \item $Mamifero.\_\_init\_\_ (siguiente en el MRO)$: Recibe los 2 argumentos. Toma tipo_pelaje y llama a super().__init__ con el último que queda (nombre).
+        \item $SerVivo.\_\_init\_\_ (último en el MRO con __init__ personalizado)$: Recibe el argumento nombre. Lo toma y llama a $super().\_\_init\_\_()$ sin argumentos.
+        \item $object.\_\_init\_\_$: Finalmente, se llama al inicializador de la clase \textit{object} base, que no toma argumentos, y la cadena termina limpiamente.
+    \end{itemize}
+El uso de * \footnote{* por sí solo sirve para indicar que todos los parámetros que vienen después de él deben ser especificados usando su nombre (como argumentos de palabra clave) y no por su posición. Pensemos en el * como una barrera que separa los argumentos posicionales (a la izquierda) de los argumentos que son exclusivamente de palabra clave (a la derecha).} en la definición $(def \_\_init\_\_(self, *, nombre, **kwargs))$ fuerza a que nombre sea un argumento de palabra clave (\textit{keyword-only} argument), lo cual hace el código más robusto y legible.
+
+
+
+
+%comparacion con tecnica directa
+\textbf{Simplicidad Aparente vs. Robustez Real}
+
+Al trabajar con herencia múltiple en Python, surge la pregunta de cómo inicializar las clases base desde una clase derivada. A primera vista, llamar directamente al inicializador de cada clase padre, como \mintinline{python}{Base1.__init__(self, ...)}, puede parecer más simple y directo. Sin embargo, esta simplicidad es engañosa y, a menudo, conduce a un código más frágil y difícil de mantener, especialmente en sistemas complejos.
+
+El enfoque de llamada directa es \textbf{imperativo}: le indicamos a Python exactamente qué hacer y en qué orden. En contraste, el enfoque con \mintinline{python}{super()} es \textbf{cooperativo}: cada clase en la jerarquía confía en la siguiente de la cadena para que realice su parte correspondiente.
+
+\section{Comparativa de Enfoques}
+
+La siguiente tabla resume las diferencias fundamentales entre ambos métodos:
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|>{\bfseries}p{0.2\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Característica} & \textbf{Llamada Directa (\mintinline{python}{Base.__init__})} & \textbf{\mintinline{python}{super()} Cooperativo} \\
+\hline
+\hline
+\textbf{Simplicidad Inicial} & \textbf{Alta}. Es muy obvio lo que se está llamando. & \textbf{Moderada}. Requiere entender el patrón \mintinline{python}{**kwargs} y el MRO (Method Resolution Order). \\
+\hline
+\textbf{Problema del Diamante} & \textbf{No lo resuelve} \⚠️. Causa ejecuciones duplicadas del inicializador "abuelo". & \textbf{Lo resuelve} \✅. Garantiza que cada inicializador en la jerarquía se ejecute solo una vez. \\
+\hline
+\textbf{Mantenibilidad} & \textbf{Muy Baja}. Si la jerarquía de clases cambia, se debe reescribir el \mintinline{python}{__init__} de la clase hija. El código es frágil. & \textbf{Muy Alta}. La jerarquía puede cambiar. Mientras se respete el patrón \mintinline{python}{super()}, el código se adapta automáticamente. \\
+\hline
+\textbf{Acoplamiento} & \textbf{Alto}. La clase hija necesita conocer toda la estructura de herencia de sus padres para pasar los parámetros correctos. & \textbf{Bajo}. Cada clase solo necesita saber de sí misma. Toma sus argumentos y pasa el resto. No le importa quién es el siguiente. \\
+\hline
+\end{tabular}
+\caption{Comparación entre llamada directa y \texttt{super()} cooperativo.}
+\end{table}
+
+\section{El Problema de la Responsabilidad}
+
+Consideremos una jerarquía de clases donde \texttt{Murcielago} hereda de \texttt{Ave} y \texttt{Mamifero}, y ambas heredan de \texttt{SerVivo}. Si usamos la llamada directa, la clase \texttt{Murcielago} asume demasiada responsabilidad.
+
+\subsection{Enfoque Frágil con Llamada Directa}
+
+\begin{minted}[frame=single, framesep=5pt, linenos]{python}
+class Murcielago(Ave, Mamifero):
+    def __init__(self, nombre, tipo_pelaje, envergadura, habilidad_ecolocalizacion):
+        # La clase Murcielago debe saber qué parámetros necesita cada padre.
+        Ave.__init__(self, nombre=nombre, envergadura=envergadura)
+        Mamifero.__init__(self, nombre=nombre, tipo_pelaje=tipo_pelaje)
+        
+        self.habilidad_ecolocalizacion = habilidad_ecolocalizacion
+\end{minted}
+
+Los problemas con este enfoque son:
+\begin{enumerate}
+    \item \textbf{Conocimiento Excesivo}: \texttt{Murcielago} está forzado a saber que tanto \texttt{Ave} como \texttt{Mamifero} necesitan el parámetro \texttt{nombre} para pasárselo a \texttt{SerVivo}. Si la estructura de herencia cambia, el código se rompe.
+    \item \textbf{Duplicación de Lógica}: El método \mintinline{python}{SerVivo.__init__} se ejecuta dos veces, lo cual es ineficiente y puede causar errores.
+\end{enumerate}
+
+\textbf{Enfoque Robusto con \texttt{super()}}
+
+Con \mintinline{python}{super()}, la responsabilidad se distribuye correctamente, siguiendo el principio de bajo acoplamiento.
+
+\begin{minted}[frame=single, framesep=5pt, linenos]{python}
+class Murcielago(Ave, Mamifero):
+    def __init__(self, **kwargs):
+        # Murcielago solo se preocupa por sus propios asuntos.
+        # Pasa el resto de responsabilidades al siguiente en la cadena.
+        super().__init__(**kwargs)
+        # ...lógica específica de Murciélago...
+\end{minted}
+
+Este diseño sigue un principio clave de la POO: una clase no debería necesitar conocer los detalles internos de la implementación de sus padres.
+
+Especificar cada inicializador es como darle a un taxista una lista de instrucciones detalladas para un viaje. Funciona para esa ruta específica, pero falla ante cualquier imprevisto. Usar \mintinline{python}{super()} es como darle la dirección final; el conductor (el MRO de Python) sabe cómo navegar de la manera más eficiente.
+
+Aunque la llamada directa \textbf{parece más simple}, es una simplicidad que crea código rígido y propenso a errores. El modelo cooperativo de \mintinline{python}{super()} es la base para construir sistemas flexibles y mantenibles en Python.
+
+
+
+\fi
+%%%%%%%%%%
+% ADVANCED_END
+%%%%%%%%%%
+
+
+
+\subsubsection{Comentarios finales sobre herencia múltiple en Python}
+\begin{enumerate}
+    \item \textbf{Inicialización redundante}:  En casos de herencia múltiple, atributos como `nombre` y `edad` pueden inicializarse más de una vez. Por ejemplo, en la clase `EstProf`, estos atributos se inicializan tanto en `EstudiantePosgrado` como en `Profesor`. Aunque esto no genera problemas en este caso porque los valores son idénticos, es importante tener cuidado en jerarquías más complejas donde los valores podrían diferir o causar inconsistencias.
+    \item \textbf{Orden de resolución de métodos (MRO)}:  Python utiliza un mecanismo llamado \textit{Method Resolution Order} (MRO) para determinar el orden en el que busca métodos y atributos en la jerarquía de clases. Puedes verificar el MRO de una clase ejecutando el siguiente comando:  $<clase>.mro()$ .   Esto mostrará el orden en el que Python recorrerá las clases cuando se invoquen métodos o inicializadores.
+    \item \textbf{Evitar \textit{super()} en herencia diamante}. En estructuras de herencia diamante (donde una clase hereda de dos clases que comparten un ancestro común), el uso de \textit{super()} puede no ser la mejor opción, ya que podría omitir la inicialización completa de ciertas clases. En estos casos, es más confiable llamar explícitamente a los inicializadores de los padres involucrados para asegurar que todos los atributos y métodos se configuren correctamente.   Sin embargo, llamar directamente a los inicializadores de clases base, puede llevar a la redundancia de inicialización de atributos y además a posibles errores de inicialización. En este caso se sugiere \textbf{rediseñar la inicialización }para que los atributos compartidos solo se inicialicen una vez, preferiblemente en la clase base más general. Las clases derivadas pueden encargarse de inicializar únicamente los atributos específicos que les corresponden.
+\end{enumerate}
+
+
+
+
+
+
+  
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+
+\section{Herencia: Implementación en Scala}
+
+En su forma más simple, la herencia en Scala se maneja de una forma bastante similar a Java\footnote{ \href{http://www.javabeat.net/inheritance-overriding-scala/}{Inheritance and Overriding in Scala}}.
+	 
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+class <Derivada> extends <Base> {
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}	 
+
+Solamente recordar que es posible definir los atributos como parámetro de las clases -polimórfica- (base y derivada) definiendo al mismo tiempo el constructor primario.
+
+
+\subsection{Inicializadores de superclase}	
+
+La inicialización de superclase  se hace en el momento de definir la herencia en la subclase. Los constructores auxiliares no pueden invocar directamente a constructores de la superclase; sólo pueden invocar al constructor primario de su clase quien a su vez invocará al constructor de la superclase.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+//ejemplo de herencia
+class Vehiculo(var ruedas: Int, var pasajeros: Int){
+
+   def setRuedas(num: Int){
+                ruedas=num
+   }
+
+   def getRuedas(): Int= ruedas
+
+   def setPasajeros(num: Int){
+             pasajeros=num
+   }
+
+   def getPasajeros(): Int={
+               return pasajeros
+     }
+}
+
+//clase Camion con herencia  de Vehiculo
+class Camion(ruedas: Int, pasajeros: Int, var carga: Int) 
+  extends Vehiculo(ruedas, pasajeros) {
+
+   def this() = this(0, 0, 0)
+
+   def setCarga(num: Int){
+         carga=num
+   }
+
+   def getCarga(): Int =  carga
+
+   def muestra(){
+          // uso de métodos heredados
+             println("Ruedas: " + getRuedas());
+              println("Pasajeros: " + getPasajeros());
+                // método de la clase Camion
+            println("Capacidad de carga: " + getCarga());
+   }
+}
+
+object Main extends App {
+   val ford: Camion = new Camion()
+   ford.setRuedas(6)
+   ford.setPasajeros(3)
+   ford.setCarga(3200)
+   ford.muestra()
+}
+\end{minted}
+\caption{Ejemplo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Redefinición de métodos}	
+
+Comparado con Java, Scala añade unas restricciones para redefinir un método. El método redefinido debe usar el modificador \textit{override} (existe una anotación $@Override$ en Java, pero no es obligatoria). Adicionalmente, no se puede redefinir un \textit{var} con \textit{val} o \textit{def}. Pero puede redefinirse si en la superclase es abstracta. Un \textit{val} no puede ser redefinido por un \textit{var} o \textit{def} en una subclase.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Elemento(var precio:Double, var descripcion:String){
+	//Sin descuento para el elemento
+	def precioDescuento():Double = precio
+
+	override def toString():String = {
+		descripcion+" Costo: "+precioDescuento()
+	}
+}
+
+class ElementoEspecial(precio:Double, descripcion:String, 
+		var porcentajeDescuento:Double)
+		extends Elemento(precio, descripcion){
+
+	//Precio con descuento
+	override def precioDescuento():Double = {
+		precio - ((porcentajeDescuento/100) * precio)
+	}
+}
+
+object Main extends App{
+	val elem = new Elemento(335.65,"Libro,")
+	println(elem)
+	
+	val elementoEspecialspecial = new ElementoEspecial(456.7,
+	  "Un libro especial", 10)
+	println(elementoEspecialspecial)
+	
+}
+\end{minted}
+\caption{Ejemplo de redefinición de métodos en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Empleado(var firstName: String, var lastName: String){
+   	override def toString():String = 
+               firstName+" "+lastName
+
+	def print() {
+           println(toString())
+    }
+}
+
+class TrabajadorPorHora(firstName: String, lastName: String, 
+                var wage: Float, var hours: Float)
+              extends Empleado(firstName, lastName){
+
+ 	def getPay(): Float = wage * hours
+
+    override def print() {
+          println("Metodo print de Trabajador por hora")
+          super.print()   // llama a función de clase base
+          println(" es un trabajador por hora con sueldo de" + " $" + getPay())
+    }
+}
+
+object Main extends App{
+     val e = new Empleado("nombre", "apellido")
+      val h = new TrabajadorPorHora ("Juanito", "Perez", 40.0f, 7.50f)
+
+       e.print()
+       h.print
+}
+\end{minted}
+\caption{Ejemplo 2 de redefinición de métodos en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Traits \& Mixins en Scala}
+
+
+Los \textit{traits} (rasgos), son un tipo abstracto utilizado en OOP. Un trait representa un conjunto de métodos que son usados para extender la funcionalidad de una clase. Los \textit{traits} son similares a los \textit{mixins}, y también pueden incluir definiciones para métodos de clase. Los \textit{traits} son una forma simple para reuso de comportamiento para los componentes de software. A diferencia de Java, Scala permite tener \textit{traits} parcialmente implementados (tener implementaciones para algunos métodos). Los \textit{traits} no pueden instanciarse y no tienen parámetros de constructor.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+trait <nombre> {
+   def <método 1>(<parámetros>) : <tipo> [<implementación>]
+   def <método 2>(<parámetros>) : <tipo> [<implementación>]
+   … 
+   def <método n>(<parámetros>) : <tipo> [<implementación>]
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+La clases que integren \textit{traits} deben implementar los  métodos que no se encuentren implementados. Los métodos implementados se heredan directamente. 
+
+La clase \textit{Any} es la clase raíz de la jerarquía en Scala\footnote{ \href{http://www.scala-lang.org/api/2.7.2/scala/Any.html}{Class Any}}.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+trait Similar {
+  def esSimilar(x: Any): Boolean
+  def noEsSimilar(x: Any): Boolean = !esSimilar(x)
+}
+
+class Punto(xc: Int, yc: Int) extends Similar {
+  var x: Int = xc
+  var y: Int = yc
+  def esSimilar(obj: Any) =
+    obj.isInstanceOf[Punto] &&
+    obj.asInstanceOf[Punto].x == x
+}
+
+object Main extends App {
+  val p1 = new Punto(2, 3)
+  val p2 = new Punto(2, 4)
+  val p3 = new Punto(3, 3)
+  println(p1.noEsSimilar(p2))
+  println(p1.noEsSimilar(p3))
+  println(p1.noEsSimilar(2))
+}
+\end{minted}
+\caption{Ejemplo de mixins en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Una clase puede usar \textit{extends} para heredar un \textit{trait} sólo si no hereda ya de una clase base. Si ya se hereda de una clase o se quiere heredar más \textit{traits} se usa la palabra clave \textit{with}.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Base1(x: Int) {
+  var value: Int = x
+ //conflicto de miembros en clase derivada 
+ //def getData() = value
+ def getValue() = value
+}
+
+trait MiTrait {
+  var letter: Char
+  def setData(c: Char)
+  def getData(): Char = letter
+}
+
+class Derivada(x:Int, c:Char, r: Float) extends Base1(x) with MiTrait {
+  var real: Float = r
+  var letter= c
+  def setData(c: Char) {
+         letter=c
+  }
+  def getReal(): Float = real 
+}
+
+object Main extends App {
+  val b1 = new Base1(10)
+  val d = new Derivada(7, 'A', 3.5f)
+  println("Objeto b1 contiene entero " + b1.getValue())
+  println("Objeto d contiene " + d.getData())
+}
+\end{minted}
+\caption{Ejemplo mixins usando \textit{with} en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+\section{Herencia: Implementación en C\#}
+
+C\# permite la herencia simple entre clases heredando de una clase base a una clase derivada.
+
+La sintaxis de la herencia en C\# es similar a la implementación básica en C++.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+class <claseDerivada> : <claseBase> {
+	//cuerpo subclase
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+
+//ejemplo de herencia
+public class Vehiculo{
+	private int ruedas;
+	private int pasajeros;
+
+	public void setRuedas(int num){
+		ruedas=num;
+	}
+
+	public int getRuedas(){
+	return ruedas;
+	}
+
+	public void setPasajeros(int num){
+	pasajeros=num;
+	}
+
+	public int getPasajeros(){
+	return pasajeros;
+	}
+}
+
+//clase Camion con herencia de Vehiculo
+public class Camion : Vehiculo {
+	private int carga;
+
+	public void setCarga(int num){
+		carga=num;
+	}
+
+	public int getCarga(){
+		return carga;
+	}
+
+	public void muestra(){
+		// uso de métodos heredados
+		Console.WriteLine("Ruedas: " + getRuedas());
+		Console.WriteLine("Pasajeros: " + getPasajeros());
+		// método de la clase Camion
+		Console.WriteLine("Capacidad de carga: " + getCarga());
+	}
+
+	public static void Main(){
+		Camion ford= new Camion();
+		ford.setRuedas(6);
+		ford.setPasajeros(3);
+		ford.setCarga(3200);
+		ford.muestra();
+	}
+}
+\end{minted}
+\caption{Ejemplo de herencia en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Acceso a miembros}
+
+Un miembro privado de una clase permanecerá privado a su clase. No será accesible fuera de la clase, incluidas sus clases derivadas. Un miembro privado tendrá que ser accedido mediante un método público o protegido.
+
+\subsection{Constructores de clase base}
+
+Como en otros lenguajes, el constructor de la clase base puede ser llamado desde la clase derivada, para inicializar los atributos heredados.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}| <constructor>(<lista de argumentos>) : base(<argumentos sin el tipo>)  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Interfaces en C\#}
+
+C\#  cuenta con manejo de interfaces de una manera similar a Java.
+
+	Una interfaz tiene un formato muy similar a una clase, sus principales características:
+
+
+\begin{itemize}
+\item Una interfaz proporciona los nombres de los métodos, pero no sus implementaciónes.
+\item Una clase puede implementar varias interfaces, aunque solo pueda heredar una clase.
+\item No es posible crear instancias de una interfaz.
+\item La clase que implementa la interfaz debe escribir el código de todos los métodos, de otra forma no se podrá generar instancias de esa clase.
+\end{itemize}
+
+El formato general para la declaración de una interfaz es el siguiente:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+[public] interface <nombreInterfaz> {
+	//descripción de miembros
+	//los métodos no incluyen código:
+	<acceso> <tipo> <nombreMetodo> ( <parámetros> ) ;
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+El cuerpo de la interfaz generalmente es una lista de prototipos de métodos, pero puede contener atributos si se requiere.
+
+	Una clase implementa una o más interfaces de la siguiente forma:
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+class <claseDerivada> : <claseBase> ,   <nombreInterfaz> [, ... <interfazN>] {
+	//definición de la clase
+	//debe incluirse la definición de los métodos de la interfaz
+	//con la implementación del código de dichos métodos.
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}	
+
+Además, una interfaz puede ser extendida de la misma forma que una clase, aprovechando las interfaces previamente definidas:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+[public] interface <nombreInterfaz> : <InterfazBase> {
+	//descripción de miembros
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+
+//interfaz
+interface IStack { 
+	void push(Object item);
+	Object pop();
+}
+
+//clase implementa la interfaz
+class StackImpl : IStack { 
+	protected Object[] stackArray;
+	protected int tos;
+
+	public StackImpl(int capacity) {
+		stackArray = new Object[capacity];
+		tos = -1;
+	}
+
+	//implementa el método definido en la interfaz
+	public void push(Object item) 
+		{ stackArray[++tos] = item; }
+
+	//implementa el método definido en la interfaz
+	public Object pop() { 
+		Object objRef = stackArray[tos];
+		stackArray[tos] = null;
+		tos--;
+		return objRef;
+	}
+
+	public Object peek() { return stackArray[tos];}
+}
+
+// extendiendo una interfaz
+interface ISafeStack : IStack { 
+	bool isEmpty();
+	bool isFull();
+}
+
+//esta clase hereda la implementación de la pila StackImpl
+// e implementa la nueva interfaz extendida ISafeStack
+class SafeStackImpl : StackImpl, ISafeStack { 
+
+	public SafeStackImpl(int capacity):base(capacity) { }
+
+	//implementa los métodos de la interfaz
+	public bool isEmpty() { return tos < 0; } 
+	public bool isFull() { return tos >= stackArray.Length;
+	} 
+}
+
+public class StackUser {
+
+	public static void Main() { 
+		SafeStackImpl safeStackRef = new SafeStackImpl(10);
+		StackImpl stackRef = safeStackRef;
+		ISafeStack isafeStackRef = safeStackRef;
+		IStack istackRef = safeStackRef;
+		Object objRef = safeStackRef;
+
+		safeStackRef.push("Dolar"); 
+		stackRef.push("Peso");
+		Console.WriteLine(isafeStackRef.pop());
+		Console.WriteLine(istackRef.pop());
+
+		Console.WriteLine(objRef.GetType());
+	}
+}
+\end{minted}
+\caption{Ejemplo de interfaces en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+	
+\fi
+%%%%%%
+
+%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Herencia: Implementación en D}
+
+D permite la herencia simple entre clases heredando de una clase base a una clase derivada.
+
+Así como en C\#, la sintaxis de la herencia en D es similar a la implementación básica en C++.
+
+Como en otros lenguajes (e.g., Java, C\#), todas las clases heredan directa o indirectamente de la clase \textit{Object}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+class <claseDerivada> : <claseBase> {
+	//cuerpo claseDerivada
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Vehiculo;
+
+import std.stdio;
+
+//ejemplo de herencia
+class Vehiculo{
+	private:
+	int ruedas;
+	int pasajeros;
+
+	public:
+	void setRuedas(int num){
+		ruedas=num;
+	}
+
+	int getRuedas(){
+		return ruedas;
+	}
+
+	void setPasajeros(int num){
+		pasajeros=num;
+	}
+
+	int getPasajeros(){
+		return pasajeros;
+	}
+}
+
+//clase Camion con herencia de Vehiculo
+class Camion : Vehiculo {
+	private: 
+	int carga;
+
+	public:
+	void setCarga(int num){
+		carga=num;
+	}
+
+	int getCarga(){
+		return carga;
+	}
+
+	void muestra(){
+		// uso de metodos heredados
+		writeln("Ruedas: ", getRuedas());
+		writeln("Pasajeros: ", getPasajeros());
+		// metodo de la clase Camion
+		writeln("Capacidad de carga: ", getCarga());
+	}
+}
+
+void main(){
+	Camion ford= new Camion();
+	ford.setRuedas(6);
+	ford.setPasajeros(3);
+	ford.setCarga(3200);
+	ford.muestra();
+}
+\end{minted}
+\caption{Ejemplo de herencia en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Acceso a miembros}
+
+En D existen los modificadores de acceso \textit{private}, \textit{package}, \textit{protected}, \textit{public} y \textit{export}\footnote{Classes, \url{http://dlang.org/spec/class.html}}.
+
+
+\begin{itemize}
+\item \textit{private}. Un miembro privado implica que únicamente miembros de la clase o miembros y funciones del módulo de la clase pueden acceder a ellos. Miembros privados no pueden ser redefinidos.
+\item \textit{package}. El modificador \textit{package} extiende la privacidad de manera que estos miembros pueden ser accedidos por otros módulos en el mismo paquete.
+\item \textit{protected}. Un miembro protegido miembros de su clase, clase derivada o miembros y funciones en el mismo módulo pueden acceder a dicho miembro.
+\item \textit{public}. Un miembro público puede ser accedido donde el miembro sea visible.
+\item \textit{export}. El modificador \textit{export} implica que cualquier código fuera del ejecutable al que pertenece puede acceder a éste. Es análogo a la definición de exportación para DLLs.
+\end{itemize}
+
+\subsection{Constructores de clase base}
+
+Como en otros lenguajes, el constructor de la clase base puede ser llamado desde la clase derivada, para inicializar los atributos heredados.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+this<lista de argumentos>) {
+   ...  
+   super(<lista de argumentos sin el tipo>)
+   ... 
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Interfaces en D}
+
+	D  cuenta con manejo de interfaces de una manera similar a Java y C\#.
+
+	Una interfaz tiene un formato muy similar a una clase, sus principales características:
+
+  
+\begin{itemize}
+\item Una interfaz proporciona los nombres de los métodos, pero no sus implementaciones.
+\item Una clase puede implementar varias interfaces, aunque solo pueda heredar una clase.
+\item No es posible crear instancias de una interfaz.
+\item Métodos \textbf{estáticos} y \textbf{finales} deben llevar su implementación. Las clases no pueden redefinir estos tipos de miembros.
+\item La clase que implementa la interfaz debe escribir el código de todos los métodos, de otra forma no se generará un error. 
+\item Una interfaz no puede tener atributos.
+\end{itemize}
+      
+El formato general para la declaración de una interfaz es el siguiente\footnote{ \href{http://dlang.org/spec/interface.html},{Interface}}:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+interface <nombreInterfaz> {
+	//descripción de miembros
+	//los métodos no incluyen código:
+	<acceso> <tipo> <nombreMetodo> ( <parámetros> ) ;
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Una clase hereda una interfaz a través de la misma forma que hereda de una clase:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+class <clase> : <nombreInterfaz> {
+	//definición de la clase
+	//debe incluirse la definición de los métodos de la interfaz
+	//con la implementación del código de dichos métodos.
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+De hecho, si la clase hereda una previa implementación de una interfaz pero también hereda la interfaz directamente, esta clase esta obligada a reimplementar la interfaz.
+
+Ejemplo:
+\begin{minted}{d}
+interface D {
+    int foo();
+}
+
+class A : D {
+    int foo() { return 1; }
+}
+
+class B : A, D{
+}       // error, no se reimplementó foo() para la interfaz D
+\end{minted}
+
+Además, una interfaz puede ser extendida de la misma forma que una clase, aprovechando las interfaces previamente definidas.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+interface <nombreInterfaz> : <InterfazBase> {
+	//descripción de miembros
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Stack;
+import std.stdio;
+
+//interfaz
+interface IStack { 
+	void push(Object item);
+	Object pop();
+}
+
+//clase implementa la interfaz
+class StackImpl : IStack { 
+	protected:
+   	Object[] stackArray;
+    int tos;
+   	public: 
+    this(int capacity) {
+    		stackArray = new Object[capacity];
+      	tos = -1;
+  	}
+
+  	//implementa el metodo definido en la interfaz
+	void push(Object item) 
+	{ stackArray[++tos] = item; }
+
+  	//implementa el metodo definido en la interfaz
+  	Object pop() { 
+    		Object objRef = stackArray[tos];
+     	stackArray[tos] = null;
+      	tos--;
+      	return objRef;
+  	}
+
+ 	Object peek() { return stackArray[tos];}
+}
+
+// extendiendo una interfaz
+interface ISafeStack : IStack { 
+	bool isEmpty();
+ 	bool isFull();
+}
+
+//esta clase hereda la implementacion de la pila StackImpl
+// e implementa la nueva interfaz extendida ISafeStack
+class SafeStackImpl : StackImpl, ISafeStack { 
+	public: 
+  	this(int capacity){super(capacity); }
+  	//implementa los metodos de la interfaz
+ 	bool isEmpty() { return tos < 0; } 
+  	bool isFull() { return tos >= stackArray.length;} 
+}
+
+class String{
+    public:
+    string myString;
+    this(string s) {
+        myString=s;
+    }
+}
+
+void main() { 
+	SafeStackImpl safeStackRef = new SafeStackImpl(10);
+  	StackImpl stackRef = safeStackRef;
+   	ISafeStack isafeStackRef = safeStackRef;
+  	IStack istackRef = safeStackRef;
+   	Object objRef = safeStackRef;
+    //safeStackRef.push("dolar");   // strings no son objetos 
+   	safeStackRef.push(new String("dolar"));
+    	stackRef.push(new String("Peso"));
+  	String s =cast(String) isafeStackRef.pop();
+ 	writeln(s.myString);
+   	s =cast(String) istackRef.pop();
+  	writeln(s.myString);
+  	writeln(objRef.toString());
+}
+\end{minted}
+\caption{Ejemplo de interfaces en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Traits y Mixins en D}
+
+\textit{Traits} y \textit{mixins}  no van por el sentido del uso de la jerarquía de herencia, pero los mencionamos aquí para evitar confusión al respecto.
+
+Los \textit{traits}  en D son extensiones  para permitir que los programas, en tiempo de compilación, obtengan información general para el compilador. Esto es también conocido como reflexión (\textit{reflection}) en tiempo de compilación.
+
+Los \textit{mixins} en D permiten a unas cadenas constantes ser compiladas como código regular e insertado en el programa. De manera superficial, el concepto  es similar a las propiedades que realiza el preprocesador de C.
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+

@@ -1,0 +1,1009 @@
+\chapter{Polimorfismo paramétrico: programación genérica}
+
+La programación genérica favorece la reutilización de código, permitiendo que se generen objetos específicos para un tipo a partir de \textbf{clases genéricas}. Las clases genéricas son conocidas también como \textbf{plantillas de clase} o \textbf{clases parametrizadas}.
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Plantillas de clase en C++}
+Antes se mencionó el uso de plantillas en C++ aplicado a funciones. El concepto de plantillas es aplicable también a la programación orientada a objetos en C++a través de \textbf{plantillas de clase}. 
+
+	El uso de plantillas de clase no es diferente al uso de plantillas en operaciones no orientadas a objetos:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+template <class T>  
+
+o 
+
+template <typename T>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Veamos el ejemplos clásicos aprovechando el uso de plantillas.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+
+using namespace std;
+
+template <class T, class U>
+class Pair {
+private:
+    T first;
+    U second;
+public:
+    Pair(T f, U second) { 
+        first=f;
+        this->second=second; 
+        
+    }
+
+    T getFirst() { 
+        return first; 
+        
+    }
+    U getSecond() { 
+        return second; 
+    }
+};
+
+int main() { 
+    Pair<float, int> *pair = new Pair<float, int>(10.5,2);
+    
+    cout<<"Obten el primer elemento:" << pair->getFirst()<<endl;
+    cout<<"Obten el segundo elemento:"<< pair->getSecond()<<endl;
+    return 0;
+} 
+\end{minted}
+\caption{Ejemplo de plantillas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// stack.h
+// Clase de plantilla Pila
+#ifndef STACK_H_
+#define STACK_H_
+
+template< class T >
+class Stack {
+public:
+	Stack( int = 10 );
+	~Stack() { delete [] stackPtr; }
+	char push( const T& );
+	char pop( T& );
+private:
+	int size;
+	int top;
+	T *stackPtr;
+
+	char isEmpty() const { return top == -1; }
+	char isFull() const { return top == size - 1; }
+};
+
+
+template< class T >
+Stack< T >::Stack( int s )
+{
+	size = s > 0 ? s : 10;
+	top = -1;
+	stackPtr = new T[ size ];
+}
+
+template< class T >
+char Stack< T >::push( const T &pushValue )
+{
+	if ( !isFull() ) {
+		stackPtr[ ++top ] = pushValue;
+		return 1;
+	}
+	return 0;
+}
+
+template< class T >
+char Stack< T >::pop( T &popValue )
+{
+	if ( !isEmpty() ) {
+		popValue = stackPtr[ top-- ];
+		return 1;
+	}
+	return 0;
+}
+
+#endif /*STACK_H_*/
+
+// Ejemplo uso de plantillas de clase
+#include <iostream>
+#include "stack.h"
+
+using namespace std;
+
+int main() {
+	Stack< double > doubleStack( 5 );
+	double f = 1.1;
+	cout << "Insertando elementos en doubleStack \n";
+
+	while ( doubleStack.push( f ) ) {
+		cout << f << ' ';
+		f += 1.1;
+	}
+
+	cout << "\nLa pila está llena. No se puede insertar el elemento " << f
+		  << "\n\nSacando elementos de doubleStack\n";
+
+	while ( doubleStack.pop( f ) )
+		cout << f << ' ';
+
+	cout << "\nLa pila está vacía. No se pueden eliminar más elementos\n";
+
+	Stack< int > intStack;
+	int i = 1;
+	cout << "\nInsertando elementos en intStack\n";
+
+	while ( intStack.push( i ) ) {
+		cout << i << ' ';
+		++i;
+	}
+
+	cout << "\nLa pila está llena.  " << i
+		  << "\n\nSacando elementos de intStack\n";
+
+	while ( intStack.pop( i ) )
+		cout << i << ' ';
+
+	cout << "\nLa pila está vacía. No se pueden eliminar más elementos \n";
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo, una pila con plantillas en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Las plantillas de clase ayudan a la reutilización de código, al permitir varias versiones de clases para un tipo de dato a partir de clases genéricas. A estas clases específicas se les conoce como \textbf{clases de plantilla}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+Una clase de plantilla es entonces como una instanciación de una plantilla de clase.   
+\\ \hline
+\end{tabular}
+\end{center}
+
+Con respecto a la herencia en combinación con el uso de plantillas, se deben tener en cuenta las siguientes situaciones\cite{josuttis2003c++}:
+
+
+\begin{itemize}
+\item Una plantilla de clase se puede derivar de una clase de plantilla.
+\item Una plantilla de clase se puede derivar de una clase que no sea plantilla.
+\item Una clase de plantilla se puede derivar de una plantilla de clase.
+\item Una clase que no sea de plantilla se puede derivar de una plantilla de clase.
+\end{itemize}
+
+
+En cuanto a los miembros estáticos, cada clase de plantilla que se crea a partir de una plantilla de clases mantiene sus propias copias de los miembros estáticos.
+
+\section{Standard Template Library (STL)}
+
+Las plantillas de clase son una herramienta muy poderosa en C++. Esto ha llevado a desarrollar lo que se conoce como STL. STL es el acrónimo de \textit{Standard Template Library}, y es una biblioteca de C++ que proporciona un conjunto de clases contenedoras, iteradores y de algoritmos genéricos:
+
+\begin{itemize}
+\item Las clases contenedoras incluyen vectores, listas, deques, conjuntos, multiconjuntos, multimapas, pilas, colas  y colas de prioridad.
+\item Los iteradores son generalizaciones de apuntadores: son objetos que apuntan a otros objetos. Son usados normalmente para iterar sobre un conjunto de objetos. Los iteradores son importantes porque son típicamente usados como interfaces entre las clases contenedoras y los algoritmos.
+\item Los algoritmos genéricos incluyen un amplio rango de algoritmos fundamentales para los más comunes tipos de manipulación de datos, como ordenamiento, búsqueda, copiado y transformación.
+\item STL es una biblioteca estándar de ANSI/ISO desde julio de 1994.
+\end{itemize}
+
+La STL está altamente parametrizada, por lo que casi cada componente en la STL es una plantilla\cite{graphics1997standard} . Podemos usar por ejemplo la plantilla $vector<T>$ para hacer uso de vectores sin necesidad de preocuparnos del manejo de memoria:
+
+\begin{minted}{cpp}
+        vector<int> v(3);     // Declara un vector de 3 elementos.
+    	v[0] = 7;
+    	v[1] = v[0] + 3;
+    	v[2] = v[0] + v[1];   // v[0] == 7, v[1] == 10, v[2] == 17
+\end{minted}
+
+Los algoritmos proporcionados por la STL ayudan a manipular los datos de los contenedores\cite{graphics1997standard}. Por ejemplo, podemos invertir el orden de los elementos de un vector, usando el algoritmo $reverse()$:
+
+\mint[linenos=false]{cpp}| reverse(v.begin(), v.end()); // v[0]==17, v[1]==10, v[2]==7 |
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#ifndef STACK_HPP_
+#define STACK_HPP_
+#include <vector> 
+
+template <typename T> 
+class Stack { 
+  private: 
+    std::vector<T> elems;     // elementos 
+
+  public: 
+    void push(T const&);       
+    void pop();                
+    T top() const;            // regresa elemento en el tope 
+    bool empty() const {      // regresa si la pila esta vacia 
+        return elems.empty(); 
+    } 
+}; 
+
+template <typename T> 
+void Stack<T>::push (T const& elem) 
+{ 
+    elems.push_back(elem);    // añade una copia de elem 
+} 
+
+template<typename T> 
+void Stack<T>::pop () 
+{ 
+    if (elems.empty()) { 
+        std::cout<<"Stack<>::pop(): pila vacia";
+        return; 
+    } 
+    elems.pop_back();         // remueve el ultimo elemento 
+} 
+
+template <typename T> 
+T Stack<T>::top () const 
+{ 
+    if (elems.empty()) { 
+        std::cout<<"Stack<>::top(): pila vacia";
+    } 
+    return elems.back();      // regresa copia del elemento en el tope 
+} 
+#endif /*STACK_HPP_*/
+
+#include <iostream> 
+#include <string> 
+#include <cstdlib> 
+#include "stack.hpp" 
+
+int main() 
+{ 
+        Stack<int>         intStack;       // pila de enteros 
+        Stack<std::string> stringStack;    // pila de strings 
+
+        // manipulapila de enteros 
+        intStack.push(7); 
+        std::cout << intStack.top() << std::endl; 
+
+        // manipula pila de strings 
+        stringStack.push("hola"); 
+        std::cout << stringStack.top() << std::endl; 
+        stringStack.pop(); 
+        stringStack.pop(); 
+} 
+\end{minted}
+\caption{Ejemplo de STL.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+%tabla de ejemplos de clases de la STL
+
+%para ajustar el código de la columna de ejemplo
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  columns=flexible,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  tabsize=2
+}
+
+%\begin{document}
+
+%\title{Clases más Usadas de la STL en C++}
+%\author{}
+%\date{}
+%\maketitle
+
+\section*{Tabla de Clases más Usadas de la STL en C++}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+
+\begin{tabularx}{\textwidth}{|l|X|X|}
+	\hline
+	\textbf{Clase} & \textbf{Descripción} & \textbf{Ejemplo} \\
+	\hline
+	
+	\texttt{vector} &
+	Contenedor dinámico que permite almacenar una colección de elementos en un arreglo redimensionable. &
+	\code{std::vector<int> v = \{1, 2, 3\}; v.push\_back(4);} \\
+	\hline
+	
+	\texttt{list} &
+	Lista doblemente enlazada que permite inserciones y eliminaciones rápidas en cualquier posición. &
+	\code{std::list<int> l = \{1, 2, 3\}; l.push\_back(4);} \\
+	\hline
+	
+	\texttt{deque} &
+	Contenedor que permite inserciones y eliminaciones rápidas tanto al principio como al final. &
+	\code{std::deque<int> d; d.push\_front(1); d.push\_back(2);} \\
+	\hline
+	
+	\texttt{set} &
+	Contenedor que almacena elementos únicos y los mantiene ordenados automáticamente. &
+	\code{std::set<int> s = \{3, 1, 2\}; s.insert(4);} \\
+	\hline
+	
+	\texttt{map} &
+	Contenedor que almacena pares clave-valor, ordenado por las claves. &
+	\code{std::map<std::string, int> m; m["Alicia"] = 25;} \\
+	\hline
+	
+	\texttt{unordered\_map} &
+	Contenedor similar a \texttt{map}, pero no mantiene los elementos ordenados. &
+	\code{std::unordered\_map<std::string, int> um; um["Alicia"] = 25;} \\
+	\hline
+	
+	\texttt{stack} &
+	Contenedor que sigue la estructura LIFO (Last In, First Out). &
+	\code{std::stack<int> st; st.push(1); st.push(2);} \\
+	\hline
+	
+	\texttt{queue} &
+	Contenedor que sigue la estructura FIFO (First In, First Out). &
+	\code{std::queue<int> q; q.push(1); q.push(2);} \\
+	\hline
+	
+	\texttt{priority\_queue} &
+	Cola de prioridad que permite almacenar elementos ordenados según un criterio. &
+	\code{std::priority\_queue<int> pq; pq.push(3); pq.push(1);} \\
+	\hline
+	
+	\texttt{pair} &
+	Estructura que permite almacenar un par de valores relacionados. &
+	\code{std::pair<int, std::string> p = \{1, "Alicia"\};} \\
+	\hline
+	
+	\texttt{tuple} &
+	Similar a \texttt{pair}, pero permite almacenar más de dos valores de distintos tipos. &
+	\code{std::tuple<int, std::string, float> t = \{1, "Alicia", 3.14\};} \\
+	\hline
+\end{tabularx}
+
+%%%
+
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Clases Genéricas en Java}
+
+Java 1.5 introdujo finalmente el uso de clases genéricas (\textit{generics})\cite{bracha2004generics}. El uso de clases genéricas es una característica poderosa usada en otros lenguajes, siendo C++ el ejemplo más conocido que soporta programación genérica mediante el uso de plantillas o \textit{templates}.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| class NombreClase <Lista de parámetros de tipos> { ... }  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class Pair<T, U> {
+  private final T first;
+  private final U second;
+  public Pair(T first, U second) { this.first=first; this.second=second; }
+  public T getFirst() { return first; }
+  public U getSecond() { return second; }
+}
+
+public class PairExample {
+	public static void main(String[] args) {
+		
+		Pair<String, Integer> pair = new Pair<String, Integer>("one",2);
+		
+		// no acepta tipos de datos básicos o primitivos
+		//Pair<String, int> pair2 = new Pair<String, Integer>("one",2);
+		
+		// siguiente linea generaría un warning de seguridad de tipos 
+		//Pair<String, Integer> pair3 = new Pair("one",2);
+
+		System.out.println("Obtén primer elemento:" + pair.getFirst());
+		System.out.println("Obtén segundo elemento:" + pair.getSecond());
+	}
+}
+\end{minted}
+\caption{Ejemplo de clases genéricas en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Es también posible parametrizar interfaces, como se muestra a continuación.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| interface NombreInterfaz <Lista de parámetros de tipos> { ... }  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+interface IPair<T, U>{
+	public T getFirst();
+	public U getSecond();
+}
+
+class Pair<T, U> implements IPair<T, U>{
+  private final T first;
+  private final U second;
+  public Pair(T first, U second) { this.first=first; this.second=second; }
+  public T getFirst() { return first; }
+  public U getSecond() { return second; }
+}
+
+public class PairExample {
+	public static void main(String[] args) {
+		
+		IPair<String, Integer> ipair = new Pair<String, Integer>("one",2);
+
+		System.out.println("Obtén primer elemento:"+ipair.getFirst());
+		System.out.println("Obtén segundo elemento:"+ipair.getSecond());
+	}
+
+}
+\end{minted}
+\caption{Ejemplo clases e interfaces genéricas en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Un requerimiento para el uso tipos genéricos en Java es que no pueden usarse tipos de datos primitivos, porque los tipos primitivos o básicos no son subclases de Object\cite{kreft2004}. Por lo que sería ilegal por ejemplo querer instanciar $Pair<int, String>$ . La ventaja es que el uso de la clase \textit{Object} significa que solo un archivo de clase (\textit{.class}) necesita ser generado por cada clase genérica\cite{turner2001}.
+
+Restriciones de las clases genéricas, ver\footnote{\href{https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html#createArrays}{Java generics}}.
+
+\section{Biblioteca de Clases Genéricas en Java}
+
+Al igual que C++ con la STL, Java tiene un conjunto de clases genéricas predefinidas. Su uso, de manera similar que con las clases genéricas definidas por el programador, no está permitido para tipos primitivos, por lo que solo objetos podrán ser contenidos. Las principales clases genéricas en Java son, como en la STL, clases contenedoras o colecciones\footnote{ Las colecciones en Java eran implementadas antes de la versión 1.5 pero sin el uso de clases genéricas. El uso de versiones anteriores de colecciones con colecciones genéricas es permitido por compatibilidad hacia atrás pero debe tenerse especial cuidado pues hay situaciones que el compilador no puede validar.}. El \textit{Java Collections Framework }(JCF) es un conjunto de interfaces y clases definidos en los paquetes $java.util$ y $java.util.concurrent$.
+
+Las interfaces del JCF son:
+
+  
+\begin{itemize}
+\item \textit{Collection}. Contiene la funcionalidad básica requerida en casi cualquier colección de objetos (con excepción de \textit{Map})
+\item \textit{Set}. Es una colección sin duplicados, donde el orden es no significante. Sin embargo contiene un método que devuelve el conjunto ordenado (\textit{SortedSet}).
+\item \textit{Queue}. Define el comportamiento básico de una estructura de cola.
+\item \textit{List}. Es una colección donde el orden es significativo, permitiendo además valores duplicados.
+\item \textit{Map}. Define una colección donde un valor clave es asociado para almacenar y recuperar elementos.
+\end{itemize}
+
+La siguiente figura muestra las principales interfaces de la JCF\cite{naftalin2007java}:
+
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/biblioteca_generica_java.png}
+    \caption{Biblioteca genérica en Java}
+    \label{fig:my_label}
+\end{figure}	
+
+Los iteradores son objetos que te permiten recorrer una colección de objetos, obteniendo o removiendo elementos. Un objeto iterador implementa la interfaz \textit{Iterator} o la interfaz \textit{ListIterator}. En general, para usar un iterador para recorrer una colección se debe:
+    1. Obtener un iterador al inicio de la colección llamando al método $iterator()$ de la colección.
+    2. Definir un ciclo que haga la llamada a $hasNext()$. El ciclo iterará mientras el método sea verdadero.
+    3. En el ciclo, obtener cada elemento llamando al método $next()$.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Usando la interfaz Collection
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+public class CollectionTest {
+	private static final String[] colors = 
+       { "MAGENTA", "RED", "WHITE", "BLUE", "CYAN" };
+	private static final String[] removeColors = 
+       { "RED", "WHITE", "BLUE" };
+  
+    // crea ArrayList, añade Colors y la manipula
+    public CollectionTest() {
+    	List< String > list = new ArrayList< String >();      
+        List< String > removeList = new ArrayList<String>();
+    
+        // añade elementos del arreglo colors a list
+        for ( String color : colors )
+             list.add( color );   
+
+       // añade elementos del arreglo removeColors a removeList
+       for ( String color : removeColors )
+             removeList.add( color ); 
+    
+       System.out.println( "ArrayList: " );
+       // despliega contenido de list
+       for ( int count = 0; count < list.size(); count++ )
+             System.out.printf( "%s ", list.get( count ) );
+    
+       // remueve de list colores contenidos en removeList
+       removeColors( list, removeList );
+    
+       System.out.println( "\n\nArrayList después de llamar removeColors: " );
+       // despliega contenido de list
+       for ( String color : list )
+             System.out.printf( "%s ", color );
+    } // end CollectionTest constructor
+    
+    // remueve colores especificados en collection2 de collection1
+    private void removeColors( 
+       Collection< String > collection1, Collection< String > collection2 ) {
+    	   // obtiene iterator
+    	   Iterator< String > iterator = collection1.iterator(); 
+    
+    	   // mientras colección tiene elementos
+    	   while ( iterator.hasNext() )         
+       		   if ( collection2.contains( iterator.next() ) )
+    			   iterator.remove(); // remueve color actual
+    } 
+    
+    public static void main( String args[] )  {
+          new CollectionTest();
+    } 
+}
+\end{minted}
+\caption{Ejemplo usando la JCF en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Ejemplos complementarios de Clases Genéricas en Java}
+
+\textcolor{blue}{Ejemplo} de una pila genérica simple\footnote{Basado en: \href{http://cs.fit.edu/~ryan/java/programs/generic/GenericStack-java.html}{Generic Stack}}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import java.util.*;
+
+public class PilaGenérica <T> {
+	private ArrayList<T> pila = new ArrayList<T> ();
+    private int tope = 0;
+   
+    public int size () { 
+    	  return tope; 
+    }
+   
+    public void push (T elemento) {
+    	  pila.add (tope++, elemento);
+    }
+  
+    public T pop () {
+        return pila.remove (--tope);
+    }
+  
+    public static void main (String[] args) {
+        PilaGenérica<Integer> p = new PilaGenérica<Integer> ();
+        
+        p.push (17);
+        int i = p.pop ();
+        System.out.format ("%4d%n", i);
+     }
+ }
+\end{minted}
+\caption{Ejemplo de una pila genérica simple en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo} de una pila genérica como lista ligada\footnote{Ejemplo basado de: \href{http://introcs.cs.princeton.edu/java/43stack/Stack.java.html}{Stack}}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class Pila<Elemento> implements Iterable<Elemento> {
+    private int tamaño;          // tamaño de la pila
+    private Nodo primer;     // tope de la pila
+
+    // clase anidada Nodo
+    private class Nodo {
+        private Elemento elemento;
+        private Nodo siguiente;
+    }
+
+    // Crea una pila vacia.
+    public Pila() {
+        primer = null;
+        tamaño = 0;
+    }
+
+    // Esta vacia la pila?
+    public boolean estaVacia() {
+        return primer == null;
+    }
+
+    // Regresa el número de elementos en la pila
+    public int getTamaño() {
+        return tamaño;
+    }
+
+    // Añade elemento a la pila.
+    public void push(Elemento elemento) {
+        Nodo viejoPrimer = primer;
+
+     primer = new Nodo();
+        primer.elemento = elemento;
+        primer.siguiente = viejoPrimer;
+        tamaño++;
+    }
+
+   /**
+     *Regresa el elemento en el tope de la pila y lo elimina.
+     *Lanza una excepción si no hay elemento porque la pila este vacia.*/
+    public Elemento pop() {
+        if (estaVacia()) 
+        	throw new RuntimeException("Pila vacía");
+        Elemento elemento = primer.elemento;    // guarda elemento para retornarlo
+        primer = primer.siguiente;  // elimina el primer nodo
+        tamaño--;
+        return elemento;                  // regresa elemento 
+    }
+
+   /*** Regresa el elemento en el tope de la pila sin modificarla.
+     * Lanza una excepción si la pila esta vacía.*/
+    public Elemento ver() {
+        if (estaVacia()) 
+        	throw new RuntimeException("Pila vacía");
+        return primer.elemento;
+    }
+
+   /*** Regresa representación en cadena.*/
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Elemento elemento : this)
+            s.append(elemento + " ");
+        return s.toString();
+    }
+    //  Regresa un iterador a la pila que itera a través de los elementos en orden LIFO
+    public Iterator<Elemento> iterator()  { 
+    	return new ListIterator();  
+    	}
+  // Iterador, no se implementa remove() dado que es opcional
+    private class ListIterator implements Iterator<Elemento> {
+        private Nodo actual = primer;
+        
+        public boolean hasNext()  { 
+        	return actual != null;                     
+        }
+        
+        public void remove() { 
+        	throw new UnsupportedOperationException();  
+        }
+
+        public Elemento next() {
+            if (!hasNext()) 
+            	throw new NoSuchElementException();
+            Elemento elemento = actual.elemento;
+            actual = actual.siguiente; 
+            return elemento;
+        }
+    }
+
+    public static void main(String[] args) {
+        Pila<String> s = new Pila<String>();
+        
+        String elemento1 = "un texto";
+        String elemento2 = "otro elemento";
+        String elemento3 = "xxxx";
+        
+        s.push(elemento1);
+        s.push(elemento2);
+        s.push(elemento3);
+        
+        while (!s.estaVacia()) {
+           System.out.println(s.pop());
+           System.out.println("(" + s.getTamaño() + " elemento(s) quedan en la pila)");
+        }
+    }
+}
+\end{minted}
+\caption{Ejemplo de una pila genérica como lista ligada en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%%%PENDIENTE
+%Clases Genéricas en Java y comodines (wildcard)  (PENDIENTE) \footnote{https://docs.oracle.com/javase/tutorial/extra/generics/wildcards.html} \footnote{https://www.journaldev.com/1663/java-generics-example-method-class-interface}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+\section{Clases Genéricas en Scala\protect\footnote{\url{https://docs.scala-lang.org/tour/generic-classes.html}}}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Stack[T] {
+  var elems: List[T] = Nil
+  def push(x: T) { elems = x :: elems }
+  def top: T = elems.head
+  def pop() { elems = elems.tail }
+}
+
+object StackTest {
+   def main(args: Array[String]) {
+       val stack = new Stack[Int]
+        stack.push(1)
+        stack.push('a')
+        println(stack.top)
+        stack.pop()
+        println(stack.top)
+   }
+}
+\end{minted}
+\caption{Ejemplo de clases genéricas en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+\section{Clases Genéricas en C\#\protect\footnote{\url{https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/}}}
+
+\ejemplo
+
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Plantillas en D\protect\footnote{\url{https://dlang.org/spec/template.html}}}
+
+\ejemplo
+Ejemplo: \footnote{\url{https://en.wikibooks.org/wiki/A_Beginner\%27s_Guide_to_D/Templates_and_Generic_Programming/Template_Classes}}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+class LinkedStack(T){
+    private Node head;
+    class Node{
+        T item;
+        Node next;
+        Node prev;
+    }
+    this(){
+        head = new Node;
+        head.prev = head;
+        head.next = head;
+    }
+
+    void push(T t){
+        Node temp = new Node;
+        temp.item = t;
+        head.prev.next = temp;
+        temp.prev = head.prev;
+        temp.next = head;
+        head.prev = temp;
+    }
+    T pop(){
+        Node temp = head.prev;
+        temp.prev.next = head;
+        head.prev = temp.prev;
+        return temp.item;
+    }
+    T peek(){
+        return head.prev.item;
+    }
+}
+
+void main() {
+    import std.stdio;
+    
+    auto list = new LinkedStack!(int);
+    list.push(1);
+    list.push(2);
+    list.push(3);
+
+    writeln (list.pop());
+    
+    auto strList = new LinkedStack!(string);
+    strList.push("hello");
+    strList.push("world!");
+    
+    writeln(strList.pop());
+}
+\end{minted}
+\caption{Ejemplo de plantillas en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Ejercicios de clases genéricas} 
+\end{center} 
+\\ \hline
+   Diseñe una \textbf{clase genérica ''Matriz''} que almacene una matriz de cualquier tipo. La clase debe tener métodos para acceder a un elemento específico en la matriz, para establecer el valor de un elemento específico en la matriz, para obtener el número de filas y columnas de la matriz, y para imprimir la matriz en la consola. Proporcione un ejemplo de cómo se utilizaría la clase para crear una matriz de enteros y una matriz de cadenas.
+   Para C++ es posible hacer uso de la clase $vector<T>$ y para Java la clase $ArrayList<E>$
+\\ \hline
+Implementar una \textbf{clase genérica $Arbol$}, que permita almacenar elementos de cualquier tipo en una estructura de datos de tipo árbol binario. La clase debería tener los siguientes métodos:
+
+\begin{enumerate}
+    \item $add(element: T)$: Agrega un elemento al árbol.
+    \item $remove(element: T)$: Elimina un elemento específico del árbol.
+    \item $search(element: T) -> bool$: Busca un elemento específico en el árbol y devuelve verdadero si se encuentra, falso en caso contrario.
+    \item $traverse(order: str) -> List[T]$: Recorre el árbol en el orden especificado ($in-order, pre-order, post-order$) y devuelve una lista con los elementos del árbol en ese orden.
+    \item $get\_height() -> int$: devuelve la altura del arbol.
+    \item $get\_size() -> int$: devuelve el número de elementos en el árbol.
+\end{enumerate}
+\\ \hline
+
+\textbf{Almacenamiento Genérico de Datos}
+
+Crea una \textbf{clase genérica llamada \textit{AlmacenamientoDatos\<T\>}} que pueda almacenar y manipular datos de cualquier tipo \textit{T}. La clase debe tener las siguientes funcionalidades:
+
+    \begin{enumerate}
+        \item \textbf{Inicialización}: La clase debe inicializarse con una capacidad inicial para almacenar elementos.
+        \item \textbf{Agregar Elemento}: Implementa un método\textit{ void agregarElemento(T elemento)} que añade un elemento al almacenamiento. Si el almacenamiento alcanza su capacidad, debería redimensionarse automáticamente para acomodar más elementos.
+        \item \textbf{Recuperar Elemento}: Implementa un método \textit{T obtenerElemento(int indice)} que recupera el elemento en el índice especificado.
+        \item \textbf{Eliminar Elemento}: Implementa un método\textit{ bool eliminarElemento(T elemento) }que elimina la primera ocurrencia del elemento especificado del almacenamiento. Debería devolver \textit{true} si se encuentra y elimina el elemento; de lo contrario, devolver \textit{false}.
+        \item \textbf{Imprimir Todos los Elementos}: Implementa un método \textit{void ImprimirTodosLosElementos()} que imprime todos los elementos en el almacenamiento.
+        \item \textbf{Método Genérico}: Implementa un método genérico\textit{ U ProcesarDatos<U>(Func<T, U> funcionProceso) }que tome una función como argumento y la aplique a cada elemento en el almacenamiento. El resultado debería ser una colección de los elementos procesados.
+    \end{enumerate}
+
+Probar la clase genérica con varios tipos de datos, como enteros, cadenas y objetos personalizados. También  crear múltiples instancias de la clase \verb|\textit{AlmacenamientoDatos}| con capacidades iniciales diferentes para observar cómo funciona el mecanismo de redimensionamiento.
+\\ \hline
+Crear una \textbf{subclase} de \verb|\textit{\textbf{AlmacenamientoDatos<T>}}| que agregue funcionalidades o restricciones adicionales, demostrando cómo funciona la herencia y la extensión en el contexto de las clases genéricas.
+\\ \hline
+
+\end{tabular}
+\end{center}
+
+ 
+

@@ -1,0 +1,92 @@
+\chapter{Java: Expresiones lambda $\lambda$}
+\section{Introducción}
+
+
+Java fue creado como un lenguaje orientado a objetos en los 90's, pero la tendencia de los lenguajes actuales es ser multiparadigma, tomando conceptos y adaptándolos a los lenguajes actuales. Un paradigma que antes estaba confinado más al mundo académico es el de programación funcional. Éste ha tomado mayor relevancia porque funciona bien con programación concurrente o manejada por eventos. Ejemplos de lenguajes puramente funcionales son Haskell y Erlang.
+
+\includegraphics[scale=.6]{imagenes/java_lambda.png}
+
+Java 8 añade constructores de programación funcional a sus bases orientadas a objetos. Algunos puntos básicos son\footnote{\href{http://www.drdobbs.com/jvm/lambda-expressions-in-java-8/240166764}{Lambda expressions in Java}}: 
+
+
+\begin{itemize}
+\item Una expresión lambda es un bloque de código con parámetros.
+\item Expresiones lambda pueden ser convertidas en interfaces funcionales
+\item Estas expresiones pueden acceder efectivamente variables finales dentro del alcance que encierran.
+\item Se puede tener ahora métodos default y estáticos en las interfaces que ofrecen implementación concreta. Estos métodos de múltiples interfaces pueden generar conflictos que debe atender el programador.
+\end{itemize}
+
+Una expresión lambda es un bloque de código que puede ser pasado y ejecutarse eventualmente, una vez o múltiples veces. Básicamente permite la escritura de un método en el lugar que necesitas usarlo. Práctico especialmente si el método solo se va a usar una vez y éste es corto.
+
+Pasar un bloque de código no era fácil en Java. Al ser orientado a objetos, se tenía que construir un objeto que perteneciera a una clase que tuviera el método con el código necesario.
+
+
+El nombre lambda viene del lógico y matemático \textbf{Alonzo Church}, el cual quería formalizar lo que significa para una función matemática ser efectivamente computable. El usó la letra Griega minúscula lambda  $\lambda$ para marcar los parámetros. Propuso entonces un sistema formal conocido como cálculo lambda ( $\lambda-calculus$).
+
+$\lambda-calculus$ es un simple modelo conceptual de cómputo universal. De hecho, Turing demostró en 1937 que las máquinas de Turing tienen una expresividad equivalente a $\lambda-calculus$ \cite{turing1937computability}. 
+
+\section{Sintaxis de expresiones lambda}
+
+La sintaxis general de una expresión lambda en Java es:
+
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| (<argumentos>) -> <cuerpo>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Por ejemplo, las siguientes son expresiones lambda válidas:
+
+\begin{minted}{java}
+(int a, int b) -> {return a+b;}
+
+( ) -> System.out.println(“Lambda”)
+
+(String s) -> System.out.println(s)
+
+( ) -> 123
+\end{minted}
+
+Algunas características relevantes\footnote{\href{http://viralpatel.net/blogs/lambda-expressions-java-tutorial/}{Lambda expressions java tutorial}}:
+
+\begin{itemize}
+\item Una expresión puede tener de cero a n parámetros.
+\item El tipo del parámetro puede indicarse explícitamente o puede ser inferido del contexto.
+\item Cuando no hay parámetros se debe indicar con paréntesis vacíos (). Si se tienen un sólo parámetro y su tipo es inferido, los paréntesis son opcionales.
+\item El cuerpo de la expresión lambda puede ir vacío. 
+\item Si se tiene una sola instrucción en el cuerpo, se pueden omitir las llaves y el tipo de retorno de la función es el mismo que el de la instrucción.
+\end{itemize}
+
+Las expresiones lambda pueden ser usadas en lugar de las clases anónimas para implementar el método de una interfaz funcional. Una \textbf{interfaz funcional}  es una interfaz que tiene sólo un método abstracto declarado. Cada expresión lambda puede ser implícitamente asignada a una interfaz funcional. 
+
+Por ejemplo, inclusive cuando no especificamos la interfaz funcional, el compilador automáticamente resuelve que la siguiente expresión lambda puede ser enmascarada a la interfaz \textit{Runnable} en la firma del constructor \textit{Thread(Runnable r)}:
+
+\begin{minted}{java}
+new Thread(
+	( ) -> System.out.println("ejemplo de expresión lambda")
+).start();
+\end{minted}
+
+Dos diferencias importantes entre expresiones lambda y clases anónimas:
+
+
+\begin{itemize}
+\item Para una clase anónima el uso de this se refiere a la clase anónima, mientras que el uso de this en una expresión lambda se refiere a la clase que contiene la expresión lambda.
+\item Para el compilador, una clase anónima es tratada como una clase y generará su código respectivo, mientras que una expresión lambda es compilada y convertida en un método privado de la clase que contiene la expresión.
+\end{itemize}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

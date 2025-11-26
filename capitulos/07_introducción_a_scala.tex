@@ -1,0 +1,394 @@
+\chapter{Introducción a Scala}
+\section{Introducción}
+Scala es un lenguaje con características funcionales y orientadas a objetos que se ejecuta sobre la máquina virtual de Java y tiene gran interacción con éste lenguaje. 
+
+¿Es Scala orientado a objetos o funcional? En realidad se trata de una nueva generación de lenguajes multiparadigma. Puede considerarte 100\% orientado a objetos pero incluye también un buen número de características del paradigma funcional.  \textbf{Scala es multiparadigma y multiplataforma}.
+
+Fue creado por Martin Odersky, quien inició el proyecto en 2001 liberando la primera versión en 2003. Odersky trabajó desde 1995 con la máquina virtual de java y lideró el desarrollo de \textit{javac} de la versión 1.1 a la 1.4 \cite{pollak2009beginning}.
+
+Odersky y Phillip Wader también trabajaron en un lenguaje llamado Pizza que trabajaba con la JVM y contenía clases genéricas entre otras características. Pizza evolucionó para proporcionar clases genéricas en Java.
+
+Scala esta disponible en \url{www.scala-lang.org} . Iniciado como proyecto académico ha encontrado acogida en la industria. Por ejemplo, Twitter fue originalmente desarrollado en Ruby, pero después movió  partes de su código a Scala.
+
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Actividad: lectura de artículo}\\ 
+\hline
+   \url{https://www.computerworld.com.au/article/315254/-z_programming_languages_scala} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Herramientas}
+
+Para ejecutar Scala debe tenerse instalada la JVM. Scala puede ser obtenido del sitio mencionado anteriormente.
+
+Scala es accesible desde la consola de comandos tecleando $scala$. Deberias de ver una introducción como:
+
+\begin{alltt}
+ Welcome to Scala version 2.7.3.final (Java HotSpot(TM) 64-Bit Server VM, Java 
+1.6.0_07). 
+Type in expressions to have them evaluated. 
+Type :help for more information. 
+scala>    
+\end{alltt}
+
+Scala puede ejecutar código de tres formas:
+
+  
+\begin{enumerate}
+\item  Interactivamente
+\item  Ejecución interpretada de archivos
+\item  En modo compilado en archivos de clases como en Java
+\end{enumerate}
+
+Scala puede ser iniciado en su modo interactivo simplemente ejecutando $scala$ desde una terminal del sistema\footnote{Asumiendo que se encuentra instalado y accesible desde cualquier directorio.}:
+
+\begin{alltt}
+$scala
+Welcome to Scala version 2.7.5.final (Java HotSpot(TM) Client VM, Java 1.5.0_19).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> 
+\end{alltt}
+
+Como cualquier intérprete, es posible empezar ejecutar expresiones directamente:
+
+\begin{minted}{scala}
+scala> 5+10
+res0: Int = 15
+
+scala> res0 * 2
+res1: Int = 30
+
+scala> val hola= "Hola Mundo!"
+hola: java.lang.String = Hola Mundo!
+
+scala> print ("Hola Mundo!")
+Hola Mundo!
+\end{minted}
+
+Recordar que Scala se basa en Java, por lo que es simple importar las bibliotecas de la API de Java:
+
+\begin{minted}{scala}
+scala> val fecha= new Date
+fecha: java.util.Date = Mon Aug 31 13:43:32 CDT 2009
+\end{minted}
+
+Por otro lado, la ejecución de scripts se hace utilizando el mismo intérprete, pero indicando, en el momento de ejecución, el nombre del programa:
+
+\mint[linenos=false]{scala}|>scala programa.scala|
+
+Finalmente, como se mencionó, es posible compilar los programa en Scala y obtener archivos $.class$, usando el programa $scalac$:
+
+\mint[linenos=false]{scala}|>scalac programa.scala|
+
+Se necesita que los archivos fuente contengan una o más clases definidas.
+
+También es posible compilar usando \textit{fsc}. \textit{fsc} (\textit{fast Scala compiler}) es un compilador que se queda como proceso corriendo, esperando por mas compilaciones, ayudando a realizar múltiples compilaciones en un menor tiempo, pero usando por lo tanto mas recursos al permanecer en ejecución.
+
+\section{''Hola, Mundo''}
+Veamos ahora el clásico "Hola, Mundo" en Scala:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+object HolaMundo {
+  def main(args: Array[String])  ={
+    println("Hola, Mundo!")
+  }
+}
+\end{minted}
+\caption{Ejemplo "Hola, Mundo" en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otra posibilidad es definir un objeto que extienda App\footnote{Ver: \href{http://alvinalexander.com/scala/how-to-launch-scala-application-with-object-main-method-trait}{How to launch a Scala application with an object (main, app)} }:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+object HolaMundo extends App{
+    println("Hola, Mundo!")
+}
+\end{minted}
+\caption{Ejemplo 2 de "Hola, Mundo" en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Fundamentos de Scala}
+
+\subsection{Convenciones léxicas}
+Scala utiliza la misma convección de comentarios de Java, C\#, C, etc.; es decir utiliza $//comentario$ y $/*comentario*/$. Scala utiliza la regla de \textbf{mayor coincidencia}, que se refiere al uso de de paréntesis en los números:
+
+\mint[linenos=false]{scala}|(1).(((2).*(3))./(x))  |
+
+ya que $1.$ es una coincidencia valida y es mayor que 1, haciendo que este sea un \textit{Double} y no un \textit{Int} y al tener $(1).+(2)$ se consideran enteros tanto 1 como 2. 
+
+\subsection{Literales}
+Existen diferentes valores literales como enteros, punto flotante, booleanos, caracteres, cadenas, símbolos, funciones, tuplas, etc. Las literales enteros pueden ser expresadas en decimal, hexadecimal u octal. Los límites de estas literales se muestran en la siguiente el Cuadro \ref{tab:literales_scala}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\rowcolor[HTML]{9B9B9B} 
+		Tipo  & Valor mínimo & Valor máximo \\ \hline
+		Long  & $-2^{63}$           & $2^{63}-1$            \\ \hline
+		Int   & $-2^{31}$           & $2^{31}-1$            \\ \hline
+		Short & $-2^{15}$           & $2^{15}-1$            \\ \hline
+		Char  & $0$            & $2^{16}-1$            \\ \hline
+		Byte  & $-2^{7}$           & $2^{7}-1$            \\ \hline
+	\end{tabular}
+	\caption{Literales en Scala}
+	\label{tab:literales_scala}
+\end{table}
+
+
+ Los valores flotantes pueden llevar la letra f o F al final del valor para indicar que son de este tipo, también pueden tener la letra d o D para indicar que son \textit{Double}, y pueden utilizar la letra e o E de exponencial para escribir un número en notación científica, por ejemplo: .14, 3.14f, 3.14F, 3.14d, 3.14D, 3.14e+5, 3.14e-5, 3.14e+5f, 3.14e-5F, etc. Los valores tipo flotantes consisten de todos los IEEE 754 de 32-bits mientras que los dobles son de IEEE 754 de 64-bits.
+   
+ Los literales tipo booleanos constan de \textit{true} y \textit{false}, por ejemplo:
+
+\begin{minted}{scala}
+scala> val b1 = true
+b1: Boolean = true
+scala> val b1 = false
+b1: Boolean = false
+\end{minted}
+
+Un carácter es o bien un carácter \textit{Unicode} o una secuencia escrito entre ' '. Un carácter Unicode entre 0 y 255 también puede estar representado por un octal, es decir, por una barra invertida (\textbackslash) seguida de una secuencia de hasta tres caracteres octales, por ejemplo: 'A' y '\textbackslash u0041' ('A' en \textit{Unicode}),  o '\textbackslash n' y '\textbackslash 012' (en octal). En el siguiente cuadro (\ref{tab:se_scala}) se muestran los caracteres que reconoce Scala.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Secuencia         & Significado          & Secuencia                        & Significado      \\ \hline
+\textbackslash{}b & Retroceso            & \textbackslash{}r                & Retorno de carro \\ \hline
+\textbackslash{}t & Tabulador horizontal & \textbackslash{}"                & Comillas dobles  \\ \hline
+\textbackslash{}n & Salto de línea       & \textbackslash{}'                & Comillas simples \\ \hline
+\textbackslash{}f & Salto de página      & \textbackslash{}\textbackslash{} & Barra invertida  \\ \hline
+\end{tabular}
+\caption{Secuencias de escape en Scala}
+\label{tab:sec_scala}
+\end{table}
+
+El \textit{string} es una secuencia de caracteres entre doble comillas o triple. Scala permite utilizar cadenas multi-lineas sin utilizar espacios en blanco extras en la cadena de salida:
+
+\begin{minted}{scala}
+def hello(name: String) = s "Bienvenido!"  
+  Hola, $nombre!
+  |Nos alegra verte.
+  |  Deja espacio en blanco extra.
+hello("programa en Scala")
+\end{minted}
+
+Las literales funciones se pueden escribir de dos formas:
+
+\begin{minted}{scala}
+val f1: (Int,String) => = (i,s) => s+i
+val f2: Function2[Int,String,String] = (i,s) => s+i
+\end{minted}
+
+son funciones que reciben un \textit{Int}  y un \textit{String} y devuelven un \textit{String}. También se pueden regresar dos o más valores en un método usando la biblioteca \textit{Tuple} para agrupar 2 elementos, la sintaxis es escribir los elementos dentro de paréntesis separados por comas, por ejemplo:
+
+\begin{minted}{scala}
+val t1: (Int,String) = (1,"Dos")
+val t2: Tuple2[Int,String] = (1,"Dos")
+\end{minted}
+
+Se puede utilizar la sintaxis literal para construir la variable $t$ y poder tener acceso a cada uno de los elementos de la siguiente forma:
+
+\begin{minted}{scala}
+val t = ("Hola",1,3.4)
+println("Tupla completa: " + t)
+println("Primer elemento de la tupla: " + t._1)
+println("Segundo elemento de la tupla: " + t._2) 
+println("tercer elemento de la tupla: " + t.3)
+\end{minted}
+
+Declarar tres valores $t1, t2, t3$ y asignarlos a una tupla:
+
+\begin{minted}{scala}
+val (t1,t2,t3) = ("Hola","!",0x22)
+println("Tupla: " + t1 + ", " + "t2" + ", " + t3)
+\end{minted}
+
+O se puede construir una tupla a partir de otra:
+
+\begin{minted}{scala}
+val (t4,t5,t6) = ("Hola",1,0x22)
+println("Tupla: " + t4 + ", " + "t5" + ", " + t6)
+\end{minted}
+
+Otra forma de definir una tupla es con $- \textgreater{} $ , por ejemplo (1,"Uno") es lo mismo que    $1- \textgreater{} "Uno"$.
+
+\subsection{Variables}
+
+Scala utiliza dos tipos de variables, inmutables o mutables. Las variables inmutables solo pueden ser de lectura mientras que las variables mutables son de lectura y escritura.  Las variables inmutables son declaradas con la palabra clave \textit{val}:
+
+\begin{minted}{scala}
+scala> val array: Array[String] = new Array(5)               
+   array: Array[String] = Array(null,null,null,null,null)
+\end{minted}
+
+
+Scala es como Java, ya que la mayoría de las variables son referenciados a objetos \textit{head-allocated}, por lo que la referencia del arreglo no se puede cambiar para apuntar a un arreglo diferente, sin embargo, los elementos del arreglo si son mutables. Si se trata de modificar el tamaño del arreglo después de ser inicializada entonces el programa marcara un error:
+    
+\mint[linenos=false]{scala}|array = new Array(2)|
+
+Los elementos de una variable inmutable debe ser inicializada en el momento que se declara. Pero se pueden modificar sus valores después de ser inicializada:
+    
+\mint[linenos=false]{scala}|scala>array(0)=3.23|
+
+Las variables mutables se declaran con la palabra clave \textit{var} y debe ser inicializada inmediatamente después de ser declarada:
+
+\begin{minted}{scala}
+scala> var variable: Double = 100.0
+variable: Double = 100.0
+\end{minted}
+
+Puede darse la excepción de que las variables mutables o inmutables no sean declaradas en el momento, pero es cuando se utiliza como constructor de una clase.
+
+\subsection{Operadores}
+
+Scala utiliza los operadores condicionales de Java y se pueden observar en la siguiente tabla:
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Operador        & Operación         \\ \hline
+\&\&            & and               \\ \hline
+||              & or                \\ \hline
+\textgreater{}  & mayor que         \\ \hline
+\textless{}     & menor que         \\ \hline
+\textgreater{}= & mayor o igual que \\ \hline
+\textless{}=    & menor o igual que \\ \hline
+==              & igualdad          \\ \hline
+!=              & diferente         \\ \hline
+\end{tabular}
+\end{table}
+
+La mayoría de los operadores se comportan como lo hacen en Java y otros lenguajes. Sin embargo los operadores == y != en java comparan sólo referencias a objetos y  realiza una comprobación de igualdad lógica, pero Scala aparte de realizar una comparación lógica también llama al método igual.
+
+\subsection{Estructuras de control}
+
+\subsubsection{Condicional \textit{if}}
+La condicional es superficialmente muy similar al de Java, hace la comparación lógica y realiza el bloque correspondiente. Sin embargo, casi todas las declaraciones en Scala son expresiones que devuelven valores, por lo que se puede asignar el resultado a una expresión:
+
+
+\begin{minted}{scala}
+val configFile = new java.io.File("somefile.txt") 
+val configFilePath = if(configFile.exists(){ configFile.getAbsolutePath()               
+}else{
+    configFile.createNewFile()
+    configFile.getAbsolutePath()
+}
+\end{minted}
+
+\subsubsection{Condicional \textit{match}}
+
+Pattern match o coincidencia de patrones es una estructura similar al switch de Java para ser usado en lugar de una serie de estructuras condicionales if.
+
+%https://docs.scala-lang.org/tour/pattern-matching.html
+\begin{minted}{scala}
+
+import scala.util.Random
+
+val x: Int = Random.nextInt(10)
+
+x match {
+  case 0 => "cero"
+  case 1 => "uno"
+  case 2 => "dos"
+  case _ => "otro"
+}
+\end{minted}
+
+Recordemos que en Scala todo puede ser considerado una expresión. Si par un case se requiere más de una línea, todas las líneas se consideran un bloque sin necesidad de usar llaves para indicar el bloque.
+
+\subsubsection{Ciclo \textit{for}}
+Se puede recorrer un arreglo de tal manera:
+
+\begin{minted}{scala}
+val dogBreeds = List ("Doberman", "Dachshund", "Great Dane", "Scottish Terrier")
+for (breed <- dogBreeds)
+   println(breed)
+\end{minted}
+
+Es decir, para cada elemento de la lista \textit{dogBreeds} se crea una variable temporal llamada \textit{breed} con el valor del elemento y lo muestra en pantalla. Al operador $<-$ se le conoce como expresión generadora. También se puede utilizar un rango de la forma tradicional:
+
+\mint[linenos=false]{scala}| for(i<-1 to 10)println(i) |
+
+\subsubsection{Ciclo \textit{while} y \textit{do-while}}
+El ciclo \textit{while} y \textit{do-while} son parecidos al de Java, realiza cierta tarea siempre que la condición sea verdadera, por ejemplo:
+
+\begin{minted}{scala}
+import java.util.Calendar
+def isFridayThirteen(cal: Calendar):Boolean={
+   val dayofWeek = cal.get(Calendar.DAY_OF_WEEK)
+   val dayofMonth = cal.get(Calendar.DAY_OF_MONTH)
+   (dayofWeek==Calendar.FRIDAY) && (dayofMonth == 13)
+}
+while(!isFridayThirteen(Calendar.getInstance())){
+    println("Today isn't Friday the 13th. Lame.")
+    Thread.sleep(86400000)
+}
+\end{minted}
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+
+\subsection{Entrada y Salida básica }
+\subsubsection{Módulos ¿?}
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+\subsubsection{Bloques de código}
+
+Como en Scala todo puede ser considerado una expresión. Inclusive un bloque de código regresa un resultado, dicho bloque de código entonces puede ser usado por un método o una variable
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+

@@ -1,0 +1,459 @@
+\chapter{Objetos compuestos}
+
+Algunas veces una clase no puede modelar adecuadamente una entidad basándose únicamente en  tipos de datos simples. Los LPOO permiten a una clase \textbf{contener} objetos. Un objeto forma parte directamente de la clase en la que se encuentra declarado.  
+
+El objeto compuesto es una especie de relación, pero con una asociación más fuerte con los objetos relacionados. A la noción de objeto \textbf{compuesto} se le conoce también como objeto \textbf{complejo} o \textbf{agregado}.  
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+\textbf{Rumbaugh} define a la agregación como \textit{''una forma fuerte de asociación, en la cual el objeto agregado está formado por componentes. Los componentes forman parte del agregado. El agregado, es un objeto extendido que se trata como una unidad en muchas operaciones, aún cuando conste físicamente de varios objetos menores.''\cite{rumbaugh1991object}}   
+\\ \hline
+\end{tabular}
+\end{center}
+
+	Ejemplo: Un automóvil se puede considerar ensamblado o agregado, donde el motor y la carrocería serian sus componentes.
+
+El concepto de agregación puede ser relativo a la conceptualización que se tenga de los objetos que se quieran modelar. 
+
+Dicho concepto implica obviamente cierta dependencia entre los objetos, por lo que hay que tener en cuenta que pasa con los objetos que son parte del objeto compuesto cuando éste último se destruye. En general tenemos dos opciones:
+
+
+\begin{enumerate}
+\item Cuando el objeto agregado se destruye, los objetos que lo componen no tienen necesariamente que ser destruidos.
+\item Cuando el agregado es destruido también sus componentes se destruyen.
+\end{enumerate}
+
+	Un objeto que es parte de otro objeto, puede a su vez ser un objeto compuesto. De esta forma podemos tener múltiples niveles. Un objeto puede ser un \textbf{agregado recursivo}, es decir, tener un objeto de su misma clase. 
+
+Ejemplo: Directorio de archivos.
+
+%\begin{wrapfigure}{O}{0.05\textwidth}
+%    \centering
+%    \includegraphics[]{imagenes/Agregación directorio archivo.png}
+%    \includegraphics[width=0.25\textwidth]{mesh}
+%\end{wrapfigure}
+
+	Sin embargo, la forma en que se implemente la agregación puede no permitir la agregación recursiva.
+
+
+	
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Objetos compuestos en C++}
+
+Por el momento vamos a considerar la segunda opción mencionada anteriormente, por ser más fácil de implementar y porque es la acción natural de los objetos que se encuentran embebidos como un atributo más en una clase.
+
+Ejemplo:
+\begin{minted}{cpp}
+class Nombre {
+	private:
+  	char paterno[20],
+  	materno[20],
+  	nom[15];
+	public:
+	set(char *, char*, char *);
+	...
+};
+
+class Persona {
+	private:
+	int edad;
+	Nombre nombrePersona;
+	...
+};
+\end{minted}
+
+	Al crear un objeto compuesto, cada uno de sus componentes es creado con sus respectivos constructores. Para inicializar esos objetos componentes tenemos dos opciones:
+
+
+\begin{enumerate}
+\item En el constructor del objeto compuesto llamar a los métodos \textit{set} correspondientes a la modificación de los atributos de los objetos componentes.
+\item Pasar en el constructor del objeto compuesto los argumentos a los constructores de los objetos componentes.
+\end{enumerate}
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+<clase>::<constructor>(<lista de argumentos>) 
+   : <objeto componente 1>(<lista de argumentos sin el tipo>),...
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+donde la lista de argumentos del objeto compuesto debe incluir a los argumentos de los objetos componentes, para que puedan ser pasados en la creación del objeto.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Tema sugerido} 
+\end{center} 
+\\ \hline
+Apéndice X: UMLGEC++ 
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+class Nombre {
+	char *nombre, *paterno, *materno;
+	public:
+		Nombre(char *n, char *p, char*m){
+			nombre=new char[strlen(n)+1];
+			paterno=new char[strlen(p)+1];
+			materno=new char[strlen(m)+1];
+			strcpy(nombre, n);
+			strcpy(paterno, p);
+			strcpy(materno, m);
+		}
+		~Nombre(){
+			cout<<"destructor de Nombre: "<<nombre<<endl;
+			delete []nombre;
+			delete []paterno;
+			delete []materno;
+		}
+};
+
+class Persona{
+	Nombre miNombre;
+	int	edad;
+	public:
+	Persona(char *n, char *p, char*m): miNombre(n, p, m){
+		edad=0;
+	}
+};
+
+int main() {
+	Persona *per1;
+	per1= new Persona("uno", "dos", "tres");
+	Persona per2("Bob", "the", "builder");
+	delete per1;
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de composición en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Objetos compuestos en Java}
+
+En Java, puede no existir mucha diferencia entre la implementación de la asociación y la agregación, debido a que en Java los objetos siempre son manejados por referencias, pero el concepto se debe tener en cuenta para su manejo, además de ser relevante a nivel de diseño de software.
+
+Recordemos que en general hay dos opciones para el manejo de la agregación:
+
+    
+\begin{enumerate}
+\item Cuando el objeto agregado se destruye, los objetos que lo componen no tienen necesariamente que ser destruidos.
+\item Cuando el agregado es destruido también sus componentes se destruyen.
+\end{enumerate}
+
+Al igual que en C++, vamos a considerar la segunda opción, por ser más fácil de implementar y es la acción natural de los objetos que se encuentran embebidos como un atributo más una clase.
+
+Ejemplo:
+\begin{minted}{java}
+class Nombre {
+	 private String paterno;
+	 private String materno;
+	 private String nom;
+
+	 public	set(String pat, String mat, String n) {
+		...
+	 }
+		...
+}
+
+class Persona {
+	 private int edad;
+	 private Nombre nombrePersona;
+	 ...
+}
+\end{minted}
+
+A diferencia de lo que sucede en C++, los atributos compuestos no tienen memoria asignada, es decir, los objetos compuestos no han sido realmente creados en el momento en que se crea el objeto componente. Es responsabilidad del constructor del objeto componente inicializar los objetos miembros o compuestos, si es que así se requiere.
+
+Para inicializar esos objetos componentes tenemos dos opciones:
+
+
+\begin{enumerate}
+\item En el constructor del objeto compuesto llamar a los métodos set correspondientes a la modificación de los atributos de los objetos componentes, esto claro está, después de asignarle la memoria a los objetos componentes.
+\item Llamar a algún constructor especializado del  objeto componente en el momento de crearlo.
+\end{enumerate}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Programa Persona
+class Nombre {
+	private String nombre,
+		paterno,
+		materno;
+	public Nombre(String n, String p, String m){
+			nombre= new String(n);
+			paterno= new String(p);
+			materno= new String(m);
+	}
+}
+
+public class Persona{
+	private Nombre miNombre;
+	private int edad;
+	public Persona(String n, String p, String m) {
+		miNombre= new Nombre(n, p, m);
+		edad=0;
+	}
+
+	public static void main(String args[]) {
+		Persona per1;
+		per1= new Persona("uno", "dos", "tres");
+		Persona per2= new Persona("mi nombre", "mi apellido", 
+		  "otro apellido");
+	}
+}
+\end{minted}
+\caption{Ejemplo de composición en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Pero también es posible que un objeto sea un agregado recursivo, es decir, tener como parte de su componente un objeto de su misma clase.  Considerar por ejemplo un directorio de archivos, donde cada directorio puede contener, además de archivos, a otros directorios\footnote{ Lo importante aquí es considerar en que solo existe la \textbf{posibilidad} de contener un objeto de si mismo. Si esto fuera una condición obligatoria y no opcional, estaríamos definiendo un \textbf{objeto infinito}.  Este problema se ve reflejado en lenguajes como C++, donde la forma más simple de implementar la agregación es definiendo un objeto al cual se le asigna espacio en tiempo de compilación, generando entonces el problema de que cada objeto debe reservar memoria para sus componentes, por lo que el compilador no permite que de esta manera se autocontenga. En Java esto no generaría problema porque implícitamente todos los atributos que no son datos simples requieren de una asignación de memoria dinámica.}.
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Objetos compuestos en Ruby}
+
+En Ruby, como en Java, puede no existir mucha diferencia entre la implementación de la asociación y la agregación, debido a que en Ruby los objetos siempre son manejados por referencias, pero el concepto se debe tener en cuenta para su manejo, además de ser relevante a nivel de diseño de software.
+
+Al igual que en C++ y Java, vamos a considerar la opción en la cual los componentes son destruidos cuando el agregado es destruido.
+
+Ejemplo:
+
+\begin{minted}{ruby}
+class Nombre 
+	 @paterno
+	 @materno
+	 @nom
+
+	 def set (paterno, materno, nombre)
+		...
+	 end
+		...
+end
+
+class Persona 
+	 @edad
+	 @nombrePersona
+	 ...
+end
+\end{minted}
+
+Como ya se sabe, los identificadores para los atributos no tienen un tipo asociado, sino que son asignados a un objeto en tiempo de ejecución. Es responsabilidad del inicializador del objeto componente inicializar los objetos miembros o compuestos, si es que así se requiere.
+
+%ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+#Programa Persona
+class Nombre 
+	@nombre
+	@paterno
+	@materno
+	def initialize(nombre, paterno, materno)
+		@nombre= String.new nombre
+		@paterno= String.new paterno
+		@materno= String.new materno
+	end
+end
+	
+class Persona
+	@miNombre
+	@edad
+	def initialize(n, p, m)
+		@miNombre = Nombre.new(n, p, m)
+		@edad =0
+	end
+end
+
+#código de prueba
+per1= Persona.new("uno", "dos", "tres")
+per2= Persona.new("mi nombre", "mi apellido", "otro apellido")
+\end{minted}
+\caption{Ejemplo de composición en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+# Clase MyDate
+class MyDate 
+   @month  # 1-12
+   @day    # 1-31 dependiendo del mes
+   @yea;   # cualquier año
+ def initialize (mn, dy, yr)    
+      if ( mn > 0 && mn <= 12 )       
+         @month = mn;
+      else 
+         @month = 1;
+         puts "Mes #{mn} invalido. Se asigno el mes 1." 
+      end
+
+      @year = yr;                      
+      @day = checkDay( dy );           # validar el dia
+
+      puts "Inicializador de objeto MyDate para fecha " + to_s
+   end
+
+   # verifica que el dia sea correcto de acuerdo al mes
+  def checkDay (testDay)  
+      daysPerMonth = [0, 31, 28, 31, 30,
+                             31, 30, 31, 31, 30,
+                             31, 30, 31]
+   
+      if ( testDay > 0 && testDay <= daysPerMonth[@month] )
+         return testDay
+      end
+   
+      if ( @month == 2 &&   # Febrero, si el año es bisiesto
+           testDay == 29 &&
+           ( @year % 400 == 0 ||
+             ( @year % 4 == 0 && @year % 100 != 0 ) ) )
+         return testDay
+  	  end
+   
+      puts "Dia #{testDay.to_s} invalido. Se asigno el dia 1." 
+   
+      return 1  # deja al objeto en un estado consistente
+   end
+   
+   def to_s
+       return @month.to_s + "/" + @day.to_s + "/" + @year.to_s
+   end
+end     
+
+# Clase Empleado
+class Employee 
+   @firstName
+   @lastName
+   @birthDate
+   @hireDate
+
+   def initialize (fName, lName, bMonth, bDay, bYear,
+                    hMonth, hDay, hYear) 
+      @firstName = fName
+      @lastName = lName
+      @birthDate = MyDate.new( bMonth, bDay, bYear )
+      @hireDate = MyDate.new( hMonth, hDay, hYear )
+   end
+
+   def to_s   
+      return @lastName + ", " + @firstName +
+             "  Contratado: " + @hireDate.to_s +
+             "  Fecha nacimiento: " + @birthDate.to_s
+   end
+end
+# clase EmployeeTest
+class EmployeeTest
+  attr_reader :e
+   @e
+
+   def initialize   
+      @e = Employee.new( "Juanito", "Sanchez", 7, 24, 49,
+                        3, 12, 88 )
+   end
+      
+end
+
+# codigo de prueba 
+et= EmployeeTest.new
+puts et.e.to_s
+\end{minted}
+\caption{Ejemplo 2 de composición en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+

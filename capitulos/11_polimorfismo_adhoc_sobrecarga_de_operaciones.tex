@@ -1,0 +1,541 @@
+\chapter{Polimorfismo AdHoc: Sobrecarga de operaciones}
+\section{Introducción}
+Es posible tener el \textbf{mismo nombre} para una operación con la condición de que tenga parámetros diferentes. La diferencia debe de ser al menos en el tipo de datos. Al menos un parámetro debe ser diferente. 
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ Si se tienen dos o más operaciones con el mismo nombre y diferentes parámetros se dice que dichas operaciones están \textbf{sobrecargadas}.  
+\\ \hline
+\end{tabular}
+\end{center}
+
+El compilador sabe que operación ejecutar a través de la \textbf{firma} de la operación, que es una combinación del nombre de la operación y el número y tipo de los parámetros.
+
+El tipo de regreso de la operación puede ser igual o diferente.
+
+La sobrecarga\footnote{También conocida como homonimia.} de operaciones sirve para hacer un código más legible y modular. La idea es utilizar el mismo nombre para operaciones relacionadas. Si no tienen nada que ver entonces es mejor utilizar un nombre distinto. A continuación ejemplos de sobrecarga en C++ y Java.
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\section{Ejemplos de sobrecarga en C++}
+
+\begin{minted}{cpp}
+class MiClase{
+	int x;
+
+	public:
+	 void modifica() {
+		x++;
+	}
+	 void modifica(int y){
+		x=y*y;
+	}
+}
+\end{minted}
+
+\textcolor{blue}{Ejemplo} completo e C++:
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//fuera de POO
+#include <iostream>
+using namespace std;
+
+int cuadrado(int i){
+	return i*i;
+}
+double cuadrado(double d){
+	return d*d;
+}
+
+int main() {
+	cout<<"10 elevado al cuadrado:  "<<cuadrado(10)<<endl;
+	cout<<"10.5 elevado al cuadrado: "<<cuadrado(10.5)<<endl;
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\section{Ejemplo de sobrecarga en Java}
+
+\begin{minted}{java}
+class MiClase{
+	int x;
+	public 	 void modifica() {
+		x++;
+	}
+	public void modifica(int y){
+		x=y*y;
+	}
+}
+\end{minted}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+
+\section{En Ruby no hay sobrecarga}
+
+
+Ruby \textbf{no} soporta sobrecarga de operaciones. En Ruby la firma de un método es su nombre. Si dos métodos son definidos con el mismo nombre, la última implementación definida es la que se espera.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class MiClase
+	attr_reader :x
+	
+	def modifica
+		@x+=1
+	end
+	def modifica y
+		@x=y*y
+	end
+	
+end
+
+#prueba
+mc=MiClase.new
+
+puts mc.x
+# mc.modifica    -- Error pues se ha redefinido el método
+
+mc.modifica 10
+puts mc.x
+\end{minted}
+\caption{Ejemplo en ruby, redefiniendo un método.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+
+\section{Sobrecarga de operaciones en Python}
+% https://www.blog.pythonlibrary.org/2016/02/23/python-3-function-overloading-with-singledispatch/
+
+%https://docs.python.org/3.10/library/functools.html
+
+Originalmente Python no contaba con sobrecarga de operaciones. De hecho tratar de sobrecargar de forma tradicional nos llevaría a una situación como la del siguiente ejemplo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class MiClase:
+    def modifica(self):
+        self.x+=1
+    
+    def modifica(self, y):
+        self.x=y*y
+        
+#prueba
+mc=MiClase()
+mc.modifica(5)
+print(mc.x)
+#  mc.modifica()    -- Error pues se ha redefinido el metodo
+mc.modifica(10)
+print(mc.x)
+\end{minted}
+\caption{Ejemplo redefiniendo un método en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Sin embargo, una aproximación al concepto de sobrecarga ha sido implementado en versiones más recientes a través decoraciones declaradas dentro del módulo \textit{functools}
+
+\subsection{Sobrecarga de funciones con \textit{singledispatch}}
+A partir de la versión 3.4 de Python, el decorador \textit{singledispatch} permitirá convertir una función tradicional en una función sobrecargada. Es importante señalar que únicamente es posible hacerlo con al tipo del primer argumento de la función.  Ejemplo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+from functools import singledispatch
+
+@singledispatch
+def suma(a, b):
+    raise NotImplementedError('Tipo no soportado')
+
+@suma.register(int)
+def _(a, b):
+    print("El primer argumento es de tipo: ", type(a))
+    print(a + b)
+
+@suma.register(str)
+def s(a, b):        # nombre de la función no es relevante
+    print("El primer argumento es de tipo: ", type(a))
+    print(a + b)
+
+@suma.register
+def _(a: list, b):  #el tipo de dato puede ir especificado como "anotación"
+    print("El primer argumento es de tipo: ", type(a))
+    print(a + b)
+
+suma(1, 2)
+suma('Programación', 'Python')
+suma([1, 2, 3], [5, 6, 7])
+
+print('Tipos de datos manejados: ', suma.registry.keys())
+
+\end{minted}
+\caption{Ejemplo sobrecargando una función con \textit{singledispatch}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+De manera similar a otros lenguajes, la implementación del método a enviarse a ejecución es el del tipo que corresponda, en este caso al tipo del primer argumento. Es importante señalar que el nombre de la función que se registra con no es relevante.
+
+En el siguiente código se ve que el decorador permite apilamiento para que una función soporte más de un tipo.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+from functools import singledispatch
+from decimal import Decimal
+
+@singledispatch
+def suma(a, b):
+    raise NotImplementedError('Tipo no soportado')
+
+@suma.register(float)
+@suma.register(Decimal)
+def _(a, b):
+    print("El primer argumento es de tipo:  ", type(a))
+    print(a + b)
+
+suma(1.23, 5.5)
+suma(Decimal(100.5), Decimal(10.789))
+
+print('Tipos de datos manejados: ', suma.registry.keys())
+
+\end{minted}
+\caption{Ejemplo sobrecargando una función con \textit{singledispatch} y apilamiento de decoradores.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Sobrecarga de métodos con \textit{singledispatchmethod}}
+
+La solución pasada es útil para funciones pero no para métodos de instancia o de clase, debido a que el primer argumento aquí es para el objeto o la clase - \textit{self} o \textit{cls} -.
+A partir de Python 3.8, se puede utilizar \textit{singledispatchmethod}
+para sobrecargar métodos, métodos de clase, métodos abstractos o estáticos para el primer argumento del método (después de \textit{self} o \textit{cls}.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+from functools import singledispatchmethod
+
+class Negacion:
+    @singledispatchmethod
+    def neg(self, arg):
+        raise NotImplementedError("No puedo negar este tipo de dato")
+
+    @neg.register
+    def _(self, arg: int):
+        return -arg
+
+    @neg.register
+    def _(self, arg: bool):
+        return not arg
+
+
+obj = Negacion()
+
+print(obj.neg(10))
+print(obj.neg(True))
+
+\end{minted}
+\caption{Ejemplo sobrecargando un método con \textit{singledispatchmethod}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+from functools import singledispatchmethod
+
+class Negacion:
+    @singledispatchmethod
+    @classmethod
+    def neg(cls, arg):
+        raise NotImplementedError("No puedo negar este tipo de dato")
+
+    @neg.register
+    @classmethod
+    def _(cls, arg: int):
+        return -arg
+
+    @neg.register
+    @classmethod
+    def _(cls, arg: bool):
+        return not arg
+
+
+obj = Negacion()
+
+print(obj.neg(10))
+print(Negacion.neg(True))
+
+\end{minted}
+\caption{Ejemplo sobrecargando un método de clase con \textit{singledispatchmethod}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+
+\section{Ejemplo de sobrecarga en Scala}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class MiClase {
+	var x: Int=0
+    def modifica() {
+        x+=1
+     }
+    
+    def modifica(y:Int) {
+        x=y*y
+    }       
+}
+    
+object Sobrecarga {
+  def main(args: Array[String]) ={
+	  System.out.println("Sobrecarga")
+	  var mc /* : MiClase */ = new MiClase()
+	  mc.modifica(5)
+	  println(mc.x)
+	  mc.modifica()  
+	  println(mc.x)
+	  mc.modifica(10)
+	  println(mc.x)
+  }  
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+
+\section{Ejemplo de sobrecarga en C\#}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+ 
+namespace Application
+{
+ 
+class MiClase {
+        public int x=0;
+    public void modifica() {
+        x+=1;
+     }
+    
+    public void modifica(int y) {
+        x=y*y;
+    }    
+}
+    
+//public class Sobrecarga       {
+class Sobrecarga {
+        static void Main() {
+                Console.WriteLine("Sobrecarga");
+                MiClase mc = new MiClase();
+                mc.modifica(5);
+                Console.WriteLine(mc.x);
+                mc.modifica();  
+                Console.WriteLine(mc.x);
+                mc.modifica(10);
+                Console.WriteLine(mc.x);
+        }
+}
+        
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+
+\section{Ejemplo de sobrecarga en D}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Sobrecarga;
+
+import std.stdio;
+
+
+class MiClase {
+	public:
+		int x=0;
+		void modifica() {
+			x+=1;
+		}
+    
+		void modifica(int y) {
+			x=y*y;
+		}    
+}
+    
+//public class Sobrecarga	{
+int main() {
+		writeln("Sobrecarga");
+		MiClase mc = new MiClase();
+		mc.modifica(5);
+	  	writeln(mc.x);
+	  	mc.modifica();  
+	  	writeln(mc.x);
+	  	mc.modifica(10);
+	  	writeln(mc.x);
+	  	return 0;
+}
+\end{minted}
+\caption{Ejemplo de sobrecarga en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+\newpage

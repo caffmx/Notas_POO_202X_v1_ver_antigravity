@@ -1,0 +1,251 @@
+\chapter{Introducción a la programación orientada a objetos \cite{weitzenfeld1994paradigma, muller1997introduccion}}
+
+\section{Programación no estructurada}
+
+Comúnmente, las personas empiezan a aprender a programar escribiendo programas pequeños y sencillos consistentes en un solo programa principal. 
+
+\begin{center}
+    \includegraphics[]{imagenes/programacion.png}
+\end{center}
+
+Aquí "programa principal" se refiere a una secuencia de comandos o instrucciones que modifican datos que son a su vez globales en el transcurso de todo el programa. 
+
+\section{Programación procedural}
+
+Con la programación procedural se pueden combinar las secuencias de instrucciones repetitivas en un solo lugar. 
+
+Una llamada de procedimiento se utiliza para invocar al procedimiento. 
+
+Después de que la secuencia es procesada, el flujo de control procede exactamente después de la posición donde la llamada fue hecha.
+
+\begin{center}
+  \includegraphics[]{imagenes/programacionProcedural.png}
+\end{center}
+
+Al introducir parámetros, así como procedimientos de procedimientos (subprocedimientos) los programas ahora pueden ser escritos en forma más estructurada y con menos errores. 
+
+Por ejemplo, si un procedimiento ya es correcto, cada vez que es usado produce resultados correctos. Por consecuencia, en caso de errores, se puede reducir la búsqueda a aquellos lugares que todavía no han sido revisados. 
+
+De este modo, un programa puede ser visto como una secuencia de llamadas a procedimientos. El programa principal es responsable de pasar los datos a las llamadas individuales, los datos son procesados por los procedimientos y, una vez que el programa ha terminado, los datos resultantes son presentados. 
+
+Así, el flujo de datos puede ser ilustrado como una gráfica jerárquica, un árbol, como se muestra en la figura para un programa sin sub-procedimientos. 
+
+\begin{center}
+    \includegraphics[]{imagenes/procedimientos.png}
+\end{center}
+
+\section{Programación modular}
+
+En la programación modular, los procedimientos con una funcionalidad común son agrupados en módulos separados. 
+
+Un programa por consiguiente, ya no consiste solamente de una sección. Ahora está dividido en varias secciones más pequeñas que interactúan a través de llamadas a procedimientos y que integran el programa en su totalidad.
+
+
+Cada módulo puede contener sus propios datos. Esto permite que cada módulo maneje un estado interno que es modificado por las llamadas a procedimientos de ese módulo. 
+
+Sin embargo, solamente hay un estado por módulo y cada módulo existe cuando más una vez en todo el programa.
+
+\begin{center}
+  \includegraphics[]{imagenes/modulos.png}
+\end{center}
+
+\section{Datos y Operaciones separados}
+
+La separación de datos y operaciones conduce usualmente a una estructura basada en las operaciones en lugar de en los datos: \textbf{los Módulos agrupan las operaciones comunes en forma conjunta. }
+
+Al programar entonces se usan estas operaciones proveyéndoles explícitamente los datos sobre los cuáles deben operar. 
+
+La estructura de módulo resultante está por lo tanto orientada a las operaciones más que sobre los datos. Se podría decir que las operaciones definidas especifican los datos que serán usados. 
+
+\textbf{En la programación orientada a objetos, la estructura se organiza por los datos. }Se escogen las representaciones de datos que mejor se ajusten a tus requerimientos. Por consecuencia, los programas se estructuran por los datos más que por las operaciones. 
+
+Los datos especifican las operaciones válidas. Ahora, los módulos agrupan representaciones de datos en forma conjunta. 
+
+\section{Programación orientada a objetos}
+
+	La programación orientada a objetos resuelve algunos de los problemas que se acaban de mencionar. De alguna forma se podría decir que obliga a prestar atención a los datos.
+
+En contraste con las otras técnicas, ahora tenemos una telaraña de objetos interactuantes, cada uno de los cuáles manteniendo su propio estado.
+
+\begin{center}
+  \includegraphics[]{imagenes/objetos.png}
+\end{center}
+
+Por ejemplo, en la programación orientada a objetos deberíamos tener tantos objetos de pila  como sea necesario. En lugar de llamar un procedimiento al que le debemos proveer el manejador de la pila correcto, mandaríamos un mensaje directamente al objeto pila en cuestión. 
+
+En términos generales, cada objeto implementa su propio módulo, permitiendo por ejemplo que coexistan muchas pilas. Cada objeto es responsable de inicializarse y destruirse en forma correcta. 
+
+\textit{¿No es ésta solamente una manera más elegante de técnica de programación modular? 
+}
+
+Podría ser, si esto fuera todo acerca de la orientación a objetos. De hecho se puede tratar de programar de esta forma sin POO. Pero eso no es todo lo que es la POO. 
+
+\section{Tipos de Datos Abstractos}
+
+Algunos autores describen la programación orientada a objetos como programación de tipos de datos abstractos y sus relaciones. Los tipos de datos abstractos son como un concepto básico de orientación a objetos.
+
+\subsection{Los problemas}
+
+	La primera cosa con la que uno se enfrenta cuando se escriben programas es el problema.
+
+Típicamente, uno se enfrenta a problemas ''de la vida real''  y nos queremos facilitar la existencia por medio de un programa para manejar dichos problemas. 
+
+Sin embargo, los problemas de la vida real son nebulosos y la primera cosa que se tiene que hacer es tratar de entender el problema para separar los detalles esenciales de los no esenciales: tratando de obtener tu propia perspectiva abstracta, o modelo, del problema. Este proceso de modelado se llama abstracción y se ilustra en la Figura:
+
+\begin{center}
+    \includegraphics[scale=.6]{imagenes/abstraccion.png}
+\end{center}
+
+El modelo define una perspectiva abstracta del problema. Esto implica que el modelo se enfoca solamente en aspectos relacionados con éste y que uno trata de definir propiedades del mismo. Estas propiedades incluyen 
+
+ 
+\begin{itemize}
+\item    los datos que son afectados 
+\item    las operaciones que son identificadas
+\end{itemize}
+
+por el problema. 
+
+Para resumir, la abstracción es la estructuración de un problema nebuloso en entidades bien definidas por medio de la definición de sus datos y operaciones. Consecuentemente, estas entidades combinan datos y operaciones. No están desacoplados unos de otras.
+
+\subsection{Tipos de Datos Abstractos y Orientación a Objetos}
+
+Los TDAs permiten la creación de instancias con propiedades bien definidas y comportamiento bien definido. En orientación a objetos, nos referimos a los TDAs como clases. Por lo tanto, una clase define las propiedades de objetos en un ambiente orientado a objetos. 
+
+Los TDAs definen la funcionalidad al poner especial énfasis en los datos involucrados, su estructura, operaciones, así como en axiomas y precondiciones. Consecuentemente, la programación orientada a objetos es ''programación con TDAs'': al combinar la funcionalidad de distintos TDAs para resolver un problema. Por lo tanto, instancias (objetos) de TDAs (clases) son creadas dinámicamente, usadas y destruidas.
+
+\section{Conceptos de básicos de objetos}
+
+La programación tradicional separa los datos de las funciones, mientras que la programación orientada a objetos define un conjunto de objetos donde se combina de forma modular los datos con las funciones.
+
+Aspectos principales:
+
+\begin{enumerate}
+\item Objetos.
+\begin{itemize}
+\item  El objeto es la \textbf{entidad básica} del modelo orientado a objetos.
+\item  El objeto integra una \textbf{estructura de datos }(atributos) y un \textbf{comportamiento} (operaciones).
+\item  Se distinguen entre sí por medio de su propia identidad, aunque internamente los valores de sus atributos sean iguales.
+\end{itemize}
+\item Clasificación.
+\begin{itemize}
+\item  Las clases \textbf{describen} posibles objetos, con una estructura y comportamiento común.
+\item  Los objetos que contienen los mismos atributos y operaciones pertenecen a la misma clase.
+\item  La estructura de clases \textbf{integra} las \textbf{operaciones} con los 
+\end{itemize}
+\textbf{atributos} a los cuales se aplican.
+\item Instanciación 
+\begin{itemize}
+\item   El proceso de \textbf{crear} objetos que pertenecen a una clase se denomina instanciación. (El objeto es la instancia de una clase). 
+\item  Pueden ser instanciados un número indefinido de objetos de cierta clase.
+\end{itemize}
+\item Generalización. 
+\begin{itemize}
+\item En una jerarquía de clases, se \textbf{comparten} atributos y operaciones entre clases basados en la generalización de clases.
+\item La jerarquía de generalización se construye mediante la herencia.
+\item Las clases más generales se conocen como superclases. (clase padre)
+\item Las clases más especializadas se conocen como subclases. (clases hijas)
+\item La herencia puede ser simple o múltiple.
+\end{itemize}
+\item Abstracción.
+\begin{itemize}
+    \item La abstracción se concentra en lo primordial de una entidad y no en sus propiedades secundarias.
+    \item Además en lo que el objeto hace y no en cómo lo hace.
+    \item Se da énfasis a cuales son los objetos y no cómo son usados.  
+\end{itemize}
+\item Encapsulación.
+\begin{itemize}
+    \item Encapsulación o encapsulamiento es la \textbf{separación} de las \textbf{propiedades externas} de un objeto de los \textbf{detalles de implementación} internos del objeto.
+    \item Al separar la interfaz del objeto de su implementación, se limita la complejidad al mostrarse sólo la información relevante.
+    \item Disminuye el impacto a cambios en la implementación, ya que los cambios a las propiedades internas del objeto no afectan su interacción externa.
+\end{itemize}
+\item Modularidad
+\begin{itemize}
+    \item El encapsulamiento de los objetos trae como consecuencia  una gran modularidad.
+    \item Cada módulo se concentra en una sola clase de objetos.
+    \item Los módulos tienden a ser pequeños y concisos.
+    \item La modularidad facilita encontrar y corregir problemas.
+    \item La complejidad del sistema se reduce facilitando su mantenimiento.
+\end{itemize}
+\item Extensibilidad.
+\begin{itemize}
+    \item La extensibilidad permite hacer cambios en el sistema sin afectar lo que ya existe.
+    \item Nuevas clases pueden ser definidas sin tener que cambiar la interfaz del resto del sistema.
+    \item La definición de los objetos existentes puede ser extendida sin necesidad de cambios más allá del propio objeto.
+\end{itemize}
+\item Polimorfismo (de subtipos).
+\begin{itemize}
+    \item El polimorfismo es la característica de definir las \textbf{mismas operaciones} con \textbf{diferente comportamiento} en diferentes clases.
+    \item Se permite llamar una operación sin preocuparse de cuál implementación es requerida en que clase, siendo responsabilidad de la jerarquía de clases y no del programador.
+\end{itemize}
+\item Reusabilidad de código.
+\begin{itemize}
+    \item La orientación a objetos apoya el reuso de código en el sistema.
+    \item Los componentes orientados a objetos se pueden utilizar para estructurar bibliotecas resuables.
+    \item El reuso reduce el tamaño del sistema durante la creación y ejecución.
+    \item Al corresponder varios objetos a una misma clase, se guardan los atributos y operaciones una sola vez por clase, y no por cada objeto.
+    \item La herencia es uno de los factores más importantes contribuyendo al incremento en el reuso de código dentro de un proyecto.
+\end{itemize}
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Actividad: lectura de artículo científico} 
+\end{center} 
+\\ \hline
+Wegner, Peter. ''Classification in object-oriented systems.''  ACM Sigplan Notices 21.10 (1986): 173-182.
+\\ \hline
+\end{tabular}
+\end{center}
+
+\section{Lenguajes de programación orientada a objetos}
+
+	\textbf{Simula I} (1967) fue originalmente diseñado para problemas de simulación y fue el primer lenguaje en el cual los datos y procedimientos estaban unificados en una sola entidad. Su sucesor \textbf{Simula} (1973) , derivó definiciones formales a los conceptos de objetos y clase.
+
+	\textbf{Simula} sirvió de base a una generación de lenguajes de programación orientados a objetos. Es el caso de \textbf{C++} (1985), \textbf{Eiffel} (1986) y \textbf{Beta}. 
+(1987)
+
+	\textbf{Ada} (1983), se derivan de conceptos similares, e incorporan el concepto de jerarquía de herencia. \textbf{CLU} -\textit{clusters}- (1986) también incorpora herencia.
+
+	\textbf{Smalltalk} es descendiente directo de \textbf{Simula}, generaliza el concepto de objeto como única entidad manipulada en los programas. Existen tres versiones principales: \textbf{Smalltalk-72}, introdujo el paso de mensajes para permitir la comunicación entre objetos. \textbf{Smalltalk-76} que introdujo herencia. \textbf{Smalltalk-80} se inspira en \textbf{Lisp}.
+
+	\textbf{Lisp} contribuyó de forma importante a la evolución de la programación orientada a objetos.
+
+	\textbf{Flavors} (1986) maneja herencia múltiple apoyada con facilidades para la combinación de métodos heredados.
+
+	\textbf{CLOS} (1989), es el estándar del sistema de objetos de \textbf{Common Lisp}.
+
+	Los programas de programación orientada a objetos pierden eficiencia ante los lenguajes imperativos, pues al ser interpretado estos en la arquitectura \textit{von Neumann} resulta en un \textbf{excesivo} manejo dinámico de la memoria por la constante creación de objetos, así como una fuerte carga por la división en múltiples operaciones (métodos) y su ocupación. Sin embargo se gana mucho en \textbf{comprensión} de código y \textbf{modelado} de los problemas.
+
+\subsection{Características de los algunos LPOO\protect\footnote{Lenguajes de Programación Orientada a Objetos}}
+
+En el Cuadro \ref{tab:principales-LPOO} podemos ver algunas características de lenguajes de programación orientados a objetos.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\caption{Características de LPOO}
+\label{tab:principales-LPOO}
+\begin{tabular}{|
+>{\columncolor[HTML]{9B9B9B}}l |l|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{9B9B9B}\textbf{}} & \multicolumn{1}{c|}{\cellcolor[HTML]{9B9B9B}\textbf{Ada 95}} & \cellcolor[HTML]{9B9B9B}Eiffel & \cellcolor[HTML]{9B9B9B}Smalltalk & \cellcolor[HTML]{9B9B9B}C++ & \cellcolor[HTML]{9B9B9B}Java \\ \hline
+\textbf{Paquetes}                                       & Sí                                                           & No                             & No                                & No                          & Sí                           \\ \hline
+\textbf{Herencia}                                       & Simple                                                       & Múltiple                       & Simple                            & Múltiple                    & Simple                       \\ \hline
+\textbf{Control de tipos}                               & Fuerte                                                       & Fuerte                         & Sin tipos                         & Fuerte                      & Fuerte                       \\ \hline
+\textbf{Enlace}                                         & Dinámico                                                     & Dinámico                       & Dinámico                          & Dinámico                    & Dinámico                     \\ \hline
+\textbf{Concurrencia}                                   & Sí                                                           & No                             & No                                & No                          & Sí                           \\ \hline
+\textbf{Recolección de basura}                          & No                                                           & Sí                             & Sí                                & No                          & Sí                           \\ \hline
+\textbf{Afirmaciones}                                   & No                                                           & Sí                             & No                                & No                          & Sí*                        \\ \hline
+\textbf{Persistencia}                                   & No                                                           & No                             & No                                & No                          & No                           \\ \hline
+\textbf{Generecidad}                                    & Sí                                                           & Sí                             & Sí                                & Sí                          & Sí*                             \\ \hline
+\end{tabular}
+*Afirmaciones y generecidad en Java fueron incluidos a partir de la versión 5 (1.5) del lenguaje.
+\end{table}
+
+
+

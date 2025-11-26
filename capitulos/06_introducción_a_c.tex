@@ -1,0 +1,182 @@
+\chapter{Introducción a C\#}
+\section{Introducción}
+C\# (C \textit{Sharp}) fue presentado en el verano del 2000 en su versión 1.0, junto con el framework .NET por Microsoft. Aunque le versión final del compilador no fue liberada hasta enero del 2002. La idea de .NET es la de proporcionar una nueva plataforma para el desarrollo de aplicaciones para Windows, independiente del lenguaje\footnote{ Programa en cualquier lenguaje y corre en Windows es la idea. Contrario a la propuesta de Java, de compila una vez, corre donde sea. Sin embargo, ambos conceptos están convergiendo. JVM ahora ejecuta otros lenguajes como Scala y .NET tiene una versión libre (Mono).}. Sin embargo, C\# siempre ha sido considerado el lenguaje representativo de .NET.
+
+En la práctica se dice que el lenguaje es similar a C++ y Java. Uno no puede negar, que C\# fue lanzado en el mejor momento de Java, cuando este lenguaje iba ganando muchos adeptos en la academia y las empresas.
+
+James Gosling (el desarrollador de Java) ha llamado a C\# una imitación de Java con lo que Anders Hejlsberg (el lider del proyecto de C\#) no esta de acuerdo y dice que es más parecido a C++. C\# es un lenguaje de programación multiparadigma que es capaz de trabajar bajo los siguientes paradigmas : estructurado, imperativo, orientado a objetos, funcional, genérico, orientado a componentes, \textit{task-driven}, \textit{event-driven} reflexivo concurrente y declarativo.
+
+El origen de su nombre es es un dato curioso pues originalmente se iba a llamar \textit{Cool} (\textit{C-like Object Oriented Language}) pero por cuestiones de derechos fue llamado C\#, el cual proviene de la nota musical “C-\textit{Sharp}” (C sostenido) que indica que la nota  escrita es un semitono más alta (o mejor). En comparación con C++ donde ++ significa que C fue incrementado o mejorado en uno, C\# se podría interpretar como C++ ++ y \# representa los 4 signos + implicando que se trata de un incremento o mejora de C++. 
+
+Aunque tuvo un lento arranque, no se puede negar que C\# ha ido adquiriendo fuerza con el tiempo y se ha constituido en una opción real de desarrollo de software desde hace un buen tiempo.
+
+\section{Herramientas}
+
+Es posible usar una versión libre de C\#, el proyecto Mono, que ofrece un framework multiplataforma de .NET. Existen versiones de este framework para Linux, Mac OS X y Windows entre otros.
+
+Puede instalarse únicamente las herramientas para la terminal e integrarlas al IDE de su preferencia (o usar la consola). También se tiene un IDE llamado \textit{MonoDevelop}. Para más información ver: 
+
+\url{http://mono-project.com/}
+
+Una vez instalado Mono, debe poder ejecutarse el compilador:
+
+$\$ mcs <programa.cs>$
+
+producirá código .NET 1.1
+
+$\$ gmcs <programa.cs>$
+
+generará código .NET 2.0
+
+El compilador generará un ejecutable .exe. Ejecutar una aplicación desde mono implicaría usar la máquina de mono:
+
+$\$ mono <programa.exe>$
+
+En Windows también podría ejecutarse directamente, como una aplicación ejecutable, aunque dependiente del \textit{runtime} de .NET
+
+\section{Fundamentos de C\#}
+
+\subsection{Literales}
+
+C\# tiene caracteres denominados secuencias de escape para facilitar la escritura con el teclado de símbolos que carecen de representación visual.
+
+Enteros: decimal, hexadecimal, entero largo, entero largo sin signo
+Coma flotante: float, double, decimal.
+Caracteres: char
+String: string
+
+\subsection{Variables}
+
+Las variables son identificadores asociados a valores. Se declaran indicando el tipo de dato que almacenará y su identificador.
+Un identificador puede: 
+
+\begin{itemize}
+\item  Empezar por ” ”.
+\item  Contener caracteres \textit{Unicode} en mayúsculas y minúsculas.
+\end{itemize}
+
+Un identificador no puede:
+
+\begin{itemize}
+\item  Empezar por un número.
+\item  Empezar por un símbolo, ni aunque sea una palabra clave. 
+\item  Contener más de 511 caracteres.
+\end{itemize}
+
+También se puede declarar una variable sin especificar el tipo de dato, mediante la palabra \textit{var}.
+
+\subsection{Constantes}
+
+Las constantes son valores inmutables, y por tanto no se pueden cambiar. Estas se declaran con la palabra clave \textit{const}.
+
+Otra tipo es \textit{readonly}, no requiere de asignación al mismo tiempo que se declara.
+
+\subsection{Operadores}
+
+Los operadores aritméticos funcionan igual que en C y C++.
+El resultado de los operadores relacionales y lógicos es un valor booleano.
+Los operadores a nivel de bits no se pueden aplicar a tipos \textit{bool}, \textit{float}, \textit{double} o decimal.
+
+\begin{itemize}
+\item Aritméticos
+\item Lógicos
+\item A nivel de bits
+\item Concatenación
+\item Incremento, decremento
+\item Desplazamiento
+\item Relacional
+\item Asignación
+\item Acceso a miembro
+\item Indexación
+\item Conversión
+\item Condicional
+\item Creación de objeto
+\item Información de tipo
+\end{itemize}
+
+\subsection{Estructuras de control}
+
+Las estructuras de control \textit{if}, \textit{switch}, \textit{while}, \textit{do-while} y \textit{for} son básicamente las mismas de lenguajes estilo C/C++ y Java.
+
+El \textit{for} permite la declaración de variables en su inicialización, a diferencia del estándar actual de C++.
+
+Agrega un \textit{foreach} que funciona de manera similar a la variación de \textit{for} en Java pero cambiando el nombre de la instrucción al ya mencionado:
+
+\mint[linenos=false]{csharp}| foreach (int x in intList) { … } |
+
+\subsection{Entrada y Salida básica}
+
+Salida básica a consola puede hacerse con los métodos de consola $WriteLine()$ y $Write()$.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+namespace Ejemplo
+{
+        class Test {
+                public static void Main(string[] args) {
+                        Console.WriteLine("C# es cool");
+                }
+        }
+}
+\end{minted}
+\caption{Ejemplo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+La entrada simple por consola puede hacerse con los métodos $ReadLine()$, $Read()$ y $ReadKey()$. $Readline()$ recibe la siguiente línea en un flujo de entrada estándar y regresa dicha cadena. $Read()$ recibe el siguiente carácter del flujo de entrada estándar y regresa el carácter ASCII. Finalmente, $ReadKey()$ obtiene la siguiente tecla presionada por el usuario.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System; 
+namespace Ejemplo
+{
+        class Entrada {
+                public static void Main(string[] args) {
+                        int entradaUsuario;
+
+                        Console.WriteLine("Presiona una tecla para continuar...");
+                        Console.ReadKey();
+                        Console.WriteLine();
+                        Console.Write("Leyendo entrada con Read(): ");
+                        entradaUsuario = Console.Read();
+                        Console.WriteLine("Valor ASCII = {0}",entradaUsuario);
+                }
+        }
+}
+\end{minted}
+\caption{Ejemplo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%\subsection{Módulos}
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+
+

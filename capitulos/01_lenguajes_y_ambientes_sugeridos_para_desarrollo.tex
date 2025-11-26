@@ -1,0 +1,392 @@
+\chapter{Lenguajes y Ambientes sugeridos para desarrollo}
+\label{sec:lengu}
+\pagenumbering{arabic}
+
+\section{Lenguajes de programación}
+
+\normalsize Existe una infinidad de lenguajes de programación. Además de los cubiertos de manera general en este material podemos mencionar algunos como:
+
+\begin{itemize}
+\item \textbf{Groovy}. Es un lenguaje orientado a objetos y dinámico, similar a Python, Ruby, Perl y Smalltalk pero que es dinámicamente compilado hacia bytecodes de la máquina virtual de Java. 
+
+    \includegraphics[scale=.4]{imagenes/groovy.png}
+
+\begin{lstlisting}[language=Java, caption={Groovy: Hola Mundo}]
+println "Hola Mundo"
+\end{lstlisting}
+
+\item \textbf{JRuby}. Es una implementación en Java del intérprete de Ruby. Su alta integración con Java permite completo acceso en los dos sentidos entre código Java y Ruby.
+
+\begin{lstlisting}[language=Ruby, caption={JRuby: Hola Mundo}]
+puts "Hola Mundo"
+\end{lstlisting}
+
+\item \textbf{Jython/JPython}. Una implementación de Python en Java. Programas en Jython pueden importar y usar clases en Java. 
+
+    \includegraphics[scale=.5]{imagenes/jython.png}
+
+\begin{lstlisting}[language=Python, caption={Jython: Hola Mundo}]
+print("Hola Mundo")
+\end{lstlisting}
+
+\item \textbf{Kotlin}. Un lenguaje orientado a objetos para JVM, para aplicaciones del lado del servidor, Android y compilación a JavaScript.
+
+\begin{lstlisting}[language=Java, caption={Kotlin: Hola Mundo}]
+fun main() {
+    println("Hola Mundo")
+}
+\end{lstlisting}
+
+\item \textbf{IronPython}. Es una implementación de Python en .NET y Mono. Permite el uso de bibliotecas de .NET y una fácil interoperabilidad con lenguajes como C\#.
+
+\begin{lstlisting}[language=Python, caption={IronPython: Hola Mundo}]
+print("Hola Mundo desde .NET")
+\end{lstlisting}
+
+\item \textbf{Dart}. Es un lenguaje de programación de código abierto, desarrollado por Google, optimizado para la creación de aplicaciones web, móviles (con Flutter), de escritorio y del lado del servidor.
+
+\begin{lstlisting}[language=Java, caption={Dart: Hola Mundo}]
+void main() {
+  print('Hola Mundo');
+}
+\end{lstlisting}
+
+\item \textbf{Go}. Conocido también como Golang, es un lenguaje compilado y concurrente, desarrollado por Google. Es apreciado por su simplicidad y eficiencia en sistemas distribuidos.
+
+\begin{lstlisting}[language=C, caption={Go: Hola Mundo}]
+package main
+import "fmt"
+func main() {
+    fmt.Println("Hola Mundo")
+}
+\end{lstlisting}
+
+\item \textbf{Swift}. Creado por Apple, es un lenguaje multiparadigma para el desarrollo de aplicaciones en iOS, macOS, watchOS y tvOS. Se enfoca en seguridad y rendimiento.
+
+\begin{lstlisting}[language=C, caption={Swift: Hola Mundo}]
+print("Hola Mundo")
+\end{lstlisting}
+
+\item \textbf{Cobra}. Lenguaje inspirado en Python y Ruby, pero con tipos estáticos, generación de código para .NET/Mono, ligado dinámico, contratos y soporte de pruebas de unidad.
+
+\begin{lstlisting}[caption={Cobra: Hola Mundo}]
+class Hola
+    def main
+        print "Hola Mundo"
+\end{lstlisting}
+
+\item \textbf{Fantom}. Es un lenguaje portable y orientado a objetos, diseñado para ejecutarse en múltiples plataformas (JVM, .NET y JavaScript). Más información en: \url{http://fantom.org/}
+
+\begin{lstlisting}[caption={Fantom: Hola Mundo}]
+class Hola {
+  static Void main() {
+    echo("Hola Mundo")
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Elixir}. Es un lenguaje funcional, concurrente y distribuido que se ejecuta en la máquina virtual de Erlang (BEAM). Es usado en sistemas tolerantes a fallos y aplicaciones web escalables.
+
+\begin{lstlisting}[caption={Elixir: Hola Mundo}]
+IO.puts "Hola Mundo"
+\end{lstlisting}
+
+\end{itemize}
+
+En la tabla \ref{tab:comparacion_lenguajes} podemos ver una tabla con algunas características de los languajes antes mencionados.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de lenguajes de programación}
+\label{tab:comparacion_lenguajes}
+\begin{tabularx}{\textwidth}{|l|X|l|c|}
+\hline
+\textbf{Lenguaje} & \textbf{Paradigma principal} & \textbf{Plataforma base} & \textbf{Año de creación} \\
+\hline
+Groovy     & Orientado a objetos, dinámico & JVM (Java Virtual Machine) & 2003 \\
+\hline
+JRuby      & Orientado a objetos (Ruby) & JVM & 2001 \\
+\hline
+Jython     & Imperativo, orientado a objetos (Python) & JVM & 1997 \\
+\hline
+Kotlin     & Orientado a objetos y funcional & JVM, Android, compilación a JS & 2011 \\
+\hline
+IronPython & Imperativo, orientado a objetos (Python) & .NET, Mono & 2006 \\
+\hline
+Dart       & Orientado a objetos & Web, Flutter (móvil), escritorio & 2011 \\
+\hline
+Go (Golang)& Imperativo, concurrente, orientado a objetos ligero & Nativo (compilado) & 2009 \\
+\hline
+Swift      & Multiparadigma (OO, funcional) & iOS, macOS, watchOS, tvOS & 2014 \\
+\hline
+Cobra      & Orientado a objetos con contratos & .NET, Mono & 2006 \\
+\hline
+Fantom     & Orientado a objetos, multiplataforma & JVM, .NET, JavaScript & 2005 \\
+\hline
+Elixir     & Funcional, concurrente, distribuido & BEAM (Erlang VM) & 2011 \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+
+\subsection{IDEs}
+
+Los \textit{Entornos de Desarrollo Integrados} (IDE, por sus siglas en inglés) son herramientas que reúnen en una sola aplicación diversos componentes necesarios para programar: editores de código, compiladores, depuradores, asistentes gráficos y gestores de proyectos. Su objetivo es aumentar la productividad del desarrollador y facilitar el mantenimiento de proyectos grandes.
+
+\subsubsection{Eclipse}
+\normalsize Eclipse es desarrollado como un proyecto de código abierto lanzado en noviembre de 2001 por IBM, Object Technology International y otras compañías. El objetivo era desarrollar una plataforma abierta de desarrollo. Fue planeada para ser extendida mediante plug-ins. 
+
+\includegraphics[scale=0.3]{imagenes/eclipse_logo.png}
+
+Es desarrollada en Java, por lo que puede ejecutarse en un amplio rango de sistemas operativos. También incorpora facilidades para desarrollar en Java, aunque es posible instalarle plug-ins para otros lenguajes como C/C++, PHP, Ruby, Haskell, etc. Incluso antiguos lenguajes como Cobol tienen extensiones disponibles para Eclipse [1]:
+
+\begin{itemize}
+\item Eclipse + JDT = Java IDE
+\item Eclipse + CDT = C/C++ IDE
+\item Eclipse + PHP = PHP IDE
+\item Eclipse + JDT + CDT + PHP = Java, C/C++, PHP IDE
+\end{itemize}
+
+Trabaja bajo “\textit{workbenchs}” que determinan la interfaz del usuario centrada alrededor del editor, vistas y perspectivas.
+
+\includegraphics[scale=0.7]{imagenes/eclipse_IDE.png}
+
+Los recursos son almacenados en el espacio de trabajo (workspace) el cual es un folder almacenado normalmente en el directorio de Eclipse. Es posible manejar diferentes áreas de trabajo.
+
+Eclipse, sus componentes y documentación pueden ser obtenidos de: \url{www.eclipse.org}
+
+\subsubsection{Mono}
+
+\textit{Mono} es una alternativa de software libre patrocinada por Novell. Implementa principalmente un compilador para C\# y el \textit{Common Language Runtime} de .NET. Incluye un IDE y existen versiones para plataformas distintas a Windows.  Su IDE es \textbf{MonoDevelop}, el cual facilita la creación de aplicaciones multiplataforma.
+
+\includegraphics[scale=0.5]{imagenes/mono_develop-logo.png} 
+
+\subsubsection{NetBeans}
+
+NetBeans es una plataforma de desarrollo y un IDE multilenguaje. Originalmente creado para desarrollo en Java y adquirido por Sun Microsystems. El IDE es actualmente de código abierto y disponible en \url{www.netbeans.org}.
+
+\includegraphics[scale=0.3]{imagenes/netbeans_logo.png}
+
+Creado en 1996 como un proyecto universitario en la Universidad Karlova (Praga), fue adoptado más tarde por Sun y posteriormente por Oracle.
+
+\includegraphics[scale=0.3]{imagenes/netbeans_ide.png}
+
+Soporta una variedad de lenguajes y tecnologías como C/C++, Java (SE, EE, ME), Ruby y PHP. NetBeans destaca por integrar de manera nativa un diseñador visual de interfaces gráficas (GUI Builder), útil en el desarrollo rápido de aplicaciones de escritorio.
+
+\subsubsection{Visual Studio Code}
+
+Visual Studio Code es un editor gratuito y de código abierto desarrollado por Microsoft.\footnote{\url{https://code.visualstudio.com/}}  
+
+\includegraphics[scale=1.3]{imagenes/visualCode.jpeg}
+
+Se caracteriza por ser ligero, extensible y multiplataforma (Windows, Linux, macOS). Algunas características principales son:  
+
+\begin{itemize}
+\item Interfaz de usuario intuitiva y personalizable.
+\item Soporte integrado para depuración paso a paso.
+\item Amplo ecosistema de extensiones para lenguajes, depuradores y control de versiones.
+\item Integración nativa con Git y GitHub.
+\item Autocompletado inteligente mediante \textit{IntelliSense}.
+\end{itemize}
+
+Hoy en día, Visual Studio Code es probablemente el editor más popular en la comunidad de desarrolladores.
+
+\subsubsection{Algunos editores ligeros}
+
+Si no se desea usar IDEs completos como Eclipse o NetBeans, existen editores ligeros que ofrecen rapidez y flexibilidad:
+
+\begin{itemize}
+\item Geany. \footnote{\url{https://www.geany.org/}}
+\item Sublime Text. \footnote{\url{https://www.sublimetext.com/}}
+\item Atom. \footnote{\url{https://atom.io/}}
+\item Brackets. \footnote{\url{http://brackets.io/}}
+\end{itemize}
+
+Estos editores no incluyen compiladores, por lo que dependen de las herramientas de línea de comandos instaladas en el sistema.
+
+\subsubsection{Otros ejemplos de frameworks}
+
+Algunos de los principales frameworks usados para desarrollo Web son:
+
+\begin{itemize}
+\item \textbf{Ruby on Rails}. Framework gratuito para desarrollo de aplicaciones Web en Ruby. 
+\includegraphics[scale=0.7]{imagenes/rails_logo.png}
+
+\item \textbf{Merb}. Framework para desarrollo web en Ruby, diseñado con enfoque en concurrencia y modularidad.
+
+\item \textbf{Django}. Framework open source para desarrollo de aplicaciones web con Python.  
+\includegraphics[scale=0.5]{imagenes/django_logo.png}
+
+\item \textbf{Grails}. Framework open source para el lenguaje Groovy, basado en la JVM.  
+
+\includegraphics[scale=0.5]{imagenes/grails_logo.png}
+
+\item \textbf{SproutCore}. Framework open source para aplicaciones web con JavaScript, orientado a experiencias similares a aplicaciones de escritorio. Fue utilizado por Apple en proyectos como MobileMe.
+
+\item \textbf{Lift}. Framework para desarrollo web en Scala. Aprovecha la JVM y la biblioteca de Java, garantizando compatibilidad y escalabilidad.
+\end{itemize}
+
+\subsubsection{Comparación de IDEs}
+En la tabla \ref{tab:comparacion_IDEs}, se presenta una breve comparación de los IDEs.
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Breve comparación de IDEs}
+\label{tab:comparacion_IDEs}
+\begin{tabularx}{\textwidth}{l p{5cm} l c}
+\toprule
+\textbf{IDE} & \textbf{Características principales} & \textbf{Lenguajes base} & \textbf{Licencia} \\
+\midrule
+Eclipse & Altamente extensible mediante plugins; multiplataforma; soporte a múltiples lenguajes & Java, C/C++, PHP, Ruby, entre otros & EPL (open source) \\
+\midrule
+MonoDevelop & Orientado a C\# y .NET multiplataforma; integración con GTK\# & C\#, F\# & MIT/X11 \\
+\midrule
+NetBeans & IDE completo con GUI Builder; soporte para múltiples lenguajes; enfoque educativo y empresarial & Java, C/C++, PHP, Ruby & Apache License 2.0 \\
+\midrule
+VS Code & Editor ligero; extensible; integración con Git; depuración integrada & Multilenguaje (a través de extensiones) & MIT \\
+\midrule
+Editores ligeros & Simples, rápidos, personalizables; requieren compiladores externos & Multilenguaje (sin integración nativa) & Variada \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\section{Lenguajes estáticos y dinámicos}
+
+Los lenguajes de programación pueden clasificarse, entre otros criterios, según su tipado en dos categorías principales: estáticos y dinámicos. La diferencia central radica en el momento en que se verifican los tipos de datos y la validez de las operaciones.
+
+En los \textbf{lenguajes estáticos}, las variables y sus tipos se comprueban en tiempo de compilación. Esto permite detectar errores de tipo y de sintaxis antes de la ejecución, lo que conduce a programas más seguros y predecibles. Además, la vinculación de variables y funciones ocurre en esta fase, lo que suele mejorar la eficiencia del código resultante. Ejemplos comunes son \textit{C, C++, Java, Go y C\#}.
+
+En contraste, los \textbf{lenguajes dinámicos} realizan la verificación en tiempo de ejecución. Los errores pueden aparecer solo cuando el programa se ejecuta, lo que implica mayor riesgo de fallos inesperados. No obstante, esta flexibilidad facilita cambios rápidos en el código y acelera el desarrollo. Lenguajes representativos son \textit{Python, JavaScript y Ruby}.
+
+En síntesis, los lenguajes estáticos tienden a ser preferidos en proyectos grandes y críticos, donde la robustez es esencial, mientras que los dinámicos son útiles en entornos donde prima la agilidad y la experimentación.
+
+
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+\ifadvanced
+
+\section{Documentación automática de código}
+ La documentación automática de código es un proceso esencial en el desarrollo de software, donde se generan automáticamente descripciones y explicaciones del código fuente sin intervención manual por parte del programador.
+
+La documentación automática es llevada a cabo por herramientas especializadas, las cuales analizan el código fuente y extraen información relevante sobre clases, métodos, variables y sus interacciones. Estos detalles se utilizan para generar documentos legibles y coherentes que proporcionan una guía comprensiva sobre la estructura y funcionamiento del programa.
+
+Al utilizar la documentación automática, se logra mejorar la comprensión del código tanto para los propios desarrolladores como para otros colaboradores o usuarios potenciales del software. Esto es especialmente valioso en proyectos de gran envergadura, donde el código puede volverse complejo y difícil de entender con facilidad.
+
+Además de facilitar la comprensión, la documentación automática también promueve una mayor eficiencia en el proceso de desarrollo y mantenimiento del software. Al tener documentación actualizada y generada automáticamente, los desarrolladores pueden ahorrar tiempo en la creación y actualización manual de la documentación.
+
+Es importante resaltar que, si bien la documentación automática es una herramienta poderosa, no reemplaza por completo la documentación manual y las buenas prácticas de programación. Es fundamental que los programadores también incluyan comentarios significativos en el código para explicar decisiones de diseño, funcionalidades importantes y otras consideraciones relevantes que no pueden ser extraídas automáticamente.
+
+La documentación automática de código es un proceso clave en el desarrollo de software, que utiliza herramientas especializadas para generar descripciones detalladas del código fuente sin intervención manual. Esta práctica mejora la comprensión del código, fomenta la eficiencia en el desarrollo y es especialmente útil en proyectos complejos. Sin embargo, se recomienda complementarla con comentarios manuales para brindar una documentación más completa y detallada.
+
+Hay una variedad de herramientas disponibles para la documentación automática de código, y cada una tiene sus propias características y ventajas. Algunas de las herramientas más populares incluyen:
+
+    \begin{itemize}
+        \item Doxygen: una herramienta de código abierto que genera documentación HTML, XML, LaTeX y RTF a partir de comentarios en el código fuente.
+        \item Javadoc: una herramienta de código abierto que genera documentación HTML a partir de comentarios en el código fuente de Java.
+        \item Sphinx: una herramienta de código abierto que genera documentación HTML, LaTeX y RST a partir de comentarios en el código fuente.
+    \end{itemize}
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+%\ifthenelse{\boolean{cpp}}{
+
+\ifpython
+
+\subsection{Documentación automática de código en Python}
+
+Python, al ser un lenguaje altamente utilizado y apreciado por su simplicidad y legibilidad, fomenta el uso de la documentación para facilitar la comprensión y el mantenimiento de proyectos de software. En este contexto, la documentación automática en Python se realiza mediante el uso de herramientas específicas, como \textit{Pydoc}, \textit{Sphinx}, o \textit{Doxygen}, que analizan el código fuente y extraen información relevante para generar documentación coherente.
+
+\textit{Pydoc} es una herramienta incorporada en Python que permite generar documentación automática directamente desde el código fuente y los comentarios del programa.
+
+\textit{Pydoc} analiza el código Python y busca \textit{docstrings}, que son cadenas de texto colocadas como primeras líneas de definiciones de módulos, clases, funciones y métodos. Estas \textit{docstrings} contienen información detallada sobre el propósito, la funcionalidad y el uso de cada componente del código. La herramienta \textit{Pydoc} extrae estas \textit{docstrings} y las convierte en una documentación estructurada y legible.
+
+A continuación, se presenta un ejemplo de código documentado utilizando \textit{docstrings} y cómo \textit{Pydoc} lo utiliza para generar documentación automática:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# Ejemplo de función para calcular el área de un círculo
+def calcular_area_circulo(radio):
+    """
+    Calcula el área de un círculo dado su radio.
+
+    Parámetros:
+        radio (float): El radio del círculo.
+
+    Retorna:
+        float: El área del círculo.
+    """
+    area = 3.1416 * radio ** 2
+    return area
+
+\end{minted}
+
+\caption{Ejemplo de documentación en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo, la función calcular \textit{area\_circulo} está documentada utilizando una \textit{docstring}. La \textit{docstring} describe claramente el propósito de la función, los parámetros que acepta y el tipo de valor que deben tener, así como el valor de retorno que se puede esperar. Estas descripciones son esenciales para que \textit{Pydoc} pueda generar una documentación detallada.
+
+Para generar la documentación utilizando \textit{Pydoc}, se debe ejecutar el siguiente comando en la línea de comandos:
+
+%one line
+\mint[linenos=false]{console}| python -m pydoc nombre_del_archivo.py |
+
+o directamente \textit{pydoc} :
+
+\mint[linenos=false]{console}| pydoc -w nombre_del_archivo.py |
+
+
+Para ver la documentación podemos dar el nombre del módulo o archivo:
+
+\mint[linenos=false]{console}| pydoc nombre.py |
+
+Inclusive ver localmente toda la documentación que tengamos disponible en nuestra localmente en nuestra computadora, lanzando un servidor temporal:
+
+\mint[linenos=false]{console}| pydoc -p 8001 |
+
+\textit{Pydoc} es una herramienta útil para generar documentación automática básica para el código Python. Sin embargo, es importante tener en cuenta que no es una herramienta de documentación completa.
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+\fi
+%%%%%%%%%%
+% ADVANCED_END
+%%%%%%%%%%
+
+
+
+
+%\chapter{Introducción a lenguajes}
+
+%%%%%%%%%%
+% C++
+%%%%%%%%%%
+%\ifthenelse{\boolean{cpp}}{
+
+\ifcpp
+
+
+
+Los compiladores de C++ son normalmente compatibles con C, y se puede usar el de preferencia, pero si usan la terminal de linux se compila:
+
+$g++ -o foo.o foo.cpp$
+
+o, desde el compilador de C:
+
+$gcc -o foo.o foo.cpp -lstdc++$
+

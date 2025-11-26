@@ -1,0 +1,1000 @@
+\chapter{Introducción a D}
+\section{Introducción}
+
+Es un nuevo lenguaje de propósito general altamente influenciado por C++. Sin embargo, D es de más alto nivel pero se dice que conserva un rendimiento similar a C++ y ofrece la productividad de lenguajes como Ruby y Python. Creado por \textbf{Walter Bright} para la compañía \textbf{Digital Mars}.
+
+A diferencia de la nueva ola de lenguajes, D no es un lenguaje tipo \textit{script} ni incluye una máquina virtual para su ejecución. Sigue permitiendo acceso directo a las APIs del sistema operativo y al hardware.
+
+D  se puede considerar una reingenieria de C++ e influenciado por lenguajes como Java, Eiffel. D es un lenguaje de programación multiparadigma. Incluye paradigmas: Imperativo, Orientado a objetos, Funcional y Concurrente.
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Actividad: lectura de artículo científico}\\ 
+\hline
+\url{http://www.computerworld.com.au/article/253741/-z_programming_languages_d} \\
+\hline
+\end{tabular}
+\end{center}
+
+D es uno de los lenguajes usados por Facebook a partir de 2013, en sustitución de C++\footnote{http://forum.dlang.org/thread/l37h5s$2gd8$1@digitalmars.com}.
+
+D, a diferencia de C++, utiliza una sintaxis y unas construcciones mucho más sencillas y lógicas. El rendimiento de C++, uno de sus puntos fuertes, también se ve reflejado en D y en algunas ocasiones incluso lo supera.
+
+Características de D:
+
+Gestión automática de memoria(recolección de basura): esto quiere decir que el programador seguirá creando los nuevos objetos con \textit{new} pero ya no tendrá que preocuparse de borrarlos con \textit{delete} porque existirá un \textbf{recolector de basura} que se encargará de eliminar automáticamente los objetos para los que ya no exista ninguna referencia. Sin embargo, si el programador lo desea, la recolección de basura puede ser controlada: los programadores pueden agregar y excluir rangos de memoria de ser observados por el recolector, pueden pausar y reanudar el recolector y forzar un ciclo generacional o de recolección completa.
+
+\begin{itemize}
+\item  \textbf{Gestión de errores mediante manejo de excepciones:} el sistema de manejo de excepciones es superior al de C++ al incorporar algunas características de lenguajes más recientes. Cuando una excepción producida en código D no se captura, se muestra un mensaje de error con información de la excepción.
+\item \textbf{Guardias de ámbito para asegurar la ejecución de código a la salida de un ámbito:} hay recursos como los archivos, los cerrojos y \textit{mutex} que se siguen teniendo que liberar manualmente; pero hay otros. Realmente, usando las guardias de ámbito, la instrucción \textit{finally} nunca es necesaria aunque se sigue manteniendo en el lenguaje. Las guardias de inclusión no sustituyen a la instrucción \textit{except}; para capturar excepciones y realizar operaciones en la captura debemos seguir usándola.
+\item \textbf{Estructuración del código en módulos y paquetes:} la estructuración del código y las bibliotecas se hace usando módulos y paquetes. Un módulo no es más que un archivo fuente de código D (generalmente con extensión .d). Al contrario de lo que sucede en otros lenguajes, cuando importamos los símbolos de un módulo no hace falta anteponer el nombre del módulo con un punto antes de llamar a un símbolo.
+\item \textbf{Compatibilidad de llamada con C:} Debido a la difusión del lenguaje, la mayoría de las APIs de sistemas operativos y bibliotecas de sistemas están escritas en C u ofrecen una interfaz para el mismo. D puede acceder a bibliotecas de C. Como los tipos de datos de D suelen tener una correspondencia muy directa con los de C este proceso suele ser bastante sencillo; sin embargo para conversiones de archivos de cabecera .h más complicados se dispone de la herramienta htod que realiza la conversión de tipos y sintáxis de forma automática, tomando como entrada un archivo .h de C y generando un archivo .d que podemos incluir en nuestros proyectos.
+\item \textbf{Delegados, funciones anidadas y funciones literales:} existe un tipo de dato llamado \textbf{delegado} que puede usarse para pasar referencias a un método de una clase como parámetros para otras funciones y métodos. En concepto son similares a los punteros a método de C++ pero con una sintáxis tanto de declaración como de creación y uso mucho más sencilla. D permite tener funciones anidadas y funciones anónimas. Las funciones anidadas son las que están definidas dentro de otra función y son muy útiles para estructurar nuestro código de una forma más jerárquica. Las funciones anónimas son funciones sin nombre que suelen utilizarse como argumento para una función que espera recibir una función como argumento.
+\item \textbf{Declaración anticipada de funciones innecesaria:} para que una función pueda llamar a otra no es necesario que esta última haya sido declarada con anterioridad a la primera.
+\end{itemize}
+
+D retiene la habilidad de C++ de hacer código de bajo nivel, permitiendo incluir código en ensamblador.
+
+\section{Herramientas}
+
+Actualmente se encuentra accesible la versión  2.x, la cual fue presentada en junio de 2007. Existen diferentes implementaciones del lenguaje. La principal es desarrollada por la misma compañía (Digital Mars) en versiones Mac OSX  Windows, Linux y FreeBSD. Otras distribuciones están disponibles, por ejemplo un compilador D.NET, obviamente para .NET
+
+Si se usa la implementación de Digital Mars, entonces el compilador es  \textit{dmd}. La extensión usada para archivos de código fuente es $.d$. Existen otras extensiones relevantes ($.dd$ para archivos de \textit{Ddoc} – similar a \textit{javadoc}-, $.di$ para archivos de interfaces, y $.def$  para archivos de definición de módulos, entre otros).
+
+\section{Fundamentos de D}
+\subsection{Convenciones léxicas}
+
+Todos los archivos D tendrán extensión $.d$. 
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+void main(string[] args){
+	   writeln("Hola, Mundo!");
+}
+\end{minted}
+\caption{Ejemplo "Hola, Mundo!" en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Se importa la biblioteca \textit{io} que ofrece las operaciones básicas de E/S. \textit{writeln}  que se utiliza en el programa anterior para la impresión de una linea de texto. El único módulo que que utiliza este programa es \textit{std.stdio}, que maneja la entrada y salida de datos.
+
+Los comentarios en D pueden ser multilínea: el cual inicia con /* y cierra con */, y los comentarios de una sola linea  con //
+
+Los identificadores en D son los nombres que se les asigna para distinguir a las variables, funciones o cualquier otro elemento definido por el usuario. Un identificador  comienza con una letra A a la Z, o de la a a la z o un guión bajo (\_)seguido de cero o mas letras, subrayado y los dígitos (0 a 9).
+
+D no permite caracteres de puntuación  tales como @, \$ y \% dentro de los identificadores. D es un lenguaje sensible a mayúsculas y minúsculas. 
+
+\subsection{Literales}
+
+Los tipos de valores constantes que forman parte del código fuente son llamados literales. Las literales pueden ser alguno de los tipos de datos básicos y pueden dividirse en Números Enteros, Números punto Flotante, Caracter, \textit{Strings} y Valores Booleanos.
+
+\begin{itemize}
+\item Las literales enteros pueden ser: Decimal, Octal, Binario, Hexadecimal. Una literal entera también puede tener un sufijo que es una combinación de U o L, de \textit{unsigned} y \textit{Long}. Para escribir una literal hexadecimal integral se usa el prefijo 0x o 0X seguido por una secuencia de letras 0-9, a-f, A-F, o \_.
+\item Literales de Punto Flotante: pueden ser especificados sistema decimal como 1.568 o en sistema hexadecimal. En el sistema decimal, un exponente puede ser representado agregando el carácter E o e seguido del valor del exponente, por ejemplo 2.3e4, aunque también 2.3e4  y 2.3e + 4 son lo mismo (A+ carácter pueden especificarse antes del valor del exponente). Por default la literal de punto flotante es \textit{double}. F o f significa flotante.
+\item Literal Booleana: Existen dos valores posibles para las literal booleana (\textit{True} y \textit{False}).
+\item Literal Carácter: encerradas entre comillas simples( ‘ ’ ). Una literal de este tipo puede ser un carácter o una secuencia de escape(‘\textbackslash t’). 
+\end{itemize}
+    
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Secuencia de escape              & Significado               \\ \hline
+\textbackslash{}\textbackslash{} & caracter \textbackslash{} \\ \hline
+\textbackslash{}'                & caracter '                \\ \hline
+\textbackslash{}"                & caracter "                \\ \hline
+\textbackslash{}b                & backspace                 \\ \hline
+\textbackslash{}f                & Form feed                 \\ \hline
+\textbackslash{}n                & Nueva línea               \\ \hline
+\textbackslash{}r                & Return                    \\ \hline
+\textbackslash{}t                & Tabulador horizontal      \\ \hline
+\textbackslash{}v                & Tabulador vertical        \\ \hline
+\end{tabular}
+\end{table}
+
+\textcolor{blue}{Ejemplo} donde se utilizan las secuencias de escape:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+int main(string[] args){
+	writefln("Hello\tWorld%c\n",'\x21');
+	writefln("Have a good day%c",'\x21');
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo en D donde se utilizan las secuencias de escape.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\begin{itemize}
+\item Literal \textit{String}: son encerradas en comillas dobles,un \textit{String} puede contener caracteres similares a las literales carácter (secuencias de escape, caracteres universales
+\item Literal de Arreglo y asociación de arreglo: \textit{Strings} son un particular tipo de arreglos. Una literal de arreglo es representada como una secuencia de valores separada por una coma encerrada por corchetes cuadrados. El tamaño del arreglo es la longitud de la lista separada por comas. El arreglo es no immutable, significa que puede modificarse después de su inicialización.
+\item Literal  de Funciones: en algunos lenguajes, cada función tiene un nombre que se elije en el momento de la definición, subsecuentemente la función es llamada con ese nombre. Otros lenguajes tiene la posibilidad de definir funciones anónimas(funciones lambda).  Esta característica vuelve poderoso al lenguaje al usar funciones de orden superior, estas funciones toman como parámetros y/o retornan otras funciones. D cuenta con literal de Funciones para definir funciones anónimas.
+\item 
+\end{itemize}
+
+\subsection{Variables}
+
+Una variables es sólo un nombre dado a un área de almacenamiento que nuestro programa puede manipular. Cada variable en D tiene un tipo específico, el cual determina el tamaño. Tipos básicos de variables en D: \textit{char, int, float, doble, void}.
+
+La siguiente tabla detalla los tamaños de almacenamiento de los tipos enteros(\textit{int}):
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Tipo   & Tamaño  & Rango de valor                             \\ \hline
+bool   & 1 byte  & false o true                               \\ \hline
+byte   & 1 byte  & -128 a 127                                 \\ \hline
+ubyte  & 1 byte  & 0 a 255                                    \\ \hline
+int    & 4 bytes & -2,147,483,648 a 2,147,483,647             \\ \hline
+uint   & 4 bytes & 0 a 4,294,967,295                          \\ \hline
+short  & 2 bytes & -32,768 to 32,767                          \\ \hline
+ushort & 2 bytes & 0 a 65,535                                 \\ \hline
+long   & 8 bytes & -9223372036854775808 a 9223372036854775807 \\ \hline
+ulong  & 8 bytes & 0 a 18446744073709551615                   \\ \hline
+\end{tabular}
+\end{table}
+
+La siguiente tabla detalla los tamaños de almacenamiento de los tipos de punto flotante:
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Tipo    & Tamaño   & Rango de valor                                            \\ \hline
+float   & 4 bytes  & 1.17549e-38 a 3.40282e+38                                 \\ \hline
+double  & 8 bytes  & 2.22507e-308 a 1.79769e+308                               \\ \hline
+real    & 10 bytes & 3.3621e-4932 a 1.18973e+4932                              \\ \hline
+ifloat  & 4 bytes  & 1.17549e-38i a 3.40282e+38i                               \\ \hline
+idouble & 8 bytes  & 2.22507e-308i a 1.79769e+308i                             \\ \hline
+ireal   & 10 bytes & 3.3621e-4932 a 1.18973e+4932                              \\ \hline
+cfloat  & 8 bytes  & 1.17549e-38+1.17549e-38i a 3.40282e+38+3.40282e+38i       \\ \hline
+cdouble & 16 bytes & 2.22507e-308+2.22507e-308i a 1.79769e+308+1.79769e+308i   \\ \hline
+creal   & 20 bytes & 3.3621e-4932+3.3621e-4932i a 1.18973e+4932+1.18973e+4932i \\ \hline
+\end{tabular}
+\end{table}
+
+La siguiente tabla detalla los tamaños de almacenamiento de los tipos carácter (\textit{char}):
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Tipo  & Tamaño  \\ \hline
+char  & 1 byte  \\ \hline
+wchar & 2 bytes \\ \hline
+dchar & 4 bytes \\ \hline
+\end{tabular}
+\end{table}
+
+El tipo \textit{void} se utiliza en dos situaciones:
+
+
+\begin{enumerate}
+\item La función devuelve void: funciones que no devuelven nada o que devuelven nulo. Una función sin valor de retorno tiene el tipo de retorno void.
+\item Argumentos de la función vacio: Una función que no acepta parámetros, vació, con ningún parámetro.
+\end{enumerate}
+
+Definición de variables en D:
+
+\begin{minted}{d}
+int i, j, k;
+char c, ch;
+float f, salary;
+double d;
+\end{minted}
+
+Las variables también pueden ser inicializadas desde su declaración:
+
+\begin{minted}{d}
+exter int d = 3, f = 5;
+int d = 3, f = 5; 
+byte z = 22; 
+char x = 'x';
+\end{minted}
+
+En este \textcolor{blue}{ejemplo} las variables han sido definidas en el tope del programa pero se redefinen e inicializan nuevamente dentro del main:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+	int a = 10, b =10;
+	int c;
+	float f;
+	int main (){
+		writeln("Value of a is : ", a);
+		/* variable re definition: * /
+		int a, b;
+		int c;
+		float f;
+		/* Initialization * /
+		a = 30;
+		b = 40;
+		writeln("Value of a is : ", a);
+		c = a + b;
+		writeln("Value of c is : ", c);
+		f = 70.0/3.0;
+		writeln("Value of f is : ", f);
+		return 0;
+	}
+\end{minted}
+\caption{Ejemplo de alcance en la definición de variables en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Con la siguiente salida:
+
+\begin{alltt}
+	Value of a is : 10
+	Value of a is : 30
+	Value of c is : 70
+	Value of f is : 23.3333    
+\end{alltt}
+
+\subsection{Operadores}
+
+Un operador es un símbolo que llama al compilador para ejecutar una operación especifica, lógica o matemática. D provee los siguientes tipos de operadores: 
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Tipo                                                                         & Operadores                                                                                                   \\ \hline
+Operadores Aritméticos:                                                      & +, -, *, /, \%, ++, –                                                                                        \\ \hline
+Operadores Relacionales:                                                     & ==, !=, \textgreater{}, \textless{}, \textgreater{}=, \textless{}=                                           \\ \hline
+Operadores Lógicos:                                                          & \&\&, ||, !                                                                                                  \\ \hline
+Operadores Bit a bit: & \&, | y \textasciicircum{}                                                                                   \\ \hline
+Operadores de Asignación:                                                    & =, +=, -+, *=, /=, \%=, \textless{}\textless{}=, \textgreater{}\textgreater{}=, \&=, \textasciicircum{}=, |= \\ \hline
+Operadores Misc:                                                             & sizeof, \&(direccion de una variable), * (apuntador), ? :                                                    \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Precedencia de operadores}
+
+Ver Cuadro \ref{tab:my-table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\caption{Precedencia de operadores en D}
+\label{tab:my-table}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{9B9B9B}\textbf{Categoría}} & \multicolumn{1}{c|}{\cellcolor[HTML]{9B9B9B}\textbf{Operador}}                                    \\ \hline
+Postfijo                                                         & {[}{]} -\textgreater . ++ - -                                                                     \\ \hline
+Unario                                                           & +-!$\sim$++\_\_ type*\&sizeof                                                                     \\ \hline
+Multiplicativo                                                   & * / \%                                                                                            \\ \hline
+Aditivo                                                          & + -                                                                                               \\ \hline
+Shift                                                            & \textless{}\textless \textgreater{}\textgreater{}                                                 \\ \hline
+Relacional                                                       & \textless \textless{}= \textgreater \textgreater{}=                                               \\ \hline
+Igualdad                                                         & == !=                                                                                             \\ \hline
+Lógicos                                                          & AND \&\&                                                                                          \\ \hline
+Lógicos                                                          & OR ||                                                                                             \\ \hline
+Condicional                                                      & ?:                                                                                                \\ \hline
+Asignación                                                       & = += -= *= /= \%=\textgreater{}\textgreater{}= \textless{}\textless{}= \&= \textasciicircum{}= |= \\ \hline
+Coma                                                             & ,                                                                                                 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Arreglos}   
+% https://dlang.org/spec/arrays.html#dynamic-arrays
+
+Los arreglos en D pueden ser estáticos o dinámicos.
+
+Un arreglo estático se declara de la siguiente forma:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{d}| <tipo> [<tamaño] <variable>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+De tal forma que un arreglo de 10 enteros quedaría de la siguiente forma:
+
+\mint[linenos=false]{d}| int [10] arr |
+
+Un arreglo dinámico pos su parte de declararía de manera similar pero sin indicar el tamaño específico.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{d}| <tipo> [ ] <variable>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Por lo que la declaración de un arreglo dinámico entero sería de la siguiente forma:
+
+%multiple lines
+\begin{minted}{d}
+int [] a;
+\end{minted}
+
+Los arreglos son objetos por lo que podemos obtener el número de elementos de un arreglo del atributo $length$. 
+
+\textcolor{blue}{Ejemplo:}
+
+%multiple lines
+\begin{minted}{d}
+int[10] a = [ 1,2,3,4,5,6,7,8,9,10 ];
+int[] b1, b2, b3, b4;
+
+b1 = a;
+b2 = a[];
+b3 = a[0 .. a.length];
+b4 = a[0 .. $];
+writeln(b1);
+writeln(b2);
+writeln(b3);
+writeln(b4);
+
+\end{minted}
+
+
+La longitud de un arreglo dinámico se puede hacer asignando un nuevo valor al atributo $length$:
+
+%multiple lines
+\begin{minted}{d}
+int [] a;
+
+a.length=10;
+
+\end{minted}
+
+
+\subsection{Estructuras de control}
+
+\textit{if}: una sentencia consiste de una expresión booleana seguida de una o mas declaraciones.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+if (<expresión_boleana>){
+     /* se ejecuta si la expresión boleana es verdadera */
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+      int main (){
+             /* Definición de variable local */
+          int a = 10;
+ 
+          if( a < 20 ){
+                 writefln("a es menor que 20" );
+             }
+             writefln("valor de a es : %d", a);
+         return 0;
+      }
+\end{minted}
+\caption{Ejemplo de estructura de control \textit{if} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{if...else}: una sentencia \textit{if} puede estar seguida de una sentencia \textit{else} opcional, que se ejecuta cuando la expresión booleana es falsa.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+if (<expresión_boleana>){
+      
+} else {
+        
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+	import std.stdio;
+      int main (){
+             int a = 100;
+      
+             if( a < 20 ){
+                 writefln("a es menor que 20" );
+             }
+             else{
+                 writefln("a no es menor que 20" );
+             }
+             writefln("el valor de a es : %d", a);
+ 	   return 0;
+      }
+\end{minted}
+\caption{Ejemplo de estructura \textit{if.. else} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{Switch}: Permite a una variable ser evaluada con una lista de valores.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+      switch(<expresión>){
+      case <expresión-constante>  :
+            <instrucciones>;
+             break; /* opcional */
+      case <expresión-constante>  :
+            <instrucciones>;
+             break; /* opcional */
+        
+          default : /* Opcional */
+             <instrucciones>;
+      }
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+      import std.stdio;
+       
+      int main (){
+         char grade = 'B';
+      
+         switch(grade){
+         case 'A' :
+            writefln("Excelente!" );
+            break;
+         case 'B' :
+         case 'C' :
+            writefln("Bien hecho" );
+            break;
+         case 'D' :
+            writefln("Pasaste" );
+            break;
+         case 'F' :
+            writefln("Trata de nuevo" );
+            break;
+         default :
+            writefln("Reprobado" );
+         }
+         writefln("Calificación  %c", grade );
+       
+         return 0;
+      }
+\end{minted}
+\caption{Ejemplo de estructura \textit{switch} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{while}: repite una(s) instruccion(es) mientras la condición es verdadera. Comprueba la condición antes de el cuerpo del ciclo.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+while(<condición>) {
+	<instrucciones>;
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+	import std.stdio;
+	int main ()	{
+		int a = 10;
+
+		while( a < 20 ){
+			writefln("Valor de a: %d", a);
+			a++;
+		}
+		return 0;
+	}
+
+\end{minted}
+\caption{Ejemplo de estructura \textit{while} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{for}: ejecuta una secuencia de instrucciones múltiples veces.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+for ( <ini>; <condición>; <incremento> ){
+	<instrucciones>;
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+ 
+\begin{enumerate}
+\item ini se ejecuta primero y solo una vez.
+\item La condición es evaluada. Si es verdadera, el cuerpo del ciclo se ejecuta. Si es falsa el cuerpo del ciclo no se ejecuta y cede el control a la siguiente instrucción después del ciclo.
+\item Después de ejecutar el ciclo, se ejecuta la instrucción incremento.
+\item La condición es evaluada nuevamente.
+\end{enumerate}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+	import std.stdio;
+       int main (){
+           for( int a = 10; a < 20; a = a + 1 ){
+               writefln("Valor de a: %d", a);
+           }
+           return 0;
+       }
+
+\end{minted}
+\caption{Ejemplo de estructura \textit{for} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{do while}: similar a \textit{while} con la diferencia que la condición se evalúa al final del ciclo.
+
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+do {
+    <instrucciones>;
+} while( <condición> );
+
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+int main (){
+    int a = 10;
+    do{
+        writefln("Valor de a: %d", a);
+        a = a + 1;
+    }while( a < 20 );
+    return 0;
+}
+\end{minted}
+\caption{Ejemplo de estructura \textit{do while} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+D soporta los controles de instrucciones \textit{break} y \textit{continue}.
+    \textit{break}: para terminar un ciclo o un instrucción de un \textit{switch} y transferir la ejecución a la instrucción inmediata después del ciclo o del \textit{switch}.
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{d}|break;|\\
+\hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+    import std.stdio;
+	int main (){
+		int a = 10;
+		while( a < 20 ){
+			writefln("valor de a: %d", a);
+			a++;
+			if( a > 15){
+				break;
+			}
+		}
+		return 0;
+	}
+\end{minted}
+\caption{Ejemplo de \textit{break} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textit{continue}: Forza la terminación del cuerpo de un ciclo y pasa el control, en el caso del \textit{for} evalúa la condición y realiza el incremento;  en el caso del \textit{while} y \textit{do...while }pasa el control para evaluar la condicional.
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{d}|continue;|\\
+\hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+      import std.stdio;
+      int main (){
+          int a = 10;
+          do{
+              if( a == 15){
+                  a = a + 1;
+                  continue;
+              }
+          writefln("valor de a: %d", a);
+          a++;
+          }while( a < 20 );
+          return 0;
+      }
+\end{minted}
+\caption{Ejemplo de \textit{continue} en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%\subsection{Entrada y salida básica en D}
+
+\subsection{Enumeraciones}
+
+Una enumeración es usada para valores de nombres de constantes. Un tipo de enumeración es declarada usando la palabra clave \textit{enum}.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+	enum <nombre_enum> {
+		<lista de enumeración>
+	}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Donde, \textit{nombre\_ enum} especifica el nombre de tipo enumeración, \textit{lista de enumeración} es la lista de identificadores separados por coma. 
+Cada símbolo de la lista enumeración representa un valor entero. Por omisión, el valor del primer símbolo de la lista es 0.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+	import std.stdio;
+	enum Days { sun, mon, tue, wed, thu, fri, sat };
+	int main(string[] args)
+	{
+		Days day;
+		day = Days.mon;
+		writefln("Current Day: %d", day);
+		writefln("Friday : %d", Days.fri);
+	return 0;
+	}
+\end{minted}
+\caption{Ejemplo de enumeración en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Propiedades:
+
+\begin{itemize}
+\item \textit{init}: inicializa el primer valor en la enumeración.
+\item \textit{min}: regresa el valor más pequeño de la enumerción.
+\item \textit{max}: regresa el valor más grande de la enumeración.
+\item \textit{sizeof}: retorna el tamaño de la enumeración.
+\end{itemize}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+import std.stdio;
+// Inicializado con valor 1
+enum Days { sun =1, m on, tue, wed, thu, fri, sat };
+int m ain(string[] args){
+	writefln("Min : %d", Days.m in);
+	writefln("Max : %d", Days.m ax);
+	writefln("Size of: %d", Days.sizeof);
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de enumeración en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo} de enumeración anónima:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+	import std.stdio;
+	// Initialized sun with value 1
+	enum { sun , m on, tue, wed, thu, fri, sat };
+	int m ain(string[] args){
+		writefln("Sunday : %d", sun);
+		writefln("Monday : %d", m on);
+		return 0;
+	}
+\end{minted}
+\caption{Ejemplo de enumeración anónima en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Módulos}
+
+El nombre de un modulo es el mismo que su nombre del archivo sin la extensión .d. Cuando explícitamente se especifica, el nombre del modulo es definido por la palabra clave \textit{module} la cual debe aparecer como  la primera linea como se muestra a continuación:
+
+\begin{minted}{d}
+    module empleado;
+	class Empleado {
+		// La definición de la clase va aquí.
+	}
+\end{minted}
+
+La línea de module es opcional, cuando no se especifica es el mismo que el nombre del archivo sin la extensión .d.
+
+D soporta Unicode en nombres de código fuente y del módulo. Sin embargo, el soporte Unicode de los sistemas de archivos puede variar. Por ejemplo, aunque la mayoría de los sistemas de archivos de Linux soportan Unicode, los nombres de los archivos en los sistemas de archivos de Windows no pueden distinguir entre letras mayúsculas y minúsculas. Además, la mayoría de los sistemas de archivos limitan los caracteres que se pueden utilizar en los nombres de archivos y directorios. Por razones de portabilidad, es recomendable utilizar solo letras ASCII minúsculas en los nombres de archivo.
+
+Una combinación de módulos relacionados se llama paquete. Los archivos fuente que están dentro del mismo directorio se consideran pertenecientes al mismo paquete. El nombre del directorio se convierte en el nombre del paquete, que también debe ser especificado como la primera parte de los nombre del módulo.
+
+Por ejemplo, si $empleado.d$ y $oficina.d$ están dentro del directorio \texttt{compañia}, el paquete se define para $empleado$ y $oficina$.
+
+
+\begin{minted}{d}
+	module compañia.empleado;
+	
+	class Empleado {
+	}
+	
+	module compañia.oficina;
+	
+	class Oficina {	
+	}
+\end{minted}
+
+La palabra clave de \textit{import}, es para la introducción de un módulo en el módulo actual:
+
+\mint[linenos=false]{d}|import std.stdio; |
+
+
+El nombre del módulo puede contener el nombre del paquete también. Por ejemplo, el \textit{std}. indica que \textit{stdio} es un módulo del paquete \textit{std}.
+
+\subsection{Entrada y Salida básica en D}
+
+La  salida básica a consola en D se hace con write y writeln
+
+\mint[linenos=false]{d}|         write("Dato ", n, ": ", foo, "\n"); |
+
+\mint[linenos=false]{d}|write("Salida sin salto de línea"); |
+
+
+La lectura por otro lado podemos hacerla con la función $readln()$ que regresa la entrada estándar a un arreglo de caracteres.
+
+\begin{minted}{d}
+char[] nom;
+nom = readln();
+writef("Hola ", nom);
+\end{minted}
+
+O se puede usar la lectura formateada que ofrece la función $readf()$
+
+  %readf(" %s", &time);
+
+
+Las funciones se encuentran en la biblioteca de entrada y salida $std.stdio$.
+
+
+\subsection{Prueba D}
+
+Una especie de tutorial interactivo puede encontrarse en : \url{https://tour.dlang.org/}
+
+\includegraphics[scale=.25]{imagenes/tryD.png}
+
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+
+\newpage
+
+\part{Programación Orientada a Objetos}
+

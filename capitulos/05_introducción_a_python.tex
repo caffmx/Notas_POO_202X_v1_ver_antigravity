@@ -1,0 +1,1002 @@
+\chapter{Introducción a Python}
+\section{Introducción}
+Python es un lenguaje dinámico y con características de orientado a objetos que es muy popular para desarrollo en Web, aunque cuenta también con características de programación funcional. Es similar a lenguajes como Ruby, Perl y Scheme pero también tiene influencias de lenguajes como Java y C.
+
+Fue desarrollado en 1990 por \textit{Guido van Rossum} y es  un lenguaje que se ejecuta en las principales plataformas de hardware y sistemas operativos. Actualmente, junto con Ruby, Python es uno de los lenguajes orientados a objetos más usados para desarrollo de web dinámico \footnote{Un artículo interesante de despedida a Guido por Dropbox donde mencionan su trabajo en Python \href{https://blog.dropbox.com/topics/company/thank-you--guido.html}{en el blog de Dropbox}}.
+
+Existen tres principales implementaciones de Pyhton:
+
+
+\begin{itemize}
+\item  \textit{Python / Cpython}. También llamada solamente Python, debido a que es la implementación más popular. La razón es que es la que tiene un desarrollo más completo, actualizado y de rápida ejecución\footnote{Ver: \href{https://www.python.org/}{python.org}}.
+\item  \textit{Jython}. Es una implementación de Pyhton para ejecutarse en máquinas virtuales de Java (JVM), de manera similar a Scala. Puede hacer uso de la biblioteca de clases de Java. 
+\item  \textit{IronPython}. Es una implementación de Python para la CLR (\textit{Common Language Runtime}) de Microsoft (.NET). Puede usar las bibliotecas de clases de .NET
+\end{itemize}
+
+\section{Herramientas}
+
+El principal programa para usar Python lleva precisamente este nombre. \textit{python} es al mismo tiempo el intérprete y el compilador del lenguaje. El programa genera código de bytes que es almacenado en programas $.pyc$ o $.pyo$. Estos archivos son generados automáticamente cuando el archivo fuente es actualizado.
+
+Python puede ejecutar código de 2 formas:
+
+1. Interactivamente. Se ejecuta \textit{python} desde el \textit{prompt} de la consola:
+
+\begin{alltt}
+> python
+Python 3.1.1 (r311:74543, Aug 24 2009, 18:44:04) 
+[GCC 4.0.1 (Apple Inc. build 5493)] on darwin
+Type "copyright", "credits" or "license()" for more information.
+>>> 
+\end{alltt}
+
+2. Ejecución interpretada de archivos. \textit{python} seguido del nombre del \textit{script} a ejecutar.
+
+\begin{alltt}
+> python programa.py
+\end{alltt}
+
+Además, Python incluye un sencillo ambiente de desarrollo llamado IDLE (\textit{Integrated DeveLopment Environment}), el cual ofrece un \textit{shell} similar al intérprete de Python con ligeras funcionalidades añadidas; además de incluir un editor de texto, visores y un depurador interactivo.
+Python puede ser usado desde otros IDEs, tales como Eclipse y NetBeans.
+
+
+\section{Fundamentos de Python}
+
+\subsection{Convenciones léxicas}
+
+Un programa en Python está formado por una secuencia de líneas lógicas que pueden estar formadas por una o más líneas físicas. Una línea no lleva un delimitador como en otros lenguajes. En cambio, si la línea es muy larga, dos líneas físicas puede unirse con una diagonal ' \textbackslash ' . Aunque Python automáticamente une dos líneas físicas si un paréntesis, corchete o llave no ha sido cerrado.
+
+La \textbf{identación} es importante para Pytthon. A diferencia de muchos lenguajes, Python no usa llaves u otros medios (como \textit{begin-end}) para delimitar bloques de instrucciones. La identación es la forma en que los bloques son delimitados en Python.
+
+\subsection{Literales}
+
+Python tiene tipos definidos para tipos de datos básicos. Estos son objetos que también pueden ser usados como literales.
+
+Por ejemplo, las literales enteras pueden ser escritas  en decimal:
+
+\begin{alltt}
+>>> 123
+123   
+\end{alltt}
+
+o hexadecimal:
+
+\begin{alltt}
+>>> 0x17
+23  
+\end{alltt}
+
+Números flotantes se escriben con un punto y tienen el equivalente a un \textit{double} en C.
+
+
+\subsection{Variables}
+Una variable es un espacio para almacenar datos modificables, en la memoria de una computadora, en Python una variable se define por la sintaxis:
+
+\mint[linenos=false]{python}| nombre_de_la_variable= valor_de_la_variable |
+
+Cada variable tiene un nombre y un valor, el cual define a la vez el tipo de datos de la variable. Para nombrarlos es necesario un nombre descriptivo y en minúsculas. Pueden utilizarse nombres compuestos pero las palabras se separan por guiones bajos. 
+%Además antes y después del signo $=$ debe haber uno y sólo un espacio en blanco. 
+%Algunas formas incorrectas de escribir los nombres de las variables son:
+
+%\begin{minted}{python}
+%MiVariable = 12
+%mi_variable    =   12 
+%mi_variable = 12 
+%mivariable =  12
+%\end{minted}
+
+Existen otros tipos de datos que no requieren ser modificados a lo largo del programa, y son llamadas constantes. Los nombres de las constantes deben estar escritos con mayúsculas, y se deben separar las palabras por guiones bajos al igual que los nombres de las variables. Para imprimir un valor de pantalla, en Python, se utiliza la palabra clave \textit{print}:
+
+\begin{minted}{python}
+mi_variable = 15
+print (mi_variable)
+\end{minted}
+
+Esto imprimirá el valor de la variable $mi\_variable$ en la pantalla.
+
+Cuando una variable tiene el valor de nulo, se usa la palabra reservada \textit{None}.
+
+\subsection{Operadores}
+\subsubsection{Operadores aritméticos}
+Los operadores aritméticos que son utilizados en Python son mostrados en el Cuadro \ref{tab:op_arit_python}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Símbolo & Significado     & Ejemplo & Resultado \\ \hline
++       & Suma            & 10+5    & 15        \\ \hline
+-       & Resta           & 12-7    & 5         \\ \hline
+-       & Negación        & -5      & -5        \\ \hline
+*       & Multiplicación  & 7*5     & 35        \\ \hline
+**      & Exponente       & 2**3    & 8         \\ \hline
+/       & División        & 12.5/2  & 6.25      \\ \hline
+//      & División entera & 12.5//2 & 6.0       \\ \hline
+\%      & Módulo          & 27\%4   & 3         \\ \hline
+\end{tabular}
+\caption{Operadores aritméticos en Python}
+\label{tab:op_arit_python}
+
+\end{table}
+
+El siguiente es un ejemplo donde se utilizan los operadores aritméticos:
+
+\begin{minted}{python}
+>>>monto_bruto = 175 
+>>>tasa_interes = 12 
+>>> monto_interes = monto_bruto * tasa_interes / 100 
+>>> tasa_bonificacion = 5 
+>>> importe_bonificacion = monto_bruto * tasa_bonificacion / 100 
+>>> monto_neto = (monto_bruto - importe_bonificacion) + monto_interes 
+>>> monto_neto 
+187.25 
+\end{minted}
+
+\subsubsection{Operadores relacionales}
+Ver Cuadro \ref{tab:op_rel_python} con el listado de los operadores relacionales.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Símbolo         & Significado       & Ejemplo           & Resultado \\ \hline
+==              & Igualdad          & 5==7              & Falso     \\ \hline
+!=              & Diferencia        & 4 != 5            & Verdadero \\ \hline
+\textless{}     & Menor que         & 5 \textless 7     & Verdadero \\ \hline
+\textgreater{}  & Mayor que         & 4\textgreater{}8  & Falso     \\ \hline
+\textless{}=    & Menor o igual que & 5\textless{}=5    & Verdadero \\ \hline
+\textgreater{}= & Mayor o igual que & 4\textgreater{}=5 & Falso     \\ \hline
+\end{tabular}
+\caption{Operadores relacionales en Python}
+\label{tab:op_rel_python}
+
+\end{table}
+
+Curiosamente, mientras muchos lenguajes únicamente permiten usar a los operadores relacionales para comparar pares de elementos. En Python permiten formar expresiones con elementos adicionales.
+
+\begin{minted}{python}
+>>> 5>3>10
+False
+>>> 5>10>1
+False
+>>> 5>3>2
+True
+>>> 5>2>3
+False
+>>> 5>2<3
+True
+\end{minted}
+
+
+\subsubsection{Operadores lógicos}
+Y para evaluar más de una condición simultáneamente se utilizan los operadores lógicos presentados en el Cuadro \ref{tab:op_log_python}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+Símbolo            & Ejemplo                            & Resultado \\ \hline
+and                & 5==7 and 7\textless{}12            & Falso     \\ \hline
+or                 & 7\textgreater{}5 or 9\textless{}12 & Verdadero \\ \hline
+xor (o excluyente) & 4==4 xor 9\textgreater{}3          & Falso     \\ \hline
+\end{tabular}
+\caption{Operadores lógicos en Python}
+\label{tab:op_log_python}
+
+\end{table}
+
+
+\subsection{Tipos de datos}
+
+Una variable  puede contener valores de diversos tipos. Entre ellos:
+\begin{minted}{python}
+Cadena de texto (String)
+mi_cadena = "Hola mundo"
+Número entero
+edad = 35
+Número hexadecimal
+edad = 0x23 
+Número real
+precio = 7435.28 
+Booleano (verdadero / falso)
+verdadero = True 
+	falso = False 
+\end{minted}
+
+Estos son algunos tipos de datos sencillos, además en Python existen otros tipos de datos complejos que admiten una colección de datos, como las \textbf{tuplas}, las \textbf{listas} y los \textbf{diccionarios}. 
+
+
+\subsubsection{Listas}
+% https://www.geeksforgeeks.org/python-lists/?ref=lbp
+
+Python no tiene el concepto de arreglos. La secuencia de elementos más usada en el lenguaje son las listas. Las listas son colecciones de elementos de tipos arbitrarios y sin un tamaño fijo\cite{lutz2013learning}.
+
+Son similares a los arreglos en otros lenguajes, con la diferencia de que son de tamaño dinámico y pueden contener elementos de distinto tipo.
+
+\mint[linenos=false]{python}| mi_lista = ['cadena de texto',15,2.8,'otro dato',25] |
+
+A los datos de las listas se accede mediante el índice entre corchetes. Sus datos son mutables.
+
+\begin{minted}{python}
+mi_lista[2] = 3.5 
+print (mi_lista)  # Devuelve ['cadena de texto', 15, 3.5, 'otro dato', 25]
+\end{minted}
+
+También pueden agregarse nuevos datos a la lista,
+
+\begin{minted}{python}
+mi_lista.append('Nuevo dato') 
+print (mi_lista)   
+	#Devuelve ['cadena de texto', 15, 3.5, 'otro dato', 25, 'Nuevo dato'] 
+\end{minted}
+
+
+
+
+Ejemplos:
+
+\begin{minted}{python}
+>>> lista=[123, 'xxx', 3.14]
+>>> len(lista)
+3
+>>> lista[0]
+123
+>>> lista + [4, 5, 6]
+[123, 'xxx', 3.14, 4, 5, 6]
+>>> lista * 2
+[123, 'xxx', 3.14, 123, 'xxx', 3.14]
+>>> lista
+[123, 'xxx', 3.14]
+
+>>> lista=lista+[4,5,6]
+>>> lista
+[123, 'xxx', 3.14, 4, 5, 6]
+>>> lista.append('zzz')
+>>> lista
+[123, 'xxx', 3.14, 4, 5, 6, 'zzz']
+>>> lista.pop(2)
+3.14
+>>> lista
+[123, 'xxx', 4, 5, 6, 'zzz']
+>>> orden=['c', 'a', 'b']
+>>> orden.sort()
+>>> orden
+['a', 'b', 'c']
+>>> orden.reverse()
+>>> orden
+['c', 'b', 'a']
+>>> lista
+[123, 'xxx', 4, 5, 6, 'zzz']
+>>> lista[100]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+>>> lista[100]=1
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list assignment index out of range
+
+
+>>> matriz=[[1, 2, 3],
+... [4, 5, 6],
+... [7, 8, 9]]
+>>> matriz
+[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+>>> matriz[1]
+[4, 5, 6]
+>>> matriz[1][2]
+6
+\end{minted}
+
+
+
+
+
+
+
+\subsubsection{Tuplas}
+
+Una tupla es una variable que permite almacenar varios datos inmutables de tipos diferentes. 
+
+\mint[linenos=false]{python}|mi_tupla = ('Cadena de texto', 15 , 2.8 ,'otro dato', 25) |
+
+Se puede acceder a cada uno de estos datos mediante su índice correspondiente, siendo el 0 el índice del primer elemento.
+
+\begin{minted}{python}
+print (mi_tupla[1])    #Devuelve 15 
+print (mi_tupla)    # Devuelve  ('Cadena de texto', 15, 2.8, 'otro dato', 25) 
+\end{minted}
+
+\subsubsection{Conjuntos}
+
+Podemos también crear un conjunto
+
+\begin{minted}{python}
+>>> s={1, 2, 3}
+>>> print(s)
+{1, 2, 3}
+>>> s.add(4)
+>>> s
+{1, 2, 3, 4}
+>>> s.add(2)
+>>> s
+{1, 2, 3, 4}
+>>> s.discard(2)
+>>> s
+{1, 3, 4}
+>>> s.remove(4)
+>>> s
+{1, 3}
+>>> s.discard(4)
+>>> s.remove(4)
+Traceback (most recent call last):
+  File "<pyshell#16>", line 1, in <module>
+    s.remove(4)
+KeyError: 4
+\end{minted}
+
+
+
+\subsubsection{Diccionarios}
+
+A diferencia de las listas y las tuplas, los diccionarios permiten utilizar una clave  para declarar y acceder a un valor.
+
+\begin{minted}{python}
+mi_diccionario = {'clave_1': 12, 'clave_2': 10} 
+print (mi_diccionario['clave_1'])        # Devuelve   12 
+\end{minted}
+
+Un diccionario permite eliminar cualquier elemento,
+
+\begin{minted}{python}
+del(mi_diccionario['clave_2']) 
+print (mi_diccionario)      # Devuelve {'clave_1': 12} 
+\end{minted}
+
+Al igual que las listas permite modificar los elementos,
+
+\begin{minted}{python}
+mi_diccionario['clave_1'] = 24 
+print (mi_diccionario)    #Devuelve    {'clave_1': 24} 
+\end{minted}
+
+
+\subsection{Estructuras de control}
+Una estructura de control es un bloque de código que permite agrupar instrucciones de manera controlada. Las principales estructuras de control son de dos tipos:
+
+\begin{itemize}
+\item Estructuras de control condicionales.
+\item Estructuras de control iterativas.
+\end{itemize}
+    
+\subsubsection{Estructuras de control condicionales}    
+Para evaluar más de una condición simultáneamente se utilizan los operadores lógicos presentados anteriormente.
+
+Las estructuras de control condicionales, se definen mediante el uso de tres palabras reservadas \textit{if} , \textit{elif}  y \textit{else} .
+
+Ejemplos:    
+
+\begin{minted}{python}
+      
+	>>> def cruzar(semaforo): 
+	...     	if semaforo == "verde": 
+	...           		print ("Cruzar la calle") 
+	...     	else: 
+	...             	print ("No cruzar la calle") 
+      
+      >>>def decidir_pago (compra) 
+      …	if compra <= 100: 
+      ...         		print ("Pago en efectivo") 
+      ... 	elif compra > 100 and compra < 300: 
+      ...        		print ("Pago con tarjeta de débito") 
+      ... 	else: 
+      ...        		print ("Pago con tarjeta de crédito")
+
+\end{minted}
+
+\textbf{Estructura múltiple condicional match \/ case}
+
+Hasta la versión 3.10, Python no tenía una característica que implementara lo que hace la instrucción \textit{switch} en otros lenguajes de programación. En su lugar, tendrías que usar la palabra clave \textit{elif} para ejecutar múltiples declaraciones condicionales.
+A partir de la versión 3.10, Python ha implementado una característica de \textit{switch case} llamada \textit{emparejamiento de patrones estructurales}. Se puede implementar esta característica con las palabras clave \textit{match} y \textit{case}.
+Aquí se muestra un ejemplo de cómo se ve en Python 3.10:
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+lang = input("¿Qué lenguaje de programación quieres aprender? ")
+match lang:
+    case "JavaScript":
+        print("Puedes convertirte en un desarrollador web.")
+    case "Python":
+        print("Puedes convertirte en un científico de datos")
+    case "PHP":
+        print("Puedes convertirte en un desarrollador backend")
+    case "Solidity":
+        print("Puedes convertirte en un desarrollador de Blockchain")
+    case "Java":
+        print("Puedes convertirte en un desarrollador de aplicaciones móviles")
+    case _:
+        print("El lenguaje no importa, lo que importa es resolver problemas.")
+
+\end{minted}
+\caption{Ejemplo de match case en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este código, \textit{match} es la palabra clave que inicia la declaración del \textit{switch}, y case se usa para definir cada caso posible. Si ninguno de los casos coincide con el valor de \textit{lang}, se ejecutará el bloque de código después de case \_:, que es el caso predeterminado.
+
+
+\subsubsection{Estructuras de control iterativas}
+En Python se dispone de dos estructuras cíclicas:
+
+\paragraph{\textit{while}}
+Ejecuta una misma acción mientras una determinada condición se cumpla.
+Ejemplo:
+\begin{minted}{python}
+      >>> def imp_anios(anio): 
+      ...     while (anio <= 2012): 
+      ...             print "Informes del año", str (anio) 
+      ...             anio += 1 
+      ... 
+\end{minted}
+
+Al probar este programa teniendo como dato de entrada $anio = 2009$, se obtiene:
+\begin{minted}{python}
+      >>> imp_anios(2009) 
+      Informes del año 2009 
+      Informes del año 2010 
+      Informes del año 2011 
+      Informes del año 2012 
+\end{minted}
+
+Con la última línea del programa $anio += 1$, estamos incrementando en uno 	la variable \textit{anio}. Esto hace que el ciclo en algún momento termine. Si ocurriera que el valor que se evalúa para el ciclo no es un valor numérico	que no puede incrementarse; en ese caso, podremos utilizar una estructura de control condicional, anidada dentro del ciclo, y frenar la ejecución cuando el condicional deje de cumplirse, con la palabra clave reservada \textit{break}: 
+
+Ejemplo:
+
+\begin{minted}{python}
+>>> def edad():
+	while True:
+		edad = input("Edad: ")
+		if int(edad)>100:
+			break
+
+>>> edad()
+Edad: 4
+Edad: 5
+Edad: 101
+>>> 
+\end{minted}
+
+Este programa continuará hasta que el usuario introduzca su nombre.
+
+\paragraph{\textit{for}}
+El ciclo \textit{for}, en Python, es aquel que nos permitirá iterar sobre una variable compleja, del tipo lista o tupla.
+      
+Ejemplo:
+\begin{minted}{python}
+>>> mi_lista = ['Juan', 'Antonio', 'Pedro', 'Herminio'] 
+	>>> for nombre in mi_lista: 
+	...     print nombre 
+	... 
+	
+\end{minted}
+
+Este programa devuelve como resultado:
+
+\begin{minted}{python}
+    Juan 	
+	Antonio 
+	Pedro 
+	Herminio 
+\end{minted}
+
+Otra forma de iterar con el \textit{for} es la siguiente:
+\begin{minted}{python}
+>>> for anio in range(2001, 2009): 
+	...     	print "Informes del Año", str(anio) 
+	...
+\end{minted}
+
+\paragraph{\textit{Instrucciones de control de ciclos}}
+
+Como en otros lenguajes, se tienen instrucciones para modificar el comportamiento del flujo de ejecución, ya sea para saltar o detener la ejecución de un ciclo:
+
+\begin{itemize}
+\item \textit{break}. Dada una condición, la instrucción \textit{break} detiene la ejecución y salta el flujo fuera del ciclo.
+\item \textit{continue}. Dada una condición, el flujo salta al inicio del ciclo y permite la siguiente iteración, si la condición del ciclo sigue siendo verdadera.
+\end{itemize}
+
+
+
+\subsection{Entrada y Salida básica en Python}
+
+Las funciones principales de entrada y salida de datos son:
+ 
+\begin{itemize}
+\item La función print() es interna del lenguaje Python y se utiliza para imprimir en la pantalla.  Para concatenar varios datos a imprimir en pantalla se utilizan comas, e.g. $print ("Hola ", alguien,"!")$. 
+\item La función \textit{a= input (''Introduzca un valor'')} \footnote{Antes de Python 3 era llamada raw\_input} despliega un mensaje en pantalla para solicitar un dato que será almacenado en la variable a como texto. La función \textit{input}, devuelve el valor ingresado por teclado tal como se escribe.
+\end{itemize}
+
+\begin{minted}{python}
+>>> variable=input("Edad:")
+Edad:45
+>>> variable
+'45'
+>>> type(variable)
+<class 'str'>
+>>> int(variable)
+45
+
+>>> nombre=input("Nombre:")
+Nombre:carlos a
+>>> nombre
+'carlos a'
+\end{minted}
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+s=" ¡Hola, Mundo! "
+print(s)
+print(s[1])
+print(s[7:12])
+
+# elimina caracteres en blanco del lado izquierdo y derecho de la cadena
+print(s.strip())
+print(len(s))
+print(s.lower())
+print(s.upper())
+
+#sustituye "l" por "j"
+print(s.replace("l", "j"))
+
+#separa una cadena y regresa una lista de cadenas
+str = "Un ejemplo de string....!"
+print (str.split( ))
+print (str.split('e',1))
+print (str.split('e'))
+
+print("Nombre:")
+n=input()
+print("Hola, "+n)
+
+
+\end{minted}
+\caption{Ejemplo de entrada en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Funciones}
+
+Aunque ya hemos usado funciones en Python no se han explicado formalmente.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+def <nombre_función> ( [<parametros>] ) :
+    <cuerpo de la función>
+    [return <expresión>]
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Como puede verse la instrucción de retorno es opcional. En caso de no regresarse nada explícitamente, se regresa $None$.
+
+\subsubsection{Valores por omisión en parámetros}
+
+Un argumento por omisión es un parámetro que asume un valor si el valor no es proporcionado en la el argumento de la llamada de la función. 
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# Ejemplo de valores por omisión
+
+def fun(x, y=50):
+	print("x: ", x)
+	print("y: ", y)
+
+fun(10)
+\end{minted}
+\caption{Ejemplo valores por omisión en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Al igual que en C++, los valores por omisión deben estar a la extrema derecha en la lista de argumentos.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Importante} 
+\end{center} 
+\\ \hline
+Hay que tener en cuenta que el ligado a los valores por omisión ocurre en la definición de la función.
+ 
+\\ \hline
+\end{tabular}
+\end{center}
+
+Usualmente este comportamiento no es el deseado:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+def f(x = None):
+    if x is None:
+        x = []
+    x.append(1)
+    return x
+
+print(f())
+print(f())
+print(f())
+print(f(x = [9,9,9]))
+print(f())
+print(f())
+
+\end{minted}
+\caption{Ejemplo  en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+\ifadvanced
+
+\subsubsection{Palabras clave de argumentos intercambiables}
+
+Este concepto implica poner el nombre del argumento en la llamada con sus valores, de manera que no se tenga que recordar el orden de los parámetros.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+def estudiante(nombre, apellido):
+	print(nombre, apellido)
+
+# Argumentos clave
+estudiante(nombre='Ada', apellido='Lovelace')
+estudiante(apellido='Turing', nombre='Alan')
+
+\end{minted}
+\caption{Ejemplo palabras clave de argumentos en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Argumentos de cantidad variable}
+
+En Python, podemos tener argumentos de cantidad variable usando $*$ o $**$. En el primer caso para argumentos tradicionales sin palabra clave y el segundo caso para argumentos con palabras clave (ver ejemplo anterior).
+
+Argumentos de longitud variable sin palabras clave
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# *argvar  como variable para los argumentos
+
+def fun(*argvar):
+  for arg in argvar:
+    print(arg)
+  print(type(argvar)) # argvar es una tupla
+
+fun('Hola', 'Bienvenido', 'a', 'POO')
+
+\end{minted}
+\caption{Ejemplo Argumentos de longitud variable sin palabras clave en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+# *kwargs como variable para los argumentos con palabras clave
+
+def fun(**kwargs):
+  for clave, val in kwargs.items():
+    print("%s == %s" % (clave, val))
+  print(type(kwargs))  #kwargs es un diccionario
+
+fun(uno='Prueba', dos='de', tres='argumentos')
+
+\end{minted}
+\caption{Ejemplo Argumentos de longitud variable con palabras clave en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Funciones de primera clase in Python}
+
+Los \textbf{objetos de primera clase} en un lenguaje son manejados uniformemente. Pueden ser usados dentro de una estructura de datos, pasados como argumentos, o usados en estructuras de control. Un lenguaje como Python que soporta \textbf{funciones de primera clase} es aquel que trata a sus funciones como objetos de primera clase.  Las funciones de primera clase en Python:
+\begin{itemize}
+\item Una función es una instancia de la clase $function$ y $object$.
+\item Una función puede asignarse a una variable.
+\item Una función puede pasarse como parámetro a otra función.
+\item Se puede regresar una función como valor de retorno de una función.
+\item Se puede almacenar una función en estructuras de datos, por ejemplo en una lista.
+\end{itemize}
+
+\textbf{Funciones como objetos}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+#Funciones como objetos
+
+def saludar(texto):
+	return texto.upper()
+
+print (saludar('Hola'))
+
+gritar = saludar
+
+print (gritar('¡Hola!'))
+
+\end{minted}
+\caption{Ejemplo funciones como objetos en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textbf{ Funciones como argumentos de otras funciones}
+También conocidas como funciones de orden superior.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+def gritar(text):
+	return text.upper()
+
+def susurrar(text):
+	return text.lower()
+
+def saludar(func):
+	# almacenando la función en una variable
+	saludar = func("""Hola, hemos creado una función
+	pasada como un argumento.""")
+	print (saludar)
+
+saludar(gritar)
+saludar(susurrar)
+
+\end{minted}
+\caption{Ejemplo de función como argumento de otra función en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textbf{Función regresando a otra función }
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+def crea_sumar(x):
+	def sumar(y):
+		return x+y
+
+	return sumar
+
+suma_15 = crea_sumar(15)
+
+print (suma_15(10))
+
+print (suma_15(15))
+
+\end{minted}
+\caption{Ejemplo de función regresando a otra función  en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+% \subsubsection{When to use yield instead of return in Python?}
+% \subsubsection{Generators in Python}
+% \subsubsection{lambda}
+% \subsubsection{closures}
+
+\fi
+%%%%%%%%%%
+% ADVANCED_END
+%%%%%%%%%%
+
+\subsection{Módulos en Python}
+En Python cada uno de los archivos $.py$ se denominan módulos. 
+
+El contenido de cada módulo, podrá ser utilizado a la vez, por otros módulos. Para ello, es necesario importar los módulos que se quieran utilizar. Para importar un módulo, se utiliza la instrucción \textit{import}, seguida del nombre del paquete (si aplica) más el nombre del módulo (sin el $.py$) que se desee importar.  
+
+\subsubsection{Importación de un módulo completo:}
+Se puede importar un módulo completo utilizando la palabra clave \textit{import} seguida del nombre del módulo. Por ejemplo:
+
+\mint[linenos=false]{python}| import modulo |
+
+Esto carga todo el contenido del archivo ''modulo.p'' en el programa actual. Luego, se puede acceder a las funciones, variables y clases definidas en ese módulo utilizando la notación de punto, como modulo.funcion(), modulo.variable, o modulo.Clase.
+
+\subsubsection{Importación de módulos con alias:}
+Se puede asignar un alias al módulo importado para hacer que el código sea más legible o evitar conflictos de nombres. Para hacerlo, se utiliza la palabra clave \textit{as}. Por ejemplo:
+
+\mint[linenos=false]{python}| import modulo as alias |
+
+Esto permite utilizar alias en lugar de modulo para acceder a sus elementos.
+
+\subsubsection{Importación selectiva:}
+Se puede importar solo partes específicas de un módulo utilizando la declaración \textit{from}. Por ejemplo:
+
+\mint[linenos=false]{python}| from modulo import funcion, variable |
+
+Esto importará solo la función "funcion" y la variable variable del módulo "modulo.py". Luego, se pueden utilizar directamente sin el prefijo del módulo.
+
+\subsubsection{Importación de todos los elementos:}
+También se pueden importar todos los elementos de un módulo utilizando el asterisco *, pero esto no se recomienda en general debido a que puede hacer que el código sea menos legible y propenso a conflictos de nombres. Por ejemplo:
+
+\mint[linenos=false]{python}| from modulo import * |
+
+Esto importará todas las funciones, variables y clases definidas en \textit{modulo.py}.
+
+Es importante recordar que Python buscará los módulos en los directorios especificados en la variable de entorno \textit{sys.path}. Se debe asegurar que el módulo que se intenta importar se encuentre en alguno de los directorios de esta lista o en el directorio actual del script que se esta ejecutando.
+
+
+Ejemplo:
+\begin{minted}{python}
+import modulo   # importar un módulo que no pertenece a un paquete 
+import paquete.modulo1  # importar un módulo que está dentro de un paquete 
+import paquete.subpaquete.modulo1
+
+from math import sqrt, sin, cos
+\end{minted}
+
+
+Además, Python tiene sus propios módulos, los cuales forman parte de su biblioteca de módulos estándar, que también pueden ser importados.
+
+A su vez, los módulos pueden agruparse formando paquetes. 
+
+\subsection{Paquetes en python}
+
+Un paquete es una carpeta que contiene archivos $.py$. Pero para que una carpeta pueda ser considerada un paquete, esta debe contener una archivo de inicio $\_\_init\_\_.py$. Este archivo no necesita contener ninguna instrucción, de hecho puede estar completamente vacío. Sin embargo, considerar que este archivo es invocado cuando el paquete es importado por lo que puede contener código necesario para la inicialización del paquete. 
+
+Además dentro de los paquetes pueden estar contenidos otros subpaquetes y los módulos no necesariamente pueden estar en un paquete.
+
+
+\subsection{Probando Pyhton}
+
+¿Por qué no empezar a probar python siguiendo el tutorial el línea? Éste se encuentra disponible en :  \url{https://try-python.appspot.com/} 
+
+\includegraphics[scale=.4]{imagenes/TryPython.png}
+
+
+\subsection{Pyhton estáticamente tipado}
+
+A partir de Python 3.5, se introdujo la funcionalidad de tipado estático en Python a través del uso de anotaciones de tipo. Esto permite al desarrollador especificar el tipo de una variable o parámetro en su declaración, lo que ayuda a prevenir errores de tipo en tiempo de ejecución.
+
+Las anotaciones de tipo se escriben como una expresión después de una variable o parámetro, precedida por un dos puntos (:), por ejemplo:
+
+\begin{minted}{python}
+def saludar(nombre: str) -> str:
+    return "Hola, " + nombre
+\end{minted}
+
+En este caso, se esta declarando que la variable 'nombre' es de tipo $string$, y la función 'saludar' retorna un $string$.
+
+Otro ejemplo:
+\begin{minted}{python}
+
+def f(n: int = 10) -> int:
+    return n*n
+print("Buen uso", f(8))
+print("Mal uso", f(.9)) 
+print(f())
+\end{minted}
+
+El código anterior corre sin problema a pesar de pasar un valor flotante donde se espera un entero. 
+
+Es importante mencionar que las anotaciones de tipo son solo informativas y no se realiza ninguna comprobación en tiempo de ejecución, para comprobar el tipo de una variable o parámetro se requiere de una biblioteca externa llamada 'mypy'.
+
+
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+
+

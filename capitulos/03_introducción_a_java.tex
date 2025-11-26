@@ -1,0 +1,1755 @@
+\chapter{Introducción a Java}
+
+
+\section{Origen}
+
+Java es un lenguaje de programación orientada a objetos, diseñado dentro de\textit{ Sun Microsystems} por James Gosling. Originalmente, se le asignó el nombre de \textit{Oak} y fue un lenguaje pensado para usarse dentro de dispositivos electrodomésticos, que tuvieran la capacidad de comunicarse entre sí.
+\begin{wrapfigure}{O}{0.05\textwidth} 
+    \centering
+    \includegraphics[]{imagenes/java_logo_01.png}
+
+%    \includegraphics[]{imagenes/groovy.png}
+%    \includegraphics[width=0.25\textwidth]{mesh}
+\end{wrapfigure}
+Posteriormente fue reorientado hacia Internet, aprovechando el auge que estaba teniendo en ese momento la red, y lo rebautizaron con el nombre de Java. Es anunciado al público en mayo de 1995 enfocándolo como la solución para el desarrollo de aplicaciones en \textit{web}. Sin embargo, se trata de un lenguaje de propósito general que puede ser usado para la solución de problemas diversos.
+
+Java es un intento serio de resolver simultáneamente los problemas ocasionados por la diversidad y crecimiento de arquitecturas incompatibles, tanto entre máquinas diferentes como entre los diversos sistemas operativos y sistemas de ventanas que funcionaban sobre una misma máquina, añadiendo la dificultad de crear aplicaciones distribuidas en una red como Internet.
+\begin{wrapfigure}{I}{0.05\textwidth} 
+    \centering
+    \includegraphics[]{imagenes/java_logo_02.png}
+%    \includegraphics[]{imagenes/groovy.png}
+%    \includegraphics[width=0.25\textwidth]{mesh}
+\end{wrapfigure}
+El interés que generó Java en la industria fue mucho, tal que nunca un lenguaje de programación había sido adoptado tan rápido por la comunidad de desarrolladores. Las principales razones por las que Java es aceptado tan rápido:
+\begin{itemize}
+\item  Aprovecha el inicio del auge de la Internet, específicamente del \textit{World Wide Web}.
+\item  Es orientado a objetos, la cual si bien no es tan reciente, estaba en uno de sus mejores momentos, todo mundo quería programar de acuerdo al modelo de objetos.
+\item  Se trataba de un lenguaje que eliminaba algunas de las principales dificultades del lenguaje C/C++, el cuál era uno de los lenguajes dominantes. Se decía que la ventaja de Java es que es sintácticamente parecido a C++, sin serlo realmente.
+\item  Java era resultado de una investigación con fines comerciales, no era un lenguaje académico como Pascal o creado por un pequeño grupo de personas como C ó C++.
+\end{itemize}
+
+Aunado a esto, las características de diseño de Java, lo hicieron muy atractivo a los programadores.
+
+\section{Características de diseño}
+Es un lenguaje de programación de alto nivel, de propósito general, y cuyas características son \cite{Sun01}:
+
+\begin{itemize}
+\item  Simple y familiar.
+\item  Orientado a objetos.
+\item  Independiente de la plataforma 
+\item  Portable
+\item  Robusto.
+\item  Seguro.
+\item  Multihilos.
+\end{itemize}
+
+\subsubsection{Simple y familiar} 
+
+Es simple, ya que tanto la estructura léxica como sintáctica del lenguaje es muy sencilla. Además, elimina las características complejas e innecesarias de sus predecesores.
+
+Es familiar al incorporar las mejores características de lenguajes tales como:	C/C++, Modula, Beta, CLOS, Dylan, Mesa, Lisp, Smalltalk, Objective-C, y Modula 3.
+
+
+\subsubsection{Orientado a objetos}
+
+Es realmente un lenguaje orientado a objetos, todo en Java son objetos:
+
+\begin{itemize}
+\item  No es posible que existan funciones que no pertenezcan a una clase.
+\item  La excepción son los tipos de datos primitivos, como números, caracteres y booleanos \footnote{Los puristas objetarían que no es totalmente orientado a objetos. En un sentido estricto \textit{Smalltalk} es un lenguaje “más” puro, ya que ahí hasta los tipos de datos básicos son considerados objetos.}.
+\end{itemize}
+
+	Cumple con los 4 requerimientos de Wegner \cite{wegner1986classification}:
+\begin{center}
+    \textbf{OO = abstracción + clasificación + polimorfismo + herencia}
+\end{center}
+
+\subsubsection{Independiente de la plataforma}
+La independencia de la plataforma implica que un programa en Java se ejecute sin importar el sistema operativo que se este ejecutando en una máquina en particular. Por ejemplo un programa en C++ compilado para \textit{Windows}, debe ser al menos vuelto a compilar si se quiere ejecutar en Unix; además, posiblemente habrá que ajustar el código que tenga que ver con alguna característica particular de la plataforma, como la interfaz con el usuario.
+
+	Java resuelve el problema de la distribución binaria mediante un formato de código binario (\textit{bytecode}) que es independiente del hardware y del sistema operativo gracias a su máquina virtual.
+
+	Si el sistema de \textit{runtime} o máquina virtual está disponible para una plataforma específica, entonces una aplicación puede ejecutarse sin necesidad de un trabajo de programación adicional. Ver figura \ref{fig:java_capas}.
+	
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.25]{imagenes/java_capas.png}
+    \caption{ Máquina virtual de Java y su ejecución sobre una plataforma }
+    \label{fig:java_capas}
+\end{figure}	
+	
+\subsubsection{Portable}
+
+	Una razón por la que los programas en Java son portables es precisamente que el lenguaje es independiente de la plataforma. 
+
+Además, la especificación de sus tipos de datos primitivos y sus tamaños, así como el comportamiento de los operadores aritméticos, son estándares en todas las implementaciones de Java. Por lo que por ejemplo, un entero es definido de un tamaño de 4 bytes, y este espacio ocupará en cualquier plataforma, por lo que no tendrá problemas en el manejo de los tipos de datos. En cambio, un entero en C generalmente ocupa 2 bytes, pero en algunas plataformas el entero ocupa 4 bytes, lo que genera problemas a la hora de adaptar un programa de una plataforma a otra.
+
+\subsubsection{Robusto}
+
+Java se considera un lenguaje robusto y confiable, gracias a:
+
+\begin{itemize}
+\item \textbf{Validación de tipos.} Los objetos de tipos compatibles pueden ser asignados a otros objetos sin necesidad de modificar sus tipos. Los objetos de tipos potencialmente incompatibles requieren un modificador de tipo (\textit{cast}). Si la modificación de tipo es claramente imposible, el compilador lo rechaza y reporta un \textbf{error en tiempo de compilación}. Si la modificación resulta legal, el compilador lo permite, pero inserta una \textbf{validación en tiempo de ejecución.} Cuando el programa se ejecuta se realiza la validación cada vez que se ejecuta una asignación potencialmente inválida.
+\item  \textbf{Control de acceso a variables y métodos.} Los miembros de una clase pueden ser privados, públicos o protegidos\footnote{Más adelante en el curso se ahondará en el tema.}. En java una variable privada, es realmente privada. Tanto el compilador como la máquina virtual de Java, controlan el acceso a los miembros de una clase, garantizando así su privacidad.
+\item  \textbf{Validación del apuntador Null.} Todos los programas en Java usan apuntadores para referenciar a un objeto. Esto no genera inestabilidad pues una validación del apuntador a \textit{Null} ocurre cada vez que un apuntador deja de referencia a un objeto. C y C++ por ejemplo, no tienen esta consideración sobre los apuntadores, por lo que es posible estar referenciando a localidades inválidas de la memoria.
+\item \textbf{ Límites de un arreglo. }Java verifica en tiempo de ejecución que un programa no use arreglos para tratar de acceder a áreas de memoria que no le pertenecen. De nuevo, C y C++ no tiene esta verificación, lo que permite que un programa se salga del límite mayor y menor de un arreglo.
+\item  \textbf{Aritmética de apuntadores.} Aunque todos los objetos se manejan con apuntadores, Java elimina la mayor parte de los errores de manejo de apuntadores  porque no soporta la aritmética de apuntadores:
+\begin{itemize}
+\item No soporta acceso directo a los apuntadores
+\item No permite operaciones sobre apuntadores.
+\end{itemize}
+\item  \textbf{Manejo de memoria. }Muchos de los errores de la programación se deben a que el programa no libera la memoria que debería liberar, o se libera la misma memoria más de una vez. Java, hace recolección automática de basura, liberando la memoria y evitando la necesidad de que el programador se preocupe por liberar memoria que ya no utilice.
+\end{itemize}
+
+\section{Diferencias entre Java y C++}
+
+Se compara mucho al lenguaje de Java con C++, y esto es lógico debido a la similitud en la sintaxis de ambos lenguajes, por lo que resulta necesario resaltar las diferencias principales que existen entre estos. Java a diferencia de C++:
+
+
+\begin{itemize}
+\item  \textbf{No tiene aritmética de apuntadores.} Java si tiene apuntadores, sin embargo no permite la manipulación directa de las direcciones de memoria. No se proporcionan operadores para el manejo de los apuntadores pues no se considera responsabilidad del programador.
+\item  \textbf{No permite funciones con ámbito global.} Toda operación debe estar asociada a una clase, por lo que el ámbito de la función esta limitado al ámbito de la clase.
+\item  \textbf{Elimina la instrucción \textit{goto}.} La instrucción \textit{goto} se considera obsoleta, ya que es una herencia de la época de la programación no estructurada. Sin embargo, esta definida como palabra reservada para restringir su uso.
+\item  \textbf{Las cadenas no terminan con '\textbackslash{0}'.} Las cadenas en C y C++ terminan con '\textbackslash{0} ' que corresponde al valor en ASCII 0, ya que en estos lenguajes no existe la cadena como un tipo de dato estándar y se construye a partir de arreglos de caracteres. En Java una cadena es un objeto de la clase \textit{String} y no necesita ese carácter para indicar su finalización.
+\item \textbf{ No maneja macros.} Una macro es declarada en C y C++ a través de la instrucción \textit{\#define}, la cual es tratada por el preprocesador. 
+\item  \textbf{No soporta un preprocesador.} Una de las razones por las cuales no maneja macros Java es precisamente porque no tiene un preprocesador que prepare el programa previo a la compilación.
+\item  \textbf{El tipo \textit{char} contiene 16 bits}. Un carácter en Java  utiliza 16 bits en lugar de 8 para poder soportar UNICODE en lugar de ASCII, lo que permite la representación de múltiples símbolos.
+\item  \textbf{Java soporta múltiples hilos de ejecución}. Los múltiples hilos de ejecución o multihilos permiten un fácil manejo de programación concurrente. Otros lenguajes dependen de la plataforma para implementar concurrencia.
+\item  \textbf{Todas las condiciones en Java deben tener como resultado un tipo booleano. }Debido a que en Java los resultados de las expresiones son dados bajo este tipo de dato. Mientras que en C y C++ se considera a un valor de cero como falso y no cero como verdadero.
+\item \textbf{ Java no soporta el operador \textit{sizeof}.} Este operador permite en C y C++ obtener el tamaño de una estructura de datos. En Java esto no es necesario ya que cada objeto “sabe” el espacio que ocupa en memoria.
+\item \textbf{ No tiene herencia múltiple.} Java solo cuenta con herencia simple, con lo que pierde ciertas capacidades de generalización que son subsanadas a través del uso de interfaces. El equipo de desarrollo de Java explica que esto simplifica el lenguaje y evita la ambigüedad natural generada por la herencia múltiple.
+\item \textbf{ No tiene liberación de memoria explícita (\textit{delete} y \textit{free()} ).} En Java no es necesario liberar la memoria ocupada, ya que cuenta con un recolector de basura \footnote{\textit{Garbage Collector}} responsable de ir liberando cada determinado tiempo los recursos de memoria que ya no se estén ocupando.
+\end{itemize}
+
+Además:
+
+\begin{itemize}
+\item  No contiene estructuras y uniones (\textit{struct} y \textit{union}).
+\item  No contiene tipos de datos sin signo.
+\item  No permite alias (\textit{typedef}).
+\item  No tiene conversión automática de tipos compatibles.
+\end{itemize}
+
+\section{Archivos .java y .class}
+
+En Java el código fuente se almacena en archivos con extensión .java, mientras que el \textit{bytecode} o código compilado se almacena en archivos .\textit{class}. El compilador de Java crea un archivo \textit{.class} por cada declaración de clase que encuentra en el archivo \textit{.java}.
+
+	Un archivo de código fuente debe tener solo una clase principal, y ésta debe tener exactamente el mismo nombre que el del archivo \textit{.java}. Por ejemplo, si tengo una clase que se llama \textit{Alumno}, el archivo de código fuente se llamará \textit{Alumno.java}. Al compilar, el archivo resultante será \textit{Alumno.class}.
+
+\section{Programas generados con java}
+
+Existen dos tipos principales de programas en Java \footnote{Se presenta la división clásica de los programas de Java, aunque existen algunas otras opciones no son relevantes en este curso.}:
+
+Por un lado están las aplicaciones, las cuales son programas \textit{standalone}, escritos en Java y ejecutados por un intérprete del código de bytes desde la línea de comandos del sistema. 
+
+Por otra parte, los \textit{Applets}, que son pequeñas aplicaciones escritas en Java, las cuales siguen un conjunto de convenciones que les permiten ejecutarse dentro de un navegador. Estos \textit{applets} siempre están incrustados en una página \textit{html}.
+
+En términos del código fuente las diferencias entre un \textit{applet} y una aplicación son:
+
+\begin{itemize}
+\item  Una aplicación debe definir una clase que contenga el método \textit{main()}, que controla su ejecución. Un \textit{applet} no usa el método \textit{main()}; su ejecución es controlado por varios métodos definidos en la clase \textit{applet}.
+\item   Un \textit{applet}, debe definir una clase derivada de la clase \textit{Applet} \footnote{A partir de la versión 1.9 del jdk, los applets ya no son soportados.}.
+\end{itemize}
+
+\section{El Java Developer’s Kit}
+
+La herramienta básica para empezar a desarrollar aplicaciones en Java es el JDK (\textit{Java Development Kit}) o Kit de Desarrollo Java, que consiste esencialmente, en un compilador y un intérprete (JVM\footnote{\textit{Java Virtual Machine}}) para la línea de comandos. No dispone de un entorno de desarrollo integrado (IDE), pero es suficiente para aprender el lenguaje y desarrollar pequeñas aplicaciones\footnote{ Este kit de desarrollo es gratuito y puede obtenerse de la dirección proporcionada al final de este documento. Independientemente del IDE que se use, el jdk debe estar instalado para poder compilar código Java.}.
+
+Los principales programas del \textit{Java Development Kit}:
+
+\begin{itemize}
+\item \textbf{javac}. Es el compilador en línea del JDK.
+\item \textbf{java}. Es la máquina virtual para aplicaciones de Java.
+\item \textbf{appletviewer}. Visor de \textit{applets} de java.
+\end{itemize}
+
+
+\subsubsection{Compilación}
+
+Utilizando el JDK, los programas se compilan desde el símbolo del sistema con el compilador javac. 
+
+Ejemplo:
+
+\begin{alltt}
+C:\\MisProgramas> javac MiClase.java
+\end{alltt}
+
+Normalmente se compila como se ha mostrado en el ejemplo anterior. Sin embargo, el compilador proporciona diversas opciones a través de modificadores que se agregan en la línea de comandos. 
+
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{bash}|javac [opciones] <archivo1.java>|\\
+\hline
+\end{tabular}
+\end{center}
+
+donde opciones puede ser:
+
+\begin{itemize}
+\item $-classpath <ruta>$   	Indica donde buscar los archivos de clase de Java
+\item $-d <directorio>$      	Indica el directorio destino para los archivos .class
+\item $-g$     					Habilita la generación de tablas de depuración.
+\item $-nowarn$   			Deshabilita los mensajes del compilador.
+\item $-O$     					Optimiza el código, generando en línea los métodos estáticos, finales y privados.
+\item $-verbose$   			Indica cuál archivo fuente se esta compilando.
+\end{itemize}
+
+
+\section{“Hola Mundo”}
+
+Para no ir en contra de la tradición al comenzar a utilizar un lenguaje, los primeros ejemplos son precisamente dos programas muy simples que lo único que van a hacer es desplegar el mensaje “Hola Mundo”.
+
+\paragraph{Hola mundo básico en Java}
+
+El primero es una aplicación que va a ser interpretado posteriormente por la máquina virtual:
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+public class HolaMundo {
+    public static void main(String args[]) {          
+        System.out.println("¡Hola, Mundo!"); 
+    }
+}
+\end{minted}
+\caption{Hola, Mundo en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Para los que han programado en C ó C++, notarán ya ciertas similitudes. Lo importante aquí es que una aplicación siempre requiere de un método \textit{main}, este tiene un solo argumento (\textit{String args[ ]}), a través del cual recibe información de los argumentos de la línea de comandos, pero la diferencia con los lenguajes C/C++ es que este método depende de una clase, en este caso la clase \textit{HolaMundo}. Este programa es compilado en al jdk\footnote{ Se asume que el jdk se encuentra instalado y que el PATH tiene indicado el directorio bin del jdk para que encuentre el programa javac. También es recomendable añadir nuestro directorio de programas de java a una variable de ambiente llamada CLASSPATH.}:
+
+\begin{alltt}
+%javac HolaMundo.java
+\end{alltt}
+
+con lo que, si el programa no manda errores, se obtendrá el archivo \textit{HolaMundo.class}.
+
+En Eclipse, al grabar automáticamente el programa se compilará (si la opción \textit{Build Automatically} está activada). De hecho, algunos errores se van notificando, si los hay, conforme se va escribiendo el código en el editor.
+
+\subsubsection{Hola mundo básico en C++}
+En C++ no estamos obligados a usar clases, por lo que un “Hola mundo” en C++ - aunque no en objetos – podría quedar de la siguiente forma:
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    cout << "Hola Mundo!" << endl;
+    return 0;
+}
+\end{minted}
+\caption{Hola, Mundo en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Ejecución}
+Para ejecutar una aplicación usamos la máquina virtual proporcionada por el \textit{jdk}, proporcionando el nombre de la clase:
+
+\begin{alltt}
+% java HolaMundo
+\end{alltt}
+
+A partir de la versión 11 del jdk\footnote{ \footnote{\href{https://www.codejava.net/java-core/tools/run-a-java-program-directly-from-source-code-file}{Ver: codejava.net}}
+}, podemos ejecutar directamente ejemplos pequeños de código java. Se compila y ejecuta, sin generar el código \textit{.class} correspondiente:
+
+\begin{alltt}
+% java HolaMundo.java
+\end{alltt}
+
+
+%Para la ejecución de un \textit{applet} utilizamos el \textit{appletviewer}, también proporcionado por el \textit{jdk}:
+
+%\begin{alltt}
+% appletviewer hola.html
+%\end{alltt}
+
+%La ejecución del \textit{applet} desde Eclipse implica seleccionar la opción de \textit{“Run as…”} y posteriormente \textit{“Java Applet”} del menú o icono de ejecución, o del menú contextual.
+
+%Un \textit{applet}  en realidad es construido para se ejecutado por un navegador. El \textit{appletviewer} es una versión reducida de un navegador que es utilizada para probar los \textit{applets}. Un vez que vean que su \textit{applet} se ejecuta en el visor de \textit{applets} pruébenlo en su navegador.
+
+%Es recomendable que primero prueben los \textit{applets} en el visor, ya que este soporta la misma versión de Java del \textit{jdk} que tengan instalado. Dependiendo de su configuración, los navegadores no siempre soportan la última versión de Java.
+
+\section{Fundamentos del Lenguaje Java}
+En esta sección se hablará de cómo está constituido el lenguaje, sus instrucciones, tipos de datos, entre otras características. Antes de comenzar a hacer programación orientada a objetos.
+
+\subsection{Comentarios}
+
+Los comentarios en los programas fuente son muy importantes en cualquier lenguaje. Sirven para aumentar la facilidad de comprensión del código y para recordar ciertas cosas sobre el mismo. Son porciones del programa fuente que el compilador omite, y, por tanto, no ocuparán espacio en el archivo de clase. 
+
+Existen tres tipos de comentarios en Java:
+
+\begin{itemize}
+\item  Si el comentario que se desea escribir es de una sola línea, basta con poner dos barras inclinadas //. Por ejemplo:
+\end{itemize}
+
+\begin{minted}{java}
+for (i=0; i<20;i++) // comentario de ciclo { 
+	System.out.println(“Adiós”);
+}
+\end{minted}
+
+No puede ponerse código después de un comentario introducido por // en la misma línea, ya que desde la aparición de las dos barras inclinadas // hasta el final de la línea es considerado como comentario e ignorado por el compilador.
+
+\begin{itemize}
+\item Si un comentario debe ocupar más de una línea, hay que anteponerle /* y al final */. Por ejemplo:
+\end{itemize}
+
+\begin{minted}{java}
+/* Esto es un
+comentario que
+ocupa tres líneas */
+\end{minted}
+
+\begin{itemize}
+\item Existe otro tipo de comentario que sirve para generar documentación automáticamente en formato HTML mediante la herramienta javadoc. Puede ocupar varias líneas y se inicia con /** para terminar con */. Para mas información ver:  \url{http://java.sun.com/j2se/javadoc/}  
+\end{itemize}
+
+\subsection{Tipos de datos}
+
+En Java existen dos tipos principales de datos:
+
+\begin{enumerate}
+\item  Tipos de datos \textbf{simples}.
+\item  \textbf{Referencias} a objetos.
+\end{enumerate}
+
+Los tipos de datos simples son aquellos que pueden utilizarse directamente en un programa, sin necesidad del uso de clases. Estos tipos son:
+
+\begin{itemize}
+\item  byte
+\item  short
+\item  int
+\item  long
+\item  float
+\item  double 
+\item  char 
+\item  boolean
+\end{itemize}
+
+El segundo tipo está formado por todos los demás. Se les llama referencias porque en realidad lo que se almacena en los mismos son punteros a áreas de memoria donde se encuentran almacenadas las estructuras de datos que los soportan. Dentro de este grupo se encuentran las clases (objetos) y también se incluyen las interfaces, los vectores y las cadenas o \textit{Strings}.
+
+Pueden realizarse conversiones entre los distintos tipos de datos (incluso entre simples y referenciales), bien de forma implícita o de forma explícita.
+
+\subsubsection{Tipos de datos simples}
+
+Los tipos de datos simples en Java tienen las siguientes características:
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ \textbf{Tipo} & \textbf{Descripción} & \textbf{Formato} & \textbf{Longitud}& \textbf{Rango} \\  \hline
+ \textbf{byte} & byte & C-2\footnote{C-2 = Complemento a dos.}&1 byte&- 128 … 127\\  \hline
+ \textbf{short} & entero corto & C-2&2 bytes&- 32.768 … 32.767 \\  \hline
+ \textbf{int} & entero & C-2&4 bytes&- 2.147.483.648 …2.147.483.647 \\  \hline
+ \textbf{long} & entero largo & C-2&8 bytes&-9.223.372.036.854.775.808 …9.223.372.036.854.775.807 \\  \hline
+ \textbf{float} & real en coma flotante de precisión simple & IEEE 754& 32 bits& $±3,4*10_{-38}$… $±3,4*10_{38}$ \\  \hline
+ \textbf{double} & real en coma flotante de precisión doble & IEEE 754&64 bits&$±1,7*10_{-308}$…$ ±1,7*10_{308}$\\  \hline
+ \textbf{char} & Carácter & Unicode&2 bytes&0 … 65.535 \\  \hline
+ \textbf{boolean} & Lógico &  &1 bit&true / false \\  \hline
+ 
+\end{tabular}%
+}
+\caption{Tipos de datos simples en Java}
+\label{tab:datos_java}
+\end{table}
+
+
+No existen más datos simples en Java. Incluso éstos que se enumeran pueden ser remplazados por clases equivalentes (\textit{Integer}, \textit{Double}, \textit{Byte}, etc.), con la ventaja de que es posible tratarlos como si fueran objetos en lugar de datos simples.
+
+A diferencia de otros lenguajes de programación como C, en Java los tipos de datos simples no dependen de la plataforma ni del sistema operativo. Un entero de tipo \textit{int} siempre tendrá 4 bytes, por lo que no tendremos resultados inesperados al migrar un programa de un sistema operativo a otro. 
+
+Eso sí, Java no realiza una comprobación de los rangos. Por ejemplo: si a una variable de tipo \textit{short} con el valor 32.767 se le suma 1, el resultado será -32.768 y no se producirá ningún error de ejecución. 
+
+Los valores que pueden asignarse a variables y que pueden ser utilizados en expresiones directamente reciben el nombre de literales. 
+
+\subsubsection{Referencias a objetos}
+El resto de tipos de datos que no son simples, son considerados referencias. Estos tipos son básicamente apuntadores a las instancias de las clases, en las que se basa la programación orientada a objetos.
+
+Al declarar una variable de objeto perteneciente a una determinada clase, se indica que ese identificador de referencia tiene la capacidad de apuntar a un objeto del tipo al que pertenece la variable. El momento en el que se realiza la reserva física del espacio de memoria es cuando se instancia el objeto realizando la llamada a su constructor, y no en el momento de la declaración.
+
+Existe un tipo referencial especial nominado por la palabra reservada \textit{null} que puede ser asignado a cualquier variable de cualquier clase y que indica que el puntero no tiene referencia a ninguna zona de memoria (el objeto no está inicializado).
+
+\subsection{Identificadores}
+
+Los identificadores son los nombres que se les da a las variables, clases, interfaces, atributos y métodos de un programa.
+
+Existen algunas reglas básicas para nombrar a los identificadores:
+
+\begin{enumerate}
+\item Java hace distinción entre mayúsculas y minúsculas, por lo tanto, nombres o identificadores como \textit{var1}, \textit{Var1} y \textit{VAR1} son distintos.
+\item Pueden estar formados por cualquiera de los caracteres del código \textit{Unicode}, por lo tanto, se pueden declarar variables con el nombre: \textit{añoDeCreación}, \textit{raïm}, etc.
+\item El primer carácter no puede ser un dígito numérico y no pueden utilizarse espacios en blanco ni símbolos coincidentes con operadores. 
+\item No puede ser una palabra reservada del lenguaje ni los valores lógicos \textit{true} o \textit{false}.
+\item No pueden ser iguales a otro identificador declarado en el mismo ámbito.
+\item Por convención, los nombres de las variables y los métodos deberían empezar por una letra minúscula y los de las clases por mayúscula. 
+\end{enumerate}
+
+Además, si el identificador está formado por varias palabras, la primera se escribe en minúsculas (excepto para las clases e interfaces) y el resto de palabras se hace empezar por mayúscula (por ejemplo: \textit{añoDeCreación}). Las constantes se escriben en mayúsculas, por ejemplo \textit{MÁXIMO}. 
+
+Esta última regla no es obligatoria, pero es conveniente ya que ayuda al proceso de codificación de un programa, así como a su legibilidad. Es más sencillo distinguir entre clases y métodos, variables o constantes.
+
+\subsection{Variables}
+
+La declaración de una variable se realiza de la misma forma que en C/C++. Siempre contiene el nombre (identificador de la variable) y el tipo de dato al que pertenece. El ámbito de la variable depende de la localización en el programa donde es declarada.
+
+Ejemplo:
+
+\mint[linenos=false]{java}|int x;|
+
+Las variables pueden ser inicializadas en el momento de su declaración, siempre que el valor que se les asigne coincida con el tipo de dato de la variable.
+
+Ejemplo:
+
+\mint[linenos=false]{java}|int x = 0;|
+
+\subsubsection{Ámbito de una variable}
+
+El ámbito de una variable es la porción de programa donde dicha variable es visible para el código del programa y, por tanto, referenciable. El ámbito de una variable depende del lugar del programa donde es declarada, pudiendo pertenecer a cuatro categorías distintas.
+
+\begin{itemize}
+\item  Variable local.
+\item  Atributo.
+\item  Parámetro de un método.
+\item  Parámetro de un manejador de excepciones\footnote{Este se tocará en otra etapa del curso, al hablar de manejo de excepciones.}.
+\end{itemize}
+
+Como puede observarse, no existen las variables globales. La utilización de variables globales es considerada peligrosa, ya que podría ser modificada en cualquier parte del programa y por cualquier procedimiento. A la hora de utilizarlas hay que buscar dónde están declaradas para conocerlas y dónde son modificadas para evitar sorpresas en los valores que pueden contener.
+
+Los ámbitos de las variables u objetos en Java siguen los criterios “clásicos”, al igual que en la mayoría de los lenguajes de programación como Pascal, C++, etc. 
+
+Si una variable que \textbf{no es local} no ha sido inicializada, tiene un valor asignado por defecto. Este valor es, para las variables referencias a objetos, el valor \textit{null}. Para las variables de tipo numérico, el valor por defecto es cero, las variables de tipo \textit{char}, el valor ‘\\u0000’ y las variables de tipo \textit{boolean}, el valor \textit{false}.
+
+\paragraph{Variables locales}
+
+ Una variable local se declara dentro del cuerpo de un método de una clase y es visible únicamente dentro de dicho método. Se puede declarar en cualquier lugar del cuerpo, incluso después de instrucciones ejecutables, aunque es una buena costumbre declararlas justo al principio.
+
+\subsection{Operadores}
+Los operadores son partes indispensables en la construcción de expresiones. Existen muchas definiciones técnicas para el término expresión. Puede decirse que una expresión es una combinación de operandos ligados mediante operadores.
+
+Los operandos pueden ser variables, constantes, funciones, literales, etc. y los operadores se comentarán a continuación.
+
+\subsubsection{Operadores aritméticos:}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Operador&Formato&Descripción  \\ \hline
+ +&op1 + op2 &Suma aritmética de dos operandos  \\ \hline
+ -&op1 - op2  &Resta aritmética de dos operandos  \\ \hline
+ -op1&  &Cambio de signo  \\ \hline
+ *&op1 * op2  &Multiplicación de dos operandos  \\ \hline
+ /&op1 / op2  &División entera de dos operandos  \\ \hline
+ \%&op1 \% op2  &Resto de la división entera ( o módulo)  \\ \hline
+ ++& ++op1  &Incremento unitario \\ \hline
+  &op1++  &  \\ \hline
+ - -&- -op1  &Decremento unitario  \\ \hline
+  &op1- -  &  \\ \hline
+ 
+\end{tabular}%
+}
+\caption{Operadores aritméticos Java}
+\label{tab:op_arit_java}
+\end{table}
+
+
+El operador - puede utilizarse en su versión unaria ( - op1 ) y la operación que realiza es la de invertir el signo del operando.
+
+Como en C/C++, los operadores unarios ++ y -- realizan un incremento y un decremento respectivamente. Estos operadores admiten notación prefija y postfija. Ver Cuadro \ref{tab:op_arit_java}
+
+\begin{itemize}
+\item ++op1: En primer lugar realiza un incremento (en una unidad) de \textit{op1} y después ejecuta la instrucción en la cual está inmerso.
+\item  op1++: En primer lugar ejecuta la instrucción en la cual está inmerso y después realiza un incremento (en una unidad) de \textit{op1}.
+\item  --op1: En primer lugar realiza un decremento (en una unidad) de \textit{op1} y después ejecuta la instrucción en la cual está inmerso. Visión General y elementos básicos del lenguaje.
+\item  op1--: En primer lugar ejecuta la instrucción en la cual está inmerso y después realiza un decremento (en una unidad) de \textit{op1}.
+\end{itemize}
+
+La diferencia entre la notación prefija y la postfija no tiene importancia en expresiones en las que únicamente existe dicha operación:
+
+\begin{minted}{java}
+++contador; //es equivalente a: contador++;
+--contador; //contador--;
+\end{minted}
+
+La diferencia es apreciable en instrucciones en las cuáles están incluidas otras operaciones.
+
+Ejemplo:
+
+\begin{minted}{java}
+a = 1; a = 1;
+b = 2 + a++; b = 2 + ++a;
+\end{minted}
+
+
+En el primer caso, después de las operaciones, b tendrá el valor 3 y al valor 2. En el segundo caso, después de las operaciones, b tendrá el valor 4 y al valor 2.
+
+\subsubsection{Operadores relacionales:}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Operador&Formato&Descripción  \\ \hline
+ $>$&op1 $>$ op2 &Devuelve \textit{true} si op1 es mayor que op2  \\ \hline
+ $<$&op1 $<$ op2  &Devuelve \textit{true} si op1 es menor que op2  \\ \hline
+ $>$=&op1 $>=$ op2 &Devuelve \textit{true} si op1 es mayor o igual que op2 \\ \hline
+ $<=$&op1 $<=$ op2  &Devuelve \textit{true} si op1 es menor o igual que op2  \\ \hline
+ ==&op1 == op2  &Devuelve \textit{true}  si op1 es igual a op2  \\ \hline
+ !=&op1 != op2  &Devuelve \textit{true}  si op1 es distinto de op2 \\ \hline
+ 
+\end{tabular}%
+}
+\caption{Operadores relacionales en Java}
+\label{tab:op_rel_java}
+\end{table}
+
+Los operadores relacionales actúan sobre valores enteros, reales y caracteres; y devuelven un valor del tipo booleano (\textit{true} o \textit{false}). Ver Cuadro \ref{tab:op_rel_java}
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+public class Relacional {
+	public static void main(String arg[]) {
+		double op1,op2;
+		op1=1.34;
+		op2=1.35;
+		System.out.println("op1="+op1+" op2="+op2);
+		System.out.println("op1>op2 = "+(op1>op2));
+		System.out.println("op1<op2 = "+(op1<op2));
+		System.out.println("op1==op2 = "+(op1==op2));
+		System.out.println("op1!=op2 = "+(op1!=op2));
+		char op3,op4;
+		op3='a'; op4='b';
+		System.out.println("'a'>'b' = "+(op3>op4));
+	}
+}
+\end{minted}
+\caption{Ejemplo de operadores relacionales en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Operadores lógicos:}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Operador&Formato&Descripción  \\ \hline
+ \&\& &op1 \&\& op2 &Y lógico. Devuelve \textit{true} si son ciertos op1 y op2  \\ \hline
+ $||$&op1 $||$ op2  &O lógico. Devuelve \textit{true} si son ciertos op1 o op2  \\ \hline
+ !&!op1&Negación lógica. Devuelve \textit{true} si es falso op1. \\ \hline
+ 
+\end{tabular}%
+}
+\caption{Operadores lógicos en Java}
+\label{tab:op_log_java}
+
+\end{table}
+
+Estos operadores actúan sobre operadores o expresiones lógicas, es decir, aquellos que se evalúan a cierto o falso. Ver Cuadro \ref{tab:op_log_java}
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+public class Bool {
+	public static void main ( String argumentos[] ) {
+		boolean a=true;
+		boolean b=true;
+		boolean c=false;
+		boolean d=false;
+		System.out.println("true Y true = " + (a && b) );
+		System.out.println("true Y false = " + (a && c) );
+		System.out.println("false Y false = " + (c && d) );
+		System.out.println("true O true = " + (a || b) );
+		System.out.println("true O false = " + (a || c) );
+		System.out.println("false O false = " + (c || d) );
+		System.out.println("NO true = " + !a);
+		System.out.println("NO false = " + !c);
+		System.out.println("(3 > 4) Y true = " + ((3 >4) && a) );
+	}
+}
+\end{minted}
+\caption{Ejemplo de operadores lógicos en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Operadores de asignación:}
+
+El operador de asignación es el símbolo igual ( = ).
+
+\mint[linenos=false]{java}|op1 = Expresión;|
+
+Asigna el resultado de evaluar la expresión de la derecha a \textit{op1}.
+
+Además del operador de asignación existen unas abreviaturas, como en C/C++,  cuando el operando que aparece a la izquierda del símbolo de asignación también aparece a la derecha del mismo. Ver Cuadro \ref{tab:op_asig_java}
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Operador & Formato & Equivalencia  \\ \hline
+ $ += $ & $ op1 += op2 $ & $ op1 = op1 + op2 $  \\ \hline
+ $ -= $ & $ op1 -= op2 $ & $ op1 = op1 - op2 $ \\ \hline
+ $ *= $ & $ op1 *= op2 $ & $ op1 = op1 * op2 $ \\ \hline
+ $ /= $ & $ op1 /= op2 $ & $ op1 = op1 / op2 $ \\ \hline
+ $ \%= $ & $ op1 \%= op2 $ & $ op1 = op1 \% op2 $ \\ \hline
+
+\end{tabular}%
+}
+\caption{Operadores de asignación en Java}
+\label{tab:op_asig_java}
+
+\end{table}
+
+\subsubsection{Precedencia de operadores en Java}
+
+La precedencia (ver Cuadro \ref{tab:prec_op_java})indica el orden en que es resuelta una expresión, la siguiente lista muestra primero los operadores de mayor precedencia.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Tipo de operador & Operadores   \\ \hline
+ Operadores postfijos & $[] . (parentesis)$   \\ \hline
+ Operadores unarios & $++expr --expr -expr ~ !$   \\ \hline
+ Creación o conversión de tipo & $new (tipo)expr$  \\ \hline
+ Multiplicación y división & $* / \%$  \\ \hline
+ Suma y resta & $ + - $ \\ \hline
+ Desplazamiento de bits & $<< >> >>>$ \\ \hline
+ Relacionales & $< > <= >=$ \\ \hline
+ Igualdad y desigualdad &  $==    !=$ \\ \hline
+ AND a nivel de bits & $\&$ \\ \hline
+ %XOR a nivel de bits & $\^$ \\ \hline
+ OR a nivel de bits & $|$ \\ \hline
+ AND lógico & $\&\&$ \\ \hline
+ OR lógico & $\|$ \\ \hline
+ Condicional terciaria & $ ? : $ \\ \hline
+ Asignación & $= += -= *= /= \%=   \&= |=  >>=  <<=  >>>= $ \\ \hline %Faltó 
+\end{tabular}%
+}
+\caption{Precedencia de operadores en Java}
+\label{tab:prec_op_java}
+\end{table}
+\
+\subsection{Valores literales}
+
+A la hora de tratar con valores de los tipos de datos simples (y \textit{Strings}) se utiliza lo que se denomina “literales”. Los literales son elementos que sirven para representar un valor en el código fuente del programa.
+
+En Java existen literales para los siguientes tipos de datos:
+
+\begin{itemize}
+\item  Lógicos (\textit{boolean}).
+\item  Carácter (\textit{char}).
+\item  Enteros (\textit{byte}, \textit{short}, \textit{int} y \textit{long}).
+\item  Reales (\textit{double} y \textit{float}).
+\item  Cadenas de caracteres (\textit{String}).
+\end{itemize}
+
+\subsubsection{Literales lógicos}
+
+Son únicamente dos: las palabras reservadas \textit{true} y \textit{false}.
+
+Ejemplo:
+\mint[linenos=false]{java}|boolean activado = false;|
+
+
+\subsubsection{Literales de tipo entero}
+
+Son \textit{byte}, \textit{short}, \textit{int} y \textit{long} pueden expresarse en decimal (base 10), octal (base 8) o hexadecimal (base 16). Además, puede añadirse al final del mismo la letra L para indicar que el entero es considerado como \textit{long} (64 bits).
+
+\subsubsection{Literales de tipo real}
+
+Los literales de tipo real sirven para indicar valores float o double. A diferencia de los literales de tipo entero, no pueden expresarse en octal o hexadecimal. 
+
+Existen dos formatos de representación: mediante su parte entera, el punto decimal ( . ) y la parte fraccionaria; o mediante notación exponencial o científica:
+
+Ejemplos equivalentes:
+
+\begin{alltt}
+3.1415
+0.31415e1
+.31415e1
+0.031415E+2
+.031415e2
+314.15e-2
+31415E-4
+\end{alltt}
+
+Al igual que los literales que representan enteros, se puede poner una letra como sufijo. Esta letra puede ser una F o una D (mayúscula o minúscula indistintamente).
+
+\begin{itemize}
+\item   F 	Trata el literal como de tipo \textit{float}.
+\item   D 	Trata el literal como de tipo \textit{double}.
+\end{itemize}
+
+Ejemplo:
+
+\begin{alltt}
+3.1415F
+.031415d
+\end{alltt}
+
+
+
+\subsubsection{Literales de tipo carácter}
+
+Los literales de tipo carácter se representan siempre entre comillas simples. Entre las comillas simples puede aparecer:
+
+\begin{itemize}
+\item  Un símbolo (letra) siempre que el carácter esté asociado a un código \textit{Unicode}. Ejemplos: ‘a’ , ‘B’ , ‘\{‘ , ‘ñ’ , ‘á’ .
+\item Una “secuencia de escape”. Las secuencias de escape son combinaciones del símbolo \ seguido de una letra, y sirven para representar caracteres que no tienen una equivalencia en forma de símbolo.
+\end{itemize}
+
+Las posibles secuencias de escape se pueden ver en el Cuadro \ref{tab:sec_esc_java}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{9B9B9B} 
+ Secuencia de escape &Significado  \\ \hline
+  \textbackslash{'} & 	Comilla simple. \\ \hline
+ \textbackslash{'' }	&		Comillas dobles. \\ \hline
+  \textbackslash{\textbackslash } 	&		Barra invertida. \\ \hline
+\textbackslash{b} 	&		Backspace (Borrar hacia atrás). \\ \hline
+\textbackslash{n} 	&		Cambio de línea. \\ \hline
+\textbackslash{f} 	&		Form feed. \\ \hline
+\textbackslash{r} 	&		Retorno de carro. \\ \hline
+\textbackslash{t} 	&		Tabulador. \\ \hline
+\end{tabular}%
+}
+\caption{Secuencias de escape en Java}
+\label{tab:sec_esc_java}
+
+\end{table}
+
+\subsubsection{Literales de tipo \textit{String}}
+
+Los \textit{Strings} o cadenas de caracteres no forman parte de los tipos de datos elementales en Java, sino que son instanciados a partir de la clase \textit{java.lang.String}, pero aceptan su inicialización a partir de literales de este tipo.
+
+Un literal de tipo \textit{String} va encerrado entre comillas dobles ( “ ) y debe estar incluido completamente en una sola línea del programa fuente (no puede dividirse en varias líneas). Entre las comillas dobles puede incluirse cualquier carácter del código \textit{Unicode} (o su código precedido del carácter \textbackslash ) además de las secuencias de escape vistas anteriormente en los literales de tipo carácter. Así, por ejemplo, para incluir un cambio de línea dentro de un literal de tipo \textit{String} deberá hacerse mediante la secuencia de escape \textbackslash{n} :
+
+Ejemplo:
+\begin{minted}{java}
+System.out.println("Primera línea \n Segunda línea del string\n");
+System.out.println("Hol\u0061");
+\end{minted}
+
+La visualización del \textit{String} anterior mediante \textit{println()} produciría la siguiente salida por pantalla:
+
+\begin{alltt}
+Primera línea
+Segunda línea del string
+Hola
+\end{alltt}
+
+La forma de incluir los caracteres: comillas dobles ( “ ) y barra invertida ( \textbackslash ) es mediante las secuencias de escape \textbackslash{''} y \textbackslash{\textbackslash} respectivamente (o mediante su código \textit{Unicode} precedido de \textbackslash ).
+
+Si la cadena es demasiado larga y debe dividirse en varias líneas en el código fuente, o simplemente concatenar varias cadenas,  puede utilizarse el operador de concatenación de \textit{strings} + .de la siguiente forma:
+
+\begin{alltt}
+''Este String es demasiado largo para estar en una línea'' +
+''del código fuente y se ha dividido en dos.''
+\end{alltt}
+
+\subsection{Estructuras de control}
+
+Las estructuras de control son construcciones definidas a partir de palabras reservadas del lenguaje que permiten modificar el flujo de ejecución de un programa. De este modo, pueden crearse construcciones de decisión y ciclos de repetición de bloques de instrucciones.
+
+Hay que señalar que, como en C/C++,  un bloque de instrucciones se encontrará encerrado mediante llaves \{.....\} si existe más de una instrucción.
+
+\subsubsection{Estructuras condicionales}
+
+Las estructuras condicionales o de decisión son construcciones que permiten alterar el flujo secuencial de un programa, de forma que en función de una condición o el valor de una expresión, el mismo pueda ser desviado en una u otra alternativa de código.
+
+Las estructuras condicionales disponibles en Java son:
+\begin{itemize}
+\item Estructura if-else.
+\item Estructura switch.
+\end{itemize}
+
+\textbf{if-else}
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+Forma simple:
+    \begin{minted} [linenos=false]{java}
+if (<expresión>)
+    <Bloque instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+El bloque de instrucciones se ejecuta si, y sólo si, la expresión (que debe ser lógica) se evalúa a verdadero, es decir, se cumple una determinada condición.
+
+Ejemplo:
+
+\begin{minted}{java}
+if (cont == 0)
+	System.out.println("he llegado a cero");
+\end{minted}
+
+La instrucción \textit{System.out.println(“he llegado a cero”); }sólo se ejecuta en el caso de que \textit{cont} contenga el valor cero.
+
+% TABLA con más de una línea de códico
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+Forma bicondicional:
+    \begin{minted} [linenos=false]{java}
+if (<expresión>)
+    <Bloque instrucciones 1>
+else
+	<Bloque instrucciones 2>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+El bloque de instrucciones 1 se ejecuta si, y sólo si, la expresión se evalúa como verdadero. Y en caso contrario, si la expresión se evalúa como falso, se ejecuta el bloque de instrucciones 2.
+
+Ejemplo:
+
+\begin{minted}{java}
+if (cont == 0)
+	System.out.println("he llegado a cero");
+else
+	System.out.println("no he llegado a cero");
+\end{minted}
+
+En Java, como en C/C++ y a diferencia de otros lenguajes de programación, en el caso de que el bloque de instrucciones conste de una sola instrucción no necesita ser encerrado en un bloque.
+
+
+\textbf{instrucción switch}
+
+% TABLA con más de una línea de códico
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+switch (<expresión>) {
+case <valor1>: <instrucciones1>;
+case <valor2>: <instrucciones2>;
+...
+case <valorN>: <instruccionesN>;
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+En este caso, a diferencia del \textit{if}, si $<instrucciones1>$, $<instrucciones2>$ ó $<instruccionesN>$ están formados por un bloque de instrucciones sencillas, no es necesario encerrarlas mediante las llaves ( ${ … }$ ).
+
+En primer lugar se evalúa la expresión cuyo resultado puede ser un valor de cualquier tipo. El programa comprueba el primer valor (\textit{valor1}). En el caso de que el valor resultado de la expresión coincida con \textit{valor1}, se ejecutará el bloque $<instrucciones1>$. Pero también se ejecutarían el bloque $<instrucciones2> ... <instruccionesN>$ hasta encontrarse con la palabra reservada \textit{break}. Por lo que comúnmente se añade una instrucción \textit{break} al final de cada caso del \textit{switch}.
+
+
+Ejemplo:
+
+\begin{minted}{java}
+switch (<expresión>) {
+
+	case <valor1>: <instrucciones1>;
+				break;
+	case <valor2>: <instrucciones2>;
+				break;
+	...
+	case <valorN>: <instruccionesN>;
+}
+\end{minted}
+
+Si el resultado de la expresión no coincide con $<valor1>$, evidentemente no se ejecutarían $<instrucciones1>$, se comprobaría la coincidencia con $<valor2>$ y así sucesivamente hasta encontrar un valor que coincida o llegar al final de la construcción \textit{switch}. En caso de que no exista ningún valor que coincida con el de la expresión, no se ejecuta ninguna acción.
+
+\textcolor{blue}{Ejemplo:}
+
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+public class DiaSemana {
+	public static void main(String argumentos[]) {
+		int dia;
+		if (argumentos.length<1) {
+			System.out.println("Uso: DiaSemana num");
+			System.out.println("Donde num= nº entre 1 y 7");
+		}
+		else {
+			dia=Integer.valueOf(argumentos[0]);
+			// también: dia=Integer.parseInt(argumentos[0]);
+			switch (dia) {
+			case 1: System.out.println("Lunes");
+			break;
+			case 2: System.out.println("Martes");
+			break;
+			case 3: System.out.println("Miércoles");
+			break;
+			case 4: System.out.println("Jueves");
+			break;
+			case 5: System.out.println("Viernes");
+			break;
+			case 6: System.out.println("Sábado");
+			break;
+			case 7: System.out.println("Domingo");
+			}
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo de uso de switch en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Nótese que en el caso de que se introduzca un valor no comprendido entre 1 y 7, no se realizará ninguna acción. Esto puede corregirse agregando la opción por omisión:
+
+\mint[linenos=false]{java}|default: instruccionesPorDefecto;|
+
+
+donde la palabra reservada \textit{default}, sustituye a $case <expr>$ para ejecutar el conjunto de instrucciones definido en caso de que no coincida con ningún otro caso.
+
+\textbf{Expresión switch}
+
+En la versión de \textbf{Java 12 y posteriores}, se introdujo una nueva característica llamada \textit{expresión switch }, que permite un uso más conciso del switch. El estilo sería el siguiente.
+
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+int resultado = switch (expresion) {
+    case valor1 -> {
+        // Código a ejecutar si la expresión es igual a valor1
+        yield resultado1; // Opcional: valor a devolver
+    }
+    case valor2 -> {
+        // Código a ejecutar si la expresión es igual a valor2
+        yield resultado2; // Opcional: valor a devolver
+    }
+    // Otros casos aquí
+    default -> {
+        // Código a ejecutar si ninguno de los casos anteriores se cumple
+        yield resultadoDefault; // Opcional: valor a devolver
+    }
+};
+
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Esta sintaxis permite un código más limpio y expresivo y también es capaz de devolver un valor en función del caso que coincida.
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class DiaSemana {
+    public static void main(String argumentos[]) {
+        int dia;
+        if (argumentos.length < 1) {
+            System.out.println("Uso: DiaSemana num");
+            System.out.println("Donde num= nº entre 1 y 7");
+        } else {
+            dia = Integer.valueOf(argumentos[0]);
+            // También: dia = Integer.parseInt(argumentos[0]);
+            String diaDeLaSemana = switch (dia) {
+                case 1 -> "Lunes";
+                case 2 -> "Martes";
+                case 3 -> "Miércoles";
+                case 4 -> "Jueves";
+                case 5 -> "Viernes";
+                case 6 -> "Sábado";
+                case 7 -> "Domingo";
+                default -> "Día no válido";
+            };
+            System.out.println(diaDeLaSemana);
+        }
+    }
+}
+\end{minted}
+\caption{Ejemplo de uso de la \textbf{expresión} switch en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Ciclos}
+
+Los ciclos o iteraciones son estructuras de repetición. Bloques de instrucciones que se repiten un número de veces \textbf{mientras} se cumpla una condición o \textbf{hasta} que se cumpla una condición.
+
+Existen tres construcciones para estas estructuras de repetición:
+
+\begin{itemize}
+\item Ciclo for.
+\item Ciclo do-while.
+\item Ciclo while.
+\end{itemize}
+
+Como regla general puede decirse que se utilizará el ciclo for cuando se conozca de antemano el número exacto de veces que ha de repetirse un determinado bloque de instrucciones. Se utilizará el ciclo \textit{do-while} cuando no se conoce exactamente el número de veces que se ejecutará el ciclo pero se sabe que por lo menos se ha de ejecutar una. Se utilizará el ciclo \textit{while} cuando es posible que no deba ejecutarse ninguna vez. Con mayor o menor esfuerzo, puede utilizarse cualquiera de ellas indistintamente.
+
+\textbf{Ciclo for}
+
+% TABLA con más de una línea de códico
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+for  (<inicialización> ; <condición> ; <incremento>)
+	<bloque instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+\begin{itemize}
+\item La cláusula inicialización es una instrucción que se ejecuta una sola vez al inicio del ciclo, normalmente para inicializar un contador.
+\item La cláusula condición es una expresión lógica, que se evalúa al inicio de cada nueva iteración del ciclo. En el momento en que dicha expresión se evalúe a falso, se dejará de ejecutar el ciclo y el control del programa pasará a la siguiente instrucción (a continuación del ciclo \textit{for}).
+\item La cláusula incremento es una instrucción que se ejecuta en cada iteración del ciclo como si fuera la última instrucción dentro del bloque de instrucciones. Generalmente se trata de una instrucción de incremento o decremento de alguna variable.
+\end{itemize}
+
+Cualquiera de estas tres cláusulas puede estar vacía, aunque siempre hay que poner los puntos y coma ( ; ).
+
+El siguiente programa muestra en pantalla la serie de \textit{Fibonacci} hasta el término que se indique al programa como argumento en la línea de comandos. 
+Siempre se mostrarán, por lo menos, los dos primeros términos
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// siempre se mostrarán, por lo menos, los dos primeros //términos
+public class Fibonacci {
+	public static void main(String argumentos[]) {
+		int numTerm,v1=1,v2=1,aux,cont;
+		if (argumentos.length<1) {
+			System.out.println("Uso: Fibonacci num");
+			System.out.println("Donde num = nº de términos");
+		}
+		else {
+			numTerm=Integer.valueOf(argumentos[0]);
+			System.out.print("1,1");
+			for (cont=2;cont<numTerm;cont++) {
+				aux=v2;
+				v2+=v1;
+				v1=aux;
+				System.out.print(","+v2);
+			}
+			System.out.println();
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo Fibonacci con ciclo \textit{for}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\textbf{Ciclo do-while}
+
+% TABLA con más de una línea de códico
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+do
+	<bloque instrucciones>
+while (<Expresión>);
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+En este tipo de ciclo, el bloque instrucciones se ejecuta siempre una vez por lo menos, y el bloque de instrucciones se ejecutará mientras $<Expresion>$ se evalúe como verdadero. Por lo tanto, entre las instrucciones que se repiten deberá existir alguna que, en algún momento, haga que la expresión se evalúe como falso, de lo contrario el ciclo sería infinito.
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//El mismo que antes (Fibonacci).
+public class Fibonacci2 {
+	public static void main(String argumentos[]) {
+		int numTerm,v1=0,v2=1,aux,cont=1;
+		if (argumentos.length<1) {
+			System.out.println("Uso: Fibonacci num");
+			System.out.println("Donde num = nº de términos");
+		}
+		else {
+			numTerm=Integer.valueOf(argumentos[0]);
+			System.out.print("1");
+			do {
+				aux=v2;
+				v2+=v1;
+				v1=aux;
+				System.out.print(","+v2);
+			} while (++cont<numTerm);
+			System.out.println();
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo Fibonacci con ciclo \textit{do-while}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este caso únicamente se muestra el primer término de la serie antes de iniciar el ciclo, ya que el segundo siempre se mostrará, porque el ciclo do-while siempre se ejecuta una vez por lo menos.
+
+\textbf{Ciclo while}
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+while (<Expresión>)
+    <bloque instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Al igual que en el ciclo \textit{do-while} del apartado anterior, el bloque de instrucciones se ejecuta mientras se cumple una condición (mientras \textit{Expresión} se evalúe verdadero), pero en este caso, la condición se comprueba antes de empezar a ejecutar por primera vez el ciclo, por lo que si \textit{Expresión} se evalúa como falso en la primera iteración, entonces el bloque de instrucciones no se ejecutará ninguna vez.
+
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Fibonacci:
+public class Fibonacci3 {
+	public static void main(String argumentos[]) {
+		int numTerm,v1=1,v2=1,aux,cont=2;
+		if (argumentos.length<1) {
+			System.out.println("Uso: Fibonacci num");
+			System.out.println("Donde num = nº de términos");
+		}
+		else {
+			numTerm=Integer.valueOf(argumentos[0]);
+			System.out.print("1,1");
+			while (cont++<numTerm) {
+				aux=v2;
+				v2+=v1;
+				v1=aux;
+				System.out.print(","+v2);
+			}
+			System.out.println();
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo Fibonacci con ciclo \textit{while}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como puede comprobarse, las tres construcciones de ciclo (\textit{for}, \textit{do-while} y \textit{while}) pueden utilizarse indistintamente realizando unas pequeñas variaciones en el programa.
+
+
+\subsubsection{Saltos}
+
+En Java existen dos formas de realizar un salto incondicional en el flujo normal de un programa: las instrucciones \textit{break} y \textit{continue}.
+
+\paragraph{break} La instrucción break sirve para abandonar una estructura de control, tanto de la alternativa (\textit{switch}) como de las repetitivas o ciclos (\textit{for}, \textit{do-while} y \textit{while}). En el momento que se ejecuta la instrucción \textit{break}, el control del programa sale de la estructura en la que se encuentra.
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Break {
+	public static void main(String argumentos[]) {
+		int i;
+		for (i=1; i<=4; i++) {
+			if (i==3) 
+				break;
+			System.out.println("Iteracion: "+i);
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo de uso de \textit{break}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Aunque el ciclo, en principio indica que se ejecute 4 veces, en la tercera iteración, i contiene el valor 3, se cumple la condición de \textit{i==3} y por lo tanto se ejecuta el \textit{break} y se sale del ciclo \textit{for}.
+
+\paragraph{continue} La instrucción \textit{continue} sirve para transferir el control del programa desde la instrucción \textit{continue} directamente a la cabecera del ciclo (\textit{for}, \textit{do-while} o
+\textit{while}) donde se encuentra.
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Continue {
+	public static void main(String argumentos[]) {
+		int i;
+		for (i=1; i<=4; i++) {
+			if (i==3) 
+				continue;
+			System.out.println("Itereación: "+i);
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo de uso de \textit{continue}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Puede comprobarse la diferencia con respecto al resultado del ejemplo del apartado anterior. En este caso no se abandona el ciclo, sino que se transfiere el control a la cabecera del ciclo donde se continúa con la siguiente iteración.
+
+Tanto el salto \textit{break} como en el salto \textit{continue}, pueden ser evitados mediante distintas construcciones pero en ocasiones esto puede empeorar la legibilidad del código. De todas formas existen programadores que no aceptan este tipo de saltos y no los utilizan en ningún caso; la razón es que - se dice - que atenta contra las normas de las estructuras de control.
+
+\subsection{Arreglos}
+
+Para manejar colecciones de objetos del mismo tipo estructurados en una sola variable se utilizan los arreglos.
+
+En Java, los arreglos son en realidad objetos y por lo tanto se puede llamar a sus métodos. Existen dos formas equivalentes de declarar arreglos en Java:
+
+\mint[linenos=false]{java}|tipo nombreDelArreglo[  ];|
+
+o
+
+\mint[linenos=false]{java}|tipo[  ] nombreDelArreglo;|
+
+Ejemplo:
+
+\begin{minted}{java}
+int arreglo1[], arreglo2[], entero; //entero no es un arreglo
+int[] otroArreglo;
+\end{minted}
+
+También pueden utilizarse arreglos de más de una dimensión:
+
+Ejemplo:
+
+\begin{minted}{java}
+int matriz[][];
+int [][] otraMatriz;
+\end{minted}
+
+Los arreglos, al igual que las demás variables pueden ser inicializados en el momento de su declaración. En este caso, no es necesario especificar el número de elementos máximo reservado. Se reserva el espacio justo para almacenar los elementos añadidos en la declaración.
+
+Ejemplo:
+\begin{minted}{java}
+String Días[]={"Lunes","Martes","Miércoles","Jueves",
+		"Viernes","Sábado","Domingo"};
+\end{minted}
+
+Una simple declaración de un vector no reserva espacio en memoria, a excepción del caso anterior, en el que sus elementos obtienen la memoria necesaria para ser almacenados. Para reservar la memoria hay que llamar explícitamente a \textit{new} de la siguiente forma:
+
+\mint[linenos=false]{java}|new tipoElemento[ <numElementos> ];|
+
+Ejemplo:
+
+\begin{minted}{java}
+int matriz[][];
+matriz = new int[4][7];
+\end{minted}
+
+También se puede indicar el número de elementos durante su declaración:
+
+Ejemplo:
+
+\mint[linenos=false]{java}|int vector[] = new int[5];|
+
+Para hacer referencia a los elementos particulares del arreglo, se utiliza el identificador del arreglo junto con el índice del elemento entre corchetes. El índice del primer elemento es el cero y el del último, el número de elementos menos uno.
+
+Ejemplo:
+
+\mint[linenos=false]{java}|j = vector[0]; vector[4] = matriz[2][3];|
+
+El intento de acceder a un elemento fuera del rango del arreglo, a diferencia de lo que ocurre en C, provoca una excepción (error) que, de no ser manejado por el programa, será la máquina virtual quien aborte la operación. 
+
+Para obtener el número de elementos de un arreglo en tiempo de ejecución se accede al atributo de la clase llamado \textit{length}. No olvidemos que los arreglos en Java son tratados como un objeto.
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Array1 {
+	public static void main (String argumentos[]) {
+		String colores[] = {"Rojo","Verde","Azul",
+				"Amarillo","Negro"};
+		int i;
+		for (i=0;i<colores.length;i++)
+			System.out.println(colores[i]);
+	}
+}
+\end{minted}
+\caption{Ejemplo de uso de arreglo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Usando al menos Java 5.0 (jdk 1.5)  podemos simplificar el recorrido del arreglo:
+
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Meses {
+
+	public static void main(String[] args) {
+	    String meses[] = 
+	       {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
+	       "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+	   //for(int i = 0; i < meses.length; i++ ) 
+	   //   System.out.println("mes: " + meses[i]);
+	   	    
+	   // sintaxis para recorrer el arreglo y asignar
+	   // el siguiente elemento a la variable mes en cada ciclo
+	   // instruccion "for each" a partir de version 5.0 (1.5 del jdk) 
+	   for(String mes: meses) 
+	      System.out.println("mes: " + mes);
+
+	}
+
+}
+\end{minted}
+\caption{Ejemplo de uso de arreglo 2.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Enumeraciones}
+
+Java desde la versión 5 incluye el manejo de enumeraciones. Las enumeraciones sirven para agrupar un conjunto de elementos dentro de un tipo definido. Antes, una manera simple de definir un conjunto de elementos como si fuera una enumeración era, por ejemplo:
+
+\begin{minted}{java}
+public static final int TEMPO_PRIMAVERA = 0;
+public static final int TEMPO_VERANO = 1;
+public static final int TEMPO_OTOÑO = 2;
+public static final int TEMPO_INVIERNO = 3;
+\end{minted}
+
+Lo cual puede ser problemático pues no es realmente un tipo de dato, sino un conjunto de constantes enteras. Tampoco tienen un espacio de nombres definido por lo que tienen que definirse nombre. La impresión de estos datos, puesto que son enteros, despliega solo el valor numérico a menos que sea interpretado explícitamente por código adicional en el programa.
+
+El manejo de enumeraciones en Java tiene la sintaxis de C, C++ y C\# :
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }|\\
+\hline
+\end{tabular}
+\end{center}
+
+Por lo que para el código anterior, la enumeración sería:
+
+\mint[linenos=false]{java}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO }|
+
+La sintaxis completa de enum es más compleja, ya que una enumeración en Java es realmente una clase, por lo que puede tener métodos en su definición. También es posible declarar la enumeración como pública, en cuyo caso debería ser declarada en su propio archivo. 
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO }
+
+public class EnumEj {
+
+	
+	public static void main(String[] args) {
+		Temporada tem;
+		tem=Temporada.PRIMAVERA;
+		System.out.println("Temporada: " + tem);
+		
+        System.out.println("\nListado de temporadas:");
+		
+        for(Temporada t: Temporada.values())
+			System.out.println("Temporada: " + t);
+			
+	    }
+}
+\end{minted}
+\caption{Ejemplo de enumeración en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Entrada desde consola en Java}
+
+La entrada tradicional en Java desde consola era evitada en libros y cursos en su etapa introductoria, esto debido a que era necesario incluir manejos de \textit{Streams}  o flujos, lo que comúnmente requiere mayor experiencia con el lenguaje y la programación orientada a objetos. 
+
+Sin embargo, a partir de la versión 1.5 del \textit{jdk} se incluye la clase  \textit{Scanner}  que proporciona comportamiento de lectura desde consola. 
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import java.util.Scanner;
+
+public class ScannerTest {
+
+   public static void main(String[] args) {
+
+       String nom;
+       int edad;
+       Scanner in = new Scanner(System.in);
+
+       System.out.print("Nombre:");
+       // Lee una linea de consola
+       nom = in.nextLine();
+
+       System.out.print("Edad:");
+       // Lee un entero de consola
+       edad=in.nextInt(); 
+       in.close();            
+
+       System.out.println("Nombre :"+nom);
+       System.out.println("Edad :"+edad);
+
+    }
+}
+\end{minted}
+\caption{Ejemplo de entrada de consola en Java con \textit{Scanner}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Operaciones similares a \textit{nexInt()} y\textit{ nextLine()} existen para el resto de los tipos de datos.
+
+La versión 1.6 del \textit{jdk} incluye otra clase: \textit{Console} la cual proporciona el comportamiento de lectura de una linea desde consola y  lectura sin eco (tipo \textit{password}) en la consola.
+
+\textcolor{blue}{Ejemplo\footnote{Ejecutar directamente de consola ya que puede no ejecutarse correctamente en el algunos IDEs.}:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import java.io.Console;
+
+//no funciona en la consola de Eclipse
+public class TestConsole {
+ 
+    public static void main(String... args ) {
+	
+    	// Obtener un objeto de consola
+    	Console console = System.console();
+    	if (console == null) {
+            System.err.println("No se obtuvo la consola.");
+            System.exit(1);
+        }
+
+    	String usuario = console.readLine("Usuario:");
+    	
+    	//Lee password y lo recibe en un arreglo de caracteres
+    	char[] password = console.readPassword("Password: ");
+    	
+    	if (usuario.equals("admin") 
+    	 && String.valueOf(password).equals("secreto")) {
+    	    console.printf("Bienvenido %1$s.\n", usuario);
+    	    
+    	} else {
+    	    console.printf("Usuario o password inválido.\n");	    
+    	}
+    }
+}
+\end{minted}
+\caption{Ejemplo de entrada de consola en Java con \textit{Console}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como se pudo apreciar, esta clase también incluye operaciones de salida a consola. También simplifica la salida de caracteres especiales en la consola. 
+
+\subsubsection{Argumentos de cantidad variable}
+
+Ahora, si fueron observadores sabrán que el último ejemplo nos trajo un nuevo tópico: el uso de los $...$ en la operación \textit{main}. Este operador sirve para definir argumentos de cantidad variable, siendo el resultado almacenado en un arreglo del tipo especificado.  \textbf{Podemos combinar los argumentos variables con otros argumentos, pero solo podemos meter un argumento variable y debe ir al final. }
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class TestArgs {
+	public static void main(String[] args) {    
+		llamame1(new String[] {"a", "b", "c"});    
+		llamame2("a", "b", "c");    
+		// Otra opción:    
+		// llamame2(new String[] {"a", "b", "c"});
+	}
+
+	public static void llamame1(String[] args) {    
+		for (String s : args)       
+			System.out.println(s);    
+	}
+
+	public static void llamame2(String... args) {    
+		for (String s : args)      
+			System.out.println(s);    
+	}
+}
+\end{minted}
+\caption{Ejemplo de entrada de argumentos de cantidad variable.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro ejemplo\footnote{Código original de \cite{deitel2012c}}, se presenta a continuación.
+
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+
+public class VarargsTest 
+{
+// cálculo de promedio
+public static double average( double... numbers )
+     {
+        double total = 0.0; // inicializar total
+  
+        for ( double d : numbers )              
+           total += d;                          
+  
+        return total / numbers.length;
+     } 
+  
+     public static void main( String args[] ) 
+     {
+        double d1 = 10.0;
+        double d2 = 20.0;
+        double d3 = 30.0;
+        double d4 = 40.0;
+  
+        System.out.printf( "d1 = %.1f\nd2 = %.1f\nd3 = %.1f\nd4 = %.1f\n\n",
+           d1, d2, d3, d4 );
+  
+        System.out.printf( "Promedio de d1 y d2 es %.1f\n", 
+           average( d1, d2 ) ); 
+        System.out.printf( "Promedio de d1, d2 y d3 es %.1f\n", 
+           average( d1, d2, d3 ) );
+        System.out.printf( "Average de d1, d2, d3 y d4 es %.1f\n", 
+           average( d1, d2, d3, d4 ) );
+     } 
+  } 
+\end{minted}
+\caption{Ejemplo de entrada de argumentos de cantidad variable.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Paquetes}
+
+Las clases en Java son organizadas mediante paquetes. Un paquete es entonces el mecanismo para agrupas clases que están relacionadas, ya sea porque sirven a un propósito común o porque dependen unas de otras para realizar sus responsabilidades. Se usan los paquetes cuando importamos clases para ser incorporadas en nuestro código, pero si queremos especificar el paquete al que pertenecen nuestras clases podemos hacerlo.
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}|package [<ruta>]<nombre paquete>|\\
+\hline
+\end{tabular}
+\end{center}
+
+Si no se define el nombre del paquete, por omisión se considera el nombre del directorio donde la clase se encuentra definida.
+
+
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+
+

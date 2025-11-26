@@ -1,0 +1,252 @@
+\chapter{Java: Clases anidadas y anónimas}
+\section{Clases anidadas}
+
+\textbf{Las clases anidadas son clases definidas dentro del alcance de otras clases. }Existen dos tipos de clases anidadas\footnote{Fuente: \href{Fuente: https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html}{Nested class}}:
+
+\begin{itemize}
+\item Clase anidadas estáticas
+\item Clases interiores, las cuales son clases anidadas no estáticas
+\end{itemize}
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+class claseExterna {
+    ...
+    static class ClaseAnidadaEstática {
+        ...
+    }
+    class claseInterior {
+        ...
+    }
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Una clase anidada es un miembro de la clase que la define, la clase externa. Clases interiores (clases anidadas no estáticas) tienen acceso a otros miembros de la clase externa, inclusive si estos miembros son privados. Clases anidadas estáticas no tienen acceso a los otros miembros de la clase externa. Las clases anidadas, al ser miembros de una clase pueden ser definidas como públicas, protegidas o privadas (privadas a nivel de paquete).
+
+Una clase anidada puede ser 
+\begin{itemize}
+\item Es una forma de agrupar clases que son usadas en un sólo lugar
+\item Incrementa la encapsulación
+\item Puede llevar a un código más fácil de leer y/o mantener.
+\end{itemize}
+
+\ejemplo
+Clases internas.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class EstructuraDeDatos {
+    
+    // Crea un arreglo 
+    private final static int TAMAÑO = 15;
+    private int[] arregloDeEnteros = new int[TAMAÑO];
+    
+    public EstructuraDeDatos() {
+        for (int i = 0; i < TAMAÑO; i++) {
+        	arregloDeEnteros[i] = i;
+        }
+    }
+    
+    public void despliegaPares() {
+        
+        // despliega valores de índices pares del arreglo
+    	IteradorDeEstructuraDeDatos iterador = this.new IteradorPares();
+        while (iterador.hasNext()) {
+            System.out.print(iterador.next() + " ");
+        }
+        System.out.println();
+    }
+    
+    //interfaz anidada extiende la interfaz Iterator<Interger>
+    interface IteradorDeEstructuraDeDatos extends java.util.Iterator<Integer> { } 
+
+    // Clase anidada implementa interfaz IteradorDeEstructuraDeDatos
+    private class IteradorPares implements IteradorDeEstructuraDeDatos {
+        
+        // Inicializa el iterador para el inicio del arreglo
+        private int nextIndice = 0;
+        
+		@Override
+        public boolean hasNext() {
+            //Verifica si el elemento actual es el último en el arreglo 
+            return (nextIndice <= TAMAÑO - 1);
+        }        
+        
+		@Override
+        public Integer next() {
+            // Registra un valor de un índice par del arreglo
+            Integer reValor = Integer.valueOf(arregloDeEnteros[nextIndice]);
+            
+            // obtiene el siguiente elemento par
+            nextIndice += 2;
+            return reValor;
+        }
+
+		@Override
+		public void remove() {
+			// implementación es opcional
+			throw new UnsupportedOperationException();
+			
+		}
+    }
+    
+    public static void main(String s[]) {
+    	EstructuraDeDatos edd = new EstructuraDeDatos();
+        edd.despliegaPares();
+    }
+}
+\end{minted}
+\caption{Ejemplo de clases internas.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Variables con el mismo nombre. \ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class PruebaOcultarVariables {
+
+    public int x = 0;
+
+    class PrimerNivel {
+
+        public int x = 1;
+
+        void métodoEnPrimerNivel(int x) {
+            System.out.println("x = " + x);
+            System.out.println("this.x = " + this.x);
+            System.out.println("PruebaOcultarVariables.this.x = " 
+            + PruebaOcultarVariables.this.x); //Despliega x de la clase externa (x=0)
+        }
+    }
+
+    public static void main(String... args) {
+    	PruebaOcultarVariables pov = new PruebaOcultarVariables();
+    	PruebaOcultarVariables.PrimerNivel pn = pov.new PrimerNivel();
+    	pn.métodoEnPrimerNivel(25);
+    }
+}
+\end{minted}
+\caption{Ejemplo variables con el mismo nombre en clases internas .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Clases anónimas}
+
+\textbf{Una clase anónima es una clase anidada que no tiene un nombre.} Combina  en un solo paso la definición de la clase anidada y la instanciación de la misma.
+
+Una clase anónima se ocupa cuando una clase solo se requiere una vez\footnote{\href{https://docs.oracle.com/javase/tutorial/java/javaOO/anonymousclasses.html}{Anonymouse classes}}.
+
+Las clases anónimas son compiladas con el nombre de las clase que las contienen seguida de \$ y un número consecutivo. Por ejemplo: \textit{Clasecontenedora\$1.class}
+
+Un código de clases anónimas. \ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class ClasesAnónimasHolaMundo {
+	  
+    interface HolaMundo {
+        public void saludar();
+        public void saludarAlguien(String alguien);
+    }
+  
+    public void decirHola() {
+        
+        class SaludarEnInglés implements HolaMundo {
+            String nombre = "world";
+            public void saludar() {
+            	saludarAlguien("world");
+            }
+            public void saludarAlguien(String alguien) {
+                nombre = alguien;
+                System.out.println("Hello " + nombre);
+            }
+        }
+      
+        HolaMundo saludarEnInglés = new SaludarEnInglés();
+        
+        HolaMundo saludarEnFrances = new HolaMundo() {
+            String nombre = "tout le monde";
+            public void saludar() {
+            	saludarAlguien("tout le monde");
+            }
+            public void saludarAlguien(String alguien) {
+                nombre = alguien;
+                System.out.println("Salut " + nombre);
+            }
+        };
+        
+        HolaMundo saludarEnEspañol = new HolaMundo() {
+            String nombre = "mundo";
+            public void saludar() {
+            	saludarAlguien("mundo");
+            }
+            public void saludarAlguien(String alguien) {
+                nombre = alguien;
+                System.out.println("Hola, " + nombre);
+            }
+        };
+
+        saludarEnInglés.saludar();
+        saludarEnFrances.saludarAlguien("Juliette");
+        saludarEnEspañol.saludar();
+    }
+
+    public static void main(String... args) {
+    		ClasesAnónimasHolaMundo miApl =
+            new ClasesAnónimasHolaMundo();
+        	miApl.decirHola();
+    }            
+}
+\end{minted}
+\caption{Ejemplo de clases anónimas.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+

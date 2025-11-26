@@ -1,0 +1,355 @@
+\chapter{Temas pendientes}
+\subsection{Decoradores en Python}
+
+\subsubsection{¿Qué son?}
+
+Los decoradores (\textit{decorators}) son una forma de envolver una función, como envolver un paquete con papel de regalo. Estos añaden funcionalidad a la función siendo decorada. Toman otra función como entrada y devuelven una nueva función modificada. 
+
+\subsubsection{¿Por qué usarlos?}
+Cuando se necesita código en nuestros programas que se va a ejecutar frecuentemente, podemos poner ese código en un decorador.
+
+Pueden ser utilizados para aplicar cambios en una función existente sin tener que modificar su código. Esto separa el código adicional de la función principal y, si el código adicional no se necesita más, podemos simplemente remover el decorador.
+
+\subsubsection{¿Cómo se escriben los decoradores?}
+Se escribe una función decorada que toma a otra función cómo argumento.
+Dentro de la función decoradora se escribe una función interna que contiene el código adicional, ejecuta el argumento de la función. son aplicados a una función utilizando el símbolo ''@'' seguido del nombre del decorador. Los decoradores son una forma de "meta-programación" ya que permiten modificar el comportamiento de una función en tiempo de ejecución.
+Se regresa la función interna.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+import datetime
+
+def registrar_hora(funcion):
+    def envoltorio(*args, **kwargs):
+        print(f"[{datetime.datetime.now()}] Se ejecutó la función {funcion.__name__}")
+        return funcion(*args, **kwargs)
+    return envoltorio
+
+@registrar_hora
+def mi_funcion():
+    print("Hola mundo!")
+
+mi_funcion()
+
+\end{minted}
+\caption{Ejemplo de uso de decoradores.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo se define la función decoradora \textit{registrar\_hora} que toma como parámetro una función y devuelve una nueva función \textit{envoltorio} que imprime la hora actual y el nombre de la función que se esta ejecutando antes de llamar a la función original y devolver su resultado. Se aplica el decorador a la función \textit{mi\_funcion} usando el símbolo ''@'' antes de su declaración y se ejecuta la función \textit{mi\_funcion}, la cual imprimirá ''Hola mundo!'' y también la hora en la que se ejecutó la función.
+
+
+Otros ejemplos:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+import time
+
+def temporizador(func):
+    def envoltorio(*args, **kwargs):
+        inicio = time.time()
+        resultado = func(*args, **kwargs)
+        fin = time.time()
+        print(f"La función {func.__name__} tardó {fin - inicio} 
+          segundos en ejecutarse.")
+        return resultado
+    return envoltorio
+
+@temporizador
+def funcion_lenta():
+    time.sleep(1)
+
+funcion_lenta()
+
+\end{minted}
+\caption{Ejemplo de decorador para medir tiempo de ejecución de una función.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el ejemplo entarior, la función decoradora \textit{temporizador} toma otra función como argumento y devuelve una nueva función \textit{envoltorio} que mide el tiempo de ejecución de la función original y lo imprime antes de devolver el resultado. La función \textit{funcion\_lenta} simula una tarea que dura 1 segundo. Al llamar a esta función se imprimirá ''La función funcion\_lenta tardó 1.0 segundos en ejecutarse.''
+
+Otro ejemplo seria el siguiente:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+def asegurar_primer_arg_es(val):
+    def interno(fn):
+        def envoltorio(*args, **kwargs):
+            if args and args[0] != val:
+                return f"El primer argumento no es {val}"
+            return fn(*args, **kwargs)
+        return envoltorio
+    return interno
+
+@asegurar_primer_arg_es("pizza")
+def comida_fav(*comidas):
+    return comidas
+
+print(comida_fav("pizza", "helado")) # imprime ("pizza", "helado")
+print(comida_fav("helado", "pizza")) # imprime "El primer argumento no es pizza"
+
+\end{minted}
+\caption{Ejemplo de decorador que verifica un argumento.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo se define la función decoradora \textit{asegurar\_primer\_arg\_es} que toma un valor y devuelve una nueva función \textit{interno} que a su vez toma otra función como argumento y devuelve una nueva función \textit{envoltorio} que verifica si el primer argumento de la función original es igual al valor especificado, si no es así devuelve un mensaje de error, si es así ejecuta la función original. Se aplica este decorador a la función \textit{comida\_fav} y se llama a esta función con diferentes argumentos, si el primer argumento es ''pizza'' se ejecuta normalmente, si no se imprime el mensaje de error.
+
+\subsubsection{Decoradores predefinidos más comunes\protect\footnote{Partes de esta sección fueron desarrollados con apoyo de ChatGPT}}
+
+Algunos decoradores usados con frecuencia:
+
+\begin{itemize}
+\item dataclass. Éste decorador  se utiliza para crear clases de datos de manera rápida y sencilla. Al aplicar @dataclass a una clase, Python automáticamente genera ciertos métodos para la clase.
+\item property. Éste decorador se utiliza para definir un método como una propiedad de una clase, lo que permite acceder al método como si fuera un atributo.
+\item staticmethod. Éste decorador se utiliza para definir un método estático, que no tiene acceso a los atributos de la clase o de la instancia.
+\item classmethod. Éste decorador se utiliza para definir un método como un método de clase, lo que permite acceder al método a través de la clase en lugar de a través de una instancia.
+\item abstractmethod. Éste decorador se utiliza para definir un método abstracto en una clase abstracta. Los métodos abstractos son métodos que deben ser implementados por las subclases.
+\end{itemize}
+
+Al final, un decorador es únicamente una función con código en ésta.
+
+\subsubsection{@dataclass}
+
+@dataclass es un decorador de Python 3.7 que es parte de la biblioteca estándar, se utiliza para crear clases de datos de manera rápida y sencilla.
+
+Al aplicar @dataclass a una clase, Python automáticamente genera ciertos métodos para la clase, como  las funciones especiales \textit{init}, \textit{repr} y \textit{eq} , así como también agrega la clase al módulo \textit{dataclasses}.
+
+Además, permite especificar los atributos de clase mediante la creación de variables de instancia con el decorador \textit{field}. Esto proporciona una manera fácil de especificar los atributos de clase y también proporciona una forma de especificar opciones adicionales como el valor predeterminado, si el campo es inmutable, etc.
+
+Un ejemplo de uso de @dataclass se muestra a continuación:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+from dataclasses import dataclass
+
+@dataclass
+class Persona:
+    nombre: str
+    fecha_nacimiento: str
+    genero: str
+
+p1 = Persona("Juan", "01/01/2000", "Masculino")
+p2 = Persona("Maria", "01/01/1995", "Femenino")
+
+print(p1) # Persona(nombre='Juan', fecha_nacimiento='01/01/2000', genero='Masculino')
+print(p2) # Persona(nombre='Maria', fecha_nacimiento='01/01/1995', genero='Femenino')
+
+\end{minted}
+\caption{Ejemplo de @dataclass.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo, se utiliza @dataclass para definir la clase Persona, y se utilizan los tipos de datos básicos de Python para especificar los atributos de la clase. Al imprimir las instancias de Persona, se puede ver que @dataclass ha generado automáticamente un método de representación legible de la instancia.
+
+Otro ejemplo se muestre enseguida:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+from dataclasses import dataclass, field
+
+@dataclass
+class Alumno:
+    nombre: str
+    edad: int =18
+    notas: list = field(default_factory=list)
+
+    def mostrar_notas(self):
+        print(self.notas)
+        
+# Crear una instancia de Alumno
+alumno1 = Alumno("Juan")
+
+# Acceder a los atributos
+print(alumno1.nombre) # "Juan"
+print(alumno1.edad) # 18
+
+# Modificar el valor de un atributo
+alumno1.edad = 20
+
+# Agregar una nota
+alumno1.notas.append(10)
+
+# Genera una representación legible de la instancia
+print(alumno1) # Alumno(nombre='Juan', edad=20, notas=[10])
+
+# Comparar dos instancias de Alumno
+alumno2 = Alumno("Juan", 20, [10])
+print(alumno1 == alumno2) # True
+alumno1.mostrar_notas() # [10]
+
+\end{minted}
+\caption{Ejemplo adicional de @dataclass .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo se tiene una clase Alumno la cual tiene lo campos nombre, edad y notas. El campo notas se inicializa con una lista vacía.
+
+Al crear una instancia de la clase Alumno (alumno1 = Alumno("Juan")), se genera automáticamente un método especial \textit{init} que asigna los valores de los atributos nombre, edad y notas a los valores especificados al crear la instancia. También se genera un método especial repr que permite generar una representación legible de la instancia y un método especial eq que permite comparar dos instancias de la clase para ver si son iguales. En este caso también se agregó un método mostrar\_notas para mostrar las notas del alumno
+
+Se uso la función field(). field() es una función decoradora incluida en el módulo dataclasses de Python. Se utiliza para especificar ciertas opciones para los campos de una clase de datos. Cuando se aplica a un atributo de una clase, indica que ese atributo es un campo y se debe tratar de manera especial por el decorador dataclass.
+
+Los argumentos opcionales que se pueden pasar a la función field() son:
+
+default: especifica un valor por defecto para el campo.
+default_factory: especifica una función que se ejecutará para calcular el valor por defecto del campo.
+init: indica si el campo debe ser incluido en el constructor de la clase. Por defecto es True.
+repr: indica si el campo debe ser incluido en la representación legible de la instancia. Por defecto es True.
+compare: indica si el campo debe ser comparado al comparar dos instancias de la clase. Por defecto es True.
+hash: indica si el campo debe ser incluido en el cálculo del valor hash de la instancia. Por defecto es True.
+
+field() es una forma de personalizar cómo se comporta la clase con el decorador dataclass. Sin embargo, no es necesario utilizar field() en cada atributo de una clase decorada con dataclass, ya que por defecto se consideran todos los atributos como campos con las opciones por defecto.
+
+
+Por otro lado, al momento de usar el decorador, es posible pasar algunos parámetros. Los parámetros posibles que se pueden pasar a la decoración @dataclass son:
+
+init: indica si se debe generar automáticamente un constructor para la clase. Por defecto es True.
+eq: indica si se debe generar automáticamente el método __eq__ para la clase. Por defecto es True.
+order: indica si se deben generar automáticamente los métodos __lt__, __le__, __gt__ y __ge__ para la clase. Por defecto es False.
+unsafe_hash: indica si se debe generar automáticamente el método __hash__ para la clase. Por defecto es False.
+frozen: indica si se deben congelar los atributos de la clase, es decir, no se podrán modificar una vez que se ha creado una instancia de la clase. Por defecto es False.
+Es importante mencionar que estos parámetros solo se pueden pasar al momento de usar la decoración @dataclass, no en la definición de la clase.
+
+Un ejemplo usando algunos de los parámetros de dataclass:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+from dataclasses import dataclass, asdict
+
+# Creando una clase con parámetros
+@dataclass(frozen=True, order=True)
+class Persona:
+    nombre: str
+    edad: int
+    altura: float
+    
+# Creando una instancia de Persona
+p1 = Persona("Juan", 25, 1.75)
+
+# Imprimiendo una representación legible de la instancia
+print(p1)
+
+# Modificando un valor de una atributo, genera un error ya que la clase esta congelada
+# p1.edad = 30
+
+# Generando un diccionario a partir de la instancia
+print(asdict(p1))
+
+# Comparando dos instancias de Persona
+p2 = Persona("Pedro", 30, 1.80)
+print(p1 < p2)
+
+\end{minted}
+\caption{Ejemplo .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En este ejemplo se está utilizando el parámetro \textit{frozen=True} para congelar la clase, lo que significa que no se pueden modificar los valores de los atributos una vez que se ha creado una instancia. También se está utilizando el parámetro \textit{order=True} para habilitar la comparación entre instancias de la clase. Además se utiliza \textit{asdict} para generar un diccionario a partir de una instancia de la clase.
+
+
+
+\subsection{Python Generators}
+
+¿Qué son los generadores?
+
+Los generadores nos permiten escribir funciones eficientes que puedan actuar como iteradores, por ejemplo, pueden usarse en un ciclo $for$. 
+Cualquier función que regresa un iterador puede convertirse a un generador usando la palabra reservada $yield$.
+
+¿Cómo escribir un generador?
+
+Cualquier función que regresa un iterador puede convertirse a un generador usando la palabra reservada $yield$.
+
+En el primer ejemplo, regresamos una lista conteniendo cubos de números hasta el 50 al mismo tiempo.
+
+<ejemplo>
+
+En el segundo ejemplo cedemos ($yield$) el siguiente cubo bajo demanda
+
+<ejemplo>
+
+¿Por qué usar generadores?
+Son limpios y hacen uso eficiente de memoria.
+
+Del ejemplo anterior imaginemos la diferencia entre tener que crear y mantener una lista de cubos de 50 números al mismo tiempo contra únicamente regresar el siguiente valor bajo demanda.
+
+¿Cuando usar generadores?
+
+Cuando sea necesario ahorrar memoria.
+
+Si se está inseguro si todos los elementos en un iterador no van a ser usados.
+
+
+\subsection{Python Sys y OS}
+\subsection{Python- Shelves}
+\subsection{Python - Persistence}
+\subsection{Python - GUI - PySimpleGUI}
+https://twitter.com/driscollis/status/1570115002249498646
+\subsection{Python - GUI - tkinter}
+
+
+
+
+%Temas de MTCA POO
+\section{Envío múltiple (Multiple dispatch}
+
+\Chapter{6 Encapsulamiento}
+\section{Principios de encapsulamiento}
+\section{Patrón de diseño proxy}
+\section{Modelado y construcción de componentes}
+
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+\end{document}

@@ -1,0 +1,158 @@
+\chapter*{Apéndice A. Herramientas adicionales sugeridas }
+\addcontentsline{toc}{chapter}{Apéndice A}
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\section*{BlueJ} \label{bluej}
+
+BlueJ \footnote{Ver: \url{http://www.bluej.org/}} es un programa desarrollado por la universidades de \textit{Kent} y \textit{Deakin} para ayudar a los estudiantes a entender programación orientada a objetos en Java, particularmente ayuda a entender la herencia.
+
+A partir de un diagrama de clases, BlueJ puede generar el código básico de la clase en Java, el cuál puede ser editado y compilado conforme las necesidades del programa. El programa es básico -ver figura \ref{bl} - y fácil de usar permitiendo entender estructuras complejas en las relaciones de herencia.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.7]{imagenes/BlueJ.png}
+    \caption{ Interface de BlueJ }
+    \label{fig:bluej}
+\end{figure}	
+
+El código Java generado por BlueJ para el diagrama de la figura anterior es el siguiente:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+/**
+ * Write a description of class Vehiculo here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Vehiculo
+{
+	// instance variables - replace the example below with your own
+	private int x;
+
+	/**
+	 * Constructor for objects of class Vehiculo
+	 */
+	public Vehiculo()
+	{
+		// initialise instance variables
+		x = 0;
+	}
+
+	/**
+	 * An example of a method - replace this comment with your own
+	 * 
+	 * @param  y   a sample parameter for a method
+	 * @return     the sum of x and y 
+	 */
+	public int sampleMethod(int y)
+	{
+		// put your code here
+		return x + y;
+	}
+}
+
+
+
+/**
+ * Write a description of class Camion here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Camion extends Vehiculo
+{
+	// instance variables - replace the example below with your own
+	private int x;
+
+	/**
+	 * Constructor for objects of class Camion
+	 */
+	public Camion()
+	{
+		// initialise instance variables
+		x = 0;
+	}
+
+	/**
+	 * An example of a method - replace this comment with your own
+	 * 
+	 * @param  y   a sample parameter for a method
+	 * @return     the sum of x and y 
+	 */
+	public int sampleMethod(int y)
+	{
+		// put your code here
+		return x + y;
+	}
+}
+\end{minted}
+\caption{Ejemplo de código generado por BlueJ.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section*{UMLGEC++}
+
+El proyecto de desarrollo de esta herramienta CASE (UMLGEC ++)\cite{rumbaugh1991object, matias2003herramienta} soporta la notación UML\footnote{Información básica sobre UML puede ser vista en \cite{fernandez2002modelado}} para diagramas de clase y generación de código en C++, con una interfaz lo más completa y sencilla posible, ver figura \ref{fig:umlgec}. Siendo útil para entender gráficamente conceptos básicos de objetos y su correspondiente implementación en código. Los elementos de este software son:
+
+\begin{itemize}
+\item Depósito de datos
+\item Módulo para Creación de Diagramas y Modelado 
+\item Generador de código
+\item Analizador de sintaxis
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.5]{imagenes/UMLGEC.png}
+    \caption{ Herramienta CASE UMLGEC++ }
+    \label{fig:umlgec}
+\end{figure}
+
+De la generación de código se puede decir:
+
+
+\begin{itemize}
+\item A partir del diagrama se genera la estructura de las clases.
+\item Se crean automáticamente: el constructor, el constructor de copia, el operador de asignación, las operaciones de igualdad y el destructor. 
+\item Todos los atributos y asociaciones son establecidos como privados independientemente de la visibilidad establecida por el usuario, pero el acceso a ellos está permitido mediante operaciones \textit{get} y \textit{set} generadas automáticamente para cada atributo o asociación, las cuáles adquieren la visibilidad correspondiente al atributo  o asociación al que hacen referencia.
+\item Se definen los cuerpos de las operaciones \textit{get} y \textit{set}, como funciones \textit{inline}.
+\end{itemize}
+    
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\newpage
+
+

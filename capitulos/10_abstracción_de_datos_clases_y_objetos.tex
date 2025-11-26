@@ -1,0 +1,2770 @@
+\chapter{Abstracción de datos: Clases y objetos}
+
+\section{Clases}
+
+Se mencionaba anteriormente que la base de la programación orientada a objetos es la abstracción de los datos o los TDAs. La abstracción de los datos se da realmente a través de las clases y objetos.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+\textbf{Def. Clase.} Se puede decir que una clase es la implementación real de un TDA, proporcionando entonces la estructura de datos necesaria y sus operaciones. Los datos son llamados \textbf{atributos} y las operaciones se conocen como \textbf{métodos}\cite{muller1997introduccion}. 
+\\ \hline
+\end{tabular}
+\end{center}
+
+La unión de los atributos y los métodos dan forma al \textbf{comportamiento} (comportamiento común) de un grupo de objetos. La clase es entonces como la definición de un esquema dentro del cual encajan un conjunto de objetos.
+
+El comportamiento debe ser descrito en términos de \textbf{responsabilidades} \cite{timothy2008introduction}. Resolviendo el problema bajo esos términos permite una mayor independencia entre los objetos, al elevar el nivel de abstracción. 
+
+En Programación Estructurada el programa opera \textbf{sobre} estructuras de datos. En contraste en Programación Orientada a Objetos, el programa solicita a las estructuras de datos que ejecuten un servicio.
+
+Ejemplos de clases: 
+
+\begin{itemize}
+\item automóvil, 
+\item persona, 
+\item libro, 
+\item revista, 
+\item reloj, 
+\item silla, 
+\item ...   
+\end{itemize}
+
+
+\section{Objetos e instancias}
+
+Una de las características más importantes de los lenguajes orientados a objetos es la \textbf{instanciación}. Esta es la capacidad que tienen los nuevos tipos de datos, para nuestro caso en particular las clases de ser \textbf{instanciadas} en cualquier momento.
+
+El instanciar una clase produce un objeto o instancia de la clase requerida. Todos los objetos son \textbf{instancia} de una clase\cite{timothy2008introduction}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+\textbf{Def. Objeto.} Un objeto es una instancia de una clase. Puede ser identificado en forma única por su nombre y define un estado, el cuál es representado por los valores de sus atributos en un momento en particular \cite{muller1997introduccion}.
+\\ \hline
+\end{tabular}
+\end{center}
+
+El estado de un objeto cambia de acuerdo a los métodos que le son aplicados. Nos referimos a esta posible secuencia de cambios de estado como el comportamiento del objeto: 
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+\textbf{Def. Comportamiento.} El comportamiento de un objeto es definido por un conjunto de métodos que le pueden ser aplicados \cite{muller1997introduccion}.
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Instanciación}
+
+Los objetos pueden ser creados de la misma forma que una estructura de datos:
+
+\begin{enumerate}
+\item  \textbf{Estáticamente}. En \textbf{tiempo de compilación} se le asigna un área de memoria.
+\item  \textbf{Dinámicamente}. Se le asigna un área de memoria en \textbf{tiempo de ejecución }y su existencia es temporal. Es necesario liberar espacio cuando el objeto ya no es útil; para esto puede ser que el lenguaje proporcione mecanismos de recolección de basura.
+\end{enumerate}
+
+En Java, los objetos sólo existen de manera dinámica, además de que incluye un recolector de basura para no dejar como responsabilidad del usuario la eliminación de los objetos de la memoria.
+
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+
+
+\section{Clases en C++}
+
+Una clase entonces, permite encapsular la información a través de atributos y métodos que la utilizan, ocultando la misma y la implementación del comportamiento de las clases.
+
+La definición de una clase define nuevos TDAs y la definición en C++ consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase encerrado entre llaves y finalizando con “;”. Notar la similitud de las clases con las estructuras de C.
+
+
+El cuerpo de la clase contiene la declaración de los atributos de la clase (variables) y la declaración de los métodos (funciones). Tanto los atributos como los métodos pertenecen exclusivamente a la clase y sólo pueden ser usados a través de un objeto de esa clase.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+class <nombre_clase> {
+	<cuerpo de la clase>
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+\begin{minted}{cpp}
+class Ejemplo1 {
+	int x;
+ 	float y;
+ 	void fun(int a, float b) {
+		x=a;
+		y=b;
+ 	}
+};
+\end{minted}
+
+\section{Miembros de una clase en C++}
+
+
+	Una clase está formada por un conjunto de miembros que pueden ser datos, funciones, clases anidadas, enumeraciones, tipos de dato, etc. (amigos)Por el momento nos vamos a centrar en los datos y las funciones (atributos y métodos).
+
+	Es importante señalar que un miembro no puede ser declarado más de una vez\footnote{Aunque existe el concepto de sobrecarga que se verá más adelante}. Tampoco es posible añadir miembros después de la declaración de la clase.
+
+Ejemplo:
+
+\begin{minted}{cpp}
+class Ejemplo2{
+	int i;
+	int i;   //error
+	int j;
+	int func(int, int);
+};
+\end{minted}
+
+\subsection{Atributos miembro}
+
+
+	Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma.
+	
+\subsection{Métodos miembro}
+
+	Los métodos al igual que los atributos, deber ser definidos en la clase, pero el cuerpo de la función puede ir dentro o fuera de la clase. Si un método se declara completo dentro de la clase, se considera como inline. 
+
+	La declaración dentro de la clase no cambia con respecto a la declaración de una función, salvo que se hace dentro de la clase. Veamos un ejemplo parecido al inicial de esta sección, pero ahora con el cuerpo de un método fuera del cuerpo de la clase.
+	
+Ejemplo:
+\begin{minted}{cpp}
+//código en ejemplo3.h
+class Ejemplo3 {
+	public:
+	int x;
+ 	float y;
+ 	int funX(int a) {
+		x=a;
+		return x;
+	}
+	float funY(float);
+};
+\end{minted}
+
+Podemos ver que en la definición de la clase se incluye un método en línea y un prototipo de otro método. 
+
+Para definir un método miembro de una clase fuera de la misma, se debe escribir antes del nombre del método, el nombre de la clase con la que el método esta asociado. Para esto se ocupa el operador de resolución de alcance (o de ámbito)  $::$.
+
+Continuación del ejemplo:	
+\begin{minted}{cpp}
+float Ejemplo3::funY(float b){
+	y=b;
+	return y;
+}
+\end{minted}
+
+	Reiteramos que al declarar los métodos fuera de la clase no puede mencionarse la declaración de un método que no esté contemplado dentro de la clase. Si esto fuera válido, cualquier método podría ganar acceso a la clase con sólo declarar una función adicional.
+	
+Ejemplo:
+
+
+\begin{minted}{cpp}
+//error en declaración de un método
+class x{
+	public:
+	int a;
+	f();
+};
+	
+int x::g() {	//error, el metodo debe ser f()
+	return a*=3.1234;
+}
+\end{minted}
+
+	La declaración de una función miembro es considerada dentro del ámbito de su clase. Lo cual significa que puede usar nombres de miembros de la clase directamente sin usar el operador de acceso de miembro de la clase.
+
+	Recordar que por convención en la programación orientada a objetos las funciones son llamadas métodos y la invocación o llamada se conoce como mensaje.
+	
+\subsection{Un vistazo al acceso a miembros}	
+
+Otra de las ventajas de la POO es la posibilidad de encapsular datos, ocultándolos de otros objetos si es necesario. Para esto existen principalmente dos calificadores que definen a los datos como \textbf{públicos} o \textbf{privados}.
+
+\subsubsection{Miembros públicos} 
+Se utiliza cuando queremos dar a usuarios de una clase (e.g., otras clases) el acceso a miembros de esa clase, los miembros deben ser declarados públicos.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+public:
+	<definición de miembros>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Miembros privados} 
+Si queremos ocultar ciertos miembros de una clase de los usuarios de la misma, debemos declarar a los miembros como privados. De esta forma nadie más que los miembros de la clase pueden usar a los miembros privados. Con excepción de las funciones amigas. Por omisión los miembros se consideran privados. En una estructura se consideran públicos por omisión.
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+private:
+	<definición de miembros>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Normalmente, los atributos de la clase deben ser privados; así como los métodos que no sean necesarios externamente o que puedan conducir a un estado inconsistente del objeto\footnote{Un estado inconsistente sería ocasionado por una modificación indebida de los datos, por ejemplo una modificación sin validación.}.
+
+	En el caso de los atributos, estos al ser privados deberían de contar con métodos de modificación y de consulta pudiendo incluir alguna validación.
+
+	Es una buena costumbre de programación accesar a los atributos solamente a través de las funciones de modificación, sobre todo si es necesario algún tipo de verificación sobre el valor del atributo.
+
+Ejemplo:
+\begin{minted}{cpp}
+//código en ejemplo3.h
+class Fecha {
+   	private:
+	  int dia;
+	  int mes;
+	  int an;
+
+	public:
+	  bool setDia(int);   //poner día
+	  int getDia();	//devuelve día
+	  bool setMes(int);
+	  int getMes();
+	  bool setAn(int);
+	  int getAn();
+};
+\end{minted}
+
+\section{Objetos de clase en C++}
+
+Ya se ha visto como definir una clase, declarando sus atributos y sus operaciones, mismas que pueden ir dentro de la definición de la clase (\textit{inline}) o fuera. Ahora vamos a ver como es posible crear objetos o instancias de esa clase. 
+
+Hay que recordar que una de las características de los objetos es que cada uno guarda un estado particular de acuerdo al valor de sus atributos\footnote{A diferencia de la programación modular, donde cada módulo tiene un solo estado.}.
+
+Lo más importante de los lenguajes orientados a objetos es precisamente el objeto, el cual es una identidad lógica que contiene datos y código que manipula esos datos. En C++, un objeto es una variable de un tipo definido por el usuario\cite{far1996programacion}.  Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+using namespace std;
+
+class Ejemplo3 {
+	public:
+		int i;
+		int j;
+};
+
+int main() {
+	Ejemplo3 e1;
+	Ejemplo3 e2;
+	e1.i=10;
+	e1.j=20;
+
+	e2.i=100;
+	e2.j=20;
+	cout<<e1.i<<endl;
+	cout<<e2.i<<endl;
+	
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de clases en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+class Cola{
+	private:
+	  int q[10];
+	  int sloc, rloc;
+
+	public:
+	  void ini() {  //funci¢n en l¡nea
+		sloc=rloc=-1;
+	  }
+	  bool set(int);
+	  int get();
+};
+
+#include <iostream>
+#include "Cola.h"
+
+using namespace std;
+
+bool Cola::set(int val){
+	if(sloc>=10){
+		cout<<"la cola esta llena";
+		return false;
+	}
+	sloc++;
+	q[sloc]=val;
+	return true;
+}
+int Cola::get(){
+	if(rloc==sloc)
+		cout<<"la cola esta vacia";
+	else {
+		rloc++;
+		return q[rloc];
+	}
+}
+
+
+//cola definida en un arreglo
+#include <iostream>
+#include "Cola.h"
+
+using namespace std;
+
+int main(){
+	Cola a,b, *pCola= new Cola;  // *pCola=NULL y después asignarle
+	
+	a.ini();
+	b.ini();
+	pCola->ini();
+	a.set(1);
+	b.set(2);
+	pCola->set(3);
+	a.set(11);
+	b.set(22);
+	pCola->set(33);
+	cout<<a.get()<<endl;
+	cout<<a.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<pCola->get()<<endl;
+	cout<<pCola->get()<<endl;
+	
+   	delete pCola;
+   	return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de clases en C++, una estructura de cola simple.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Nota} 
+\end{center} 
+\\ \hline
+Tomar en cuenta las instrucciones siguientes para el precompilador en el manejo de múltiples archivos.
+\\ \hline
+\end{tabular}
+\end{center}
+
+\begin{minted}{cpp}
+#ifndef CCOLA_H
+#define CCOLA_H
+<definición de la clase>
+#endif
+\end{minted}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+
+\section{Clases en Java}
+
+La definición en \textbf{Java}, de manera similar a C++, consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase encerrado entre llaves. 
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+class <nombre_clase> {
+	<cuerpo de la clase>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo\footnote{ Algunos ejemplos como este no son programas completos, sino simples ejemplos de clases. Podrán ser compilados pero no ejecutados directamente. Para que un programa corra debe contener o ser una clase derivada de \textit{applet}, o tener un método \textit{main}.}:
+
+\begin{minted}{java}
+public class Ejemplo1 {
+	int x;
+	float y;
+	void fun(int a, float b) {
+		x=a;
+		y=b;
+	}
+}
+\end{minted}
+
+\section{Miembros de una clase en Java}
+
+Los miembros en Java son esencialmente los atributos y los métodos de la clase.
+
+Ejemplo:
+\begin{minted}{java}
+class Ejemplo2{
+	int i;
+	int i;   //error
+	int j;
+	int func(int, int){}
+}
+\end{minted}
+
+\subsection{Atributos miembro}
+
+Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma.
+
+La sintaxis mínima es la siguiente:
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+ \mint[linenos=false]{java}|tipo nombreAtributo; |\\
+
+Los atributos pueden ser inicializados desde su lugar de declaración:
+
+ \mint[linenos=false]{java}|tipo nombreAtributo = valor;|\\
+
+o, en el caso de variables de objetos:
+   \mint[linenos=false]{java}|tipo nombreAtributo = new Clase();|\\
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Métodos miembro}
+
+Un método es una operación que pertenece a una clase. No es posible declarar métodos fuera de la clase. Además, en Java no existe el concepto de método prototipo como en C++.
+
+	Sin embargo, igual que en C++, la declaración de una función ó método miembro es considerada dentro del ámbito de su clase. 
+
+	La sintaxis básica para declarar a un método:
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+tipoRetorno nombreMétodo ( [<parámetros>] ) {
+	<instrucciones>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Un aspecto importante a considerar es que el paso de parámetros en Java es realizado exclusivamente por valor. Datos básicos y objetos son pasados por valor. Pero los objetos no son pasados realmente, se pasan las referencias a los objetos (i.e., una copia de la referencia al objeto).
+
+\subsection{Un vistazo al acceso a miembros}
+
+Si bien en Java existen también los miembros públicos y privados, estos tienen una sintaxis diferente a C++. En Java se define el acceso a cada miembro de manera unitaria, al contrario de la definición de acceso por grupos de miembros de C++.
+
+\subsubsection{Miembros públicos}
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}|public <definición de miembro>|\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Miembros privados}
+
+%TABLA para notas, primera linea coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}|private <definición de miembro>|\\
+\hline
+\end{tabular}
+\end{center}
+
+Si se omite el nivel de acceso de un miembro, se considera como \textit{acceso de paquete}. Es decir, se tiene acceso al miembro únicamente dentro del paquete en el que la clase esta declarada\footnote{Fuente: \href{https://docs.oracle.com/javase/specs/jls/se7/html/jls-6.html\#jls-6.6.1}{Java documentation}}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Recordatorio} 
+\end{center} 
+\\ \hline
+ Es una buena costumbre de programación acceder a los atributos solamente a través de las funciones de modificación, sobre todo si es necesario algún tipo de verificación sobre el valor del atributo. Estos métodos de acceso y modificación comúnmente tienen el prefijo \textit{get} y \textit{set}, respectivamente.
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+\begin{minted}{java}
+class Fecha {
+	private int dia;
+	private int mes, an;
+	
+	public boolean setDia(int d){}   //poner día
+	public int getDia()	{} //devuelve día
+	public boolean setMes(int m){}
+	public int getMes(){}
+	public boolean setAño(int a) {}
+	public int getAño() {}
+}
+\end{minted}
+
+
+\section{Objetos de clase en Java}
+En Java todos los objetos son creados dinámicamente, por lo que se necesita reservar la memoria de estos en el momento en que se van a ocupar. El operador de Java está basado también en el de C++ y es \textit{new}\footnote{La instrucción \textit{new}, ya había sido usada para reservar memoria a un arreglo, ya que estos son considerados objetos.}.
+
+\subsection{Asignación de memoria al objeto}
+El operador \textit{new} crea automáticamente un área de memoria del tamaño adecuado, y regresa la referencia del área de memoria. Esta referencia debe de recibirla un identificador de la misma clase de la que se haya reservado la memoria. 
+
+% TABLA con más de una línea de código
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+ \mint[linenos=false]{java}|<identificador> = new Clase();|\\
+
+o en el momento de declarar a la variable de objeto:
+
+ \mint[linenos=false]{java}|Clase <identificador> = new Clase();|\\
+
+\\ \hline
+\end{tabular}
+\end{center}
+
+El concepto de \textit{new} va asociado de la noción de constructor, pero esta se verá más adelante, por el momento basta con adoptar esta sintaxis para poder completar ejemplos de instanciación.
+
+Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Ejemplo3 {
+	public int i, j;
+	
+	public static void main(String argv[]) {
+		Ejemplo3 e3= new Ejemplo3();
+        	Ejemplo3 e1= new Ejemplo3();
+
+        	e1.i=10;
+        	e1.j=20;
+        	e3.i=100;
+        	e3.j=20;
+        	System.out.println(e1.i);
+        	System.out.println(e3.i);
+	}
+ } 
+\end{minted}
+\caption{Ejemplo de clase en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una estructura de cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class Cola{
+	private int q[];
+	private int sloc, rloc;
+
+	public void ini() { 
+		sloc=rloc=-1;
+        q=new int[10];
+	}
+
+    public boolean set(int val){
+		if(sloc>=10){
+			System.out.println("la cola esta llena");
+			return false;
+		}
+		sloc++;
+		q[sloc]=val;
+		return true;
+	}
+
+	public int get(){
+        if(rloc==sloc) {
+            System.out.println("la cola esta vacia");
+            return -1;
+        }
+		else {
+			rloc++;
+			return q[rloc];
+		}
+	}
+}
+
+public class PruebaCola {
+	public static void main(String argv[]){
+
+		Cola a= new Cola(); // new crea realmente el objeto
+		Cola b= new Cola(); // reservando la memoria
+		Cola pCola= new Cola();  
+
+        //Inicializacion de los objetos
+		a.ini();
+		b.ini();
+		pCola.ini();
+
+		a.set(1);
+		b.set(2);
+		pCola.set(3);
+		a.set(11);
+		b.set(22);
+		pCola.set(33);
+
+		System.out.println(a.get());
+		System.out.println(a.get());
+		System.out.println(b.get());
+		System.out.println(b.get());
+		System.out.println(pCola.get());
+		System.out.println(pCola.get());
+	}
+}
+\end{minted}
+\caption{Ejemplo de clase con una estructura de Cola simple en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+
+\section{Clases en Ruby}
+
+La definición en \textbf{Ruby}, de manera similar a Java y C++, consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase\cite{matsumoto2002ruby}. 
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+class <nombre_clase> 
+	<cuerpo de la clase>
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Si la clase es contenida en un archivo la convención es que el nombre del archivo coincida con el nombre de la clase pero iniciando en minúsculas. Una clase $Prueba$ estará idealmente en un archivo $prueba.rb$ (en Windows se usa $.rbw$)
+
+Ejemplo\footnote{ Algunos ejemplos como este no son programas completos, sino simples ejemplos de clases. Ruby es un lenguaje interpretado. No existe un método principal que inicie la ejecución. El intérprete recibe una lista de instrucciones y éste comienza ejecutando de la línea inicial hasta la última línea. }:
+
+\begin{minted}{ruby}
+class Ejemplo01
+	def fun a,b
+		x=a
+		y=b 
+	end
+end
+\end{minted}
+
+\section{Miembros de una clase en Ruby}
+
+Los miembros en Ruby son esencialmente los atributos y los métodos de la clase.
+
+\subsection{Métodos miembro}
+
+Un método es una operación que pertenece a una clase. Los métodos son muy importantes en Ruby. En Ruby no existen funciones, pues todo el código es representado en métodos (asociados a objetos). Aunque Ruby permite definir código similar al concepto de funciones en otros lenguajes, en realidad ese código es un método asociado (por omisión) a un objeto.
+
+	La sintaxis básica para declarar a un método:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+def <nombreMétodo> [( <parámetros> ) ]
+	<instrucciones>
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Un aspecto importante a considerar es que la lista de parámetros, al igual que el uso de variables, \textbf{no} requiere definir el tipo de dato, pues este se determina en el momento de la llamada al método.
+
+Es posible añadir los símbolos ! o ? al final del nombre de un método. ! indica que el método requiere más atención que la variante con el mismo nombre sin el !.  Generalmente usado para indicar que se esta modificando al objeto sobre el cual es llamado el método. Son llamados también \textbf{métodos peligrosos}. Por ejemplo, es posible tener 2 métodos con el mismo nombre, pero el que termina en ! modifica al objeto y el otro (llamado \textbf{método seguro}) regresa una \textbf{copia} modificada del objeto. El símbolo ? indicaría que el método retorna un resultado booleano.
+
+Otro aspecto interesante es que podemos regresar un valor en un método en Ruby con $return$ o simplemente regresar el valor de la última línea de un método. Por lo que la instrucción $return$ puede usarse únicamente para finalizaciones tempranas de un método.
+
+En Ruby es posible que un método definido para una clase quede indefinido:	
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{ruby}|undef <nombreMétodo> [( <parámetros> ) ] |\\
+\hline
+\end{tabular}
+\end{center}
+
+Por ejemplo:
+
+\begin{minted}{ruby}
+class Foo
+	def foo
+	end
+end
+
+...
+
+undef foo
+\end{minted}
+
+El uso de \textit{undef} tiene que ser también dentro de la declaración de la clase, aunque sea en un momento posterior.	
+
+\subsection{Un vistazo al acceso a métodos}
+
+Si bien en Ruby existen también los miembros públicos y privados, estos son usados para proveer acceso a los métodos, puesto que \textbf{los atributos son privados}. En Ruby, \textbf{los métodos son públicos por omisión }\cite{fulton2015ruby}.
+
+\subsubsection{Métodos públicos}
+
+Accesibles donde la clase es visible.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{ruby}|public <lista de métodos>|\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Métodos privados}
+
+Accesibles solo por instancias de la clase.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{ruby}|private <lista de métodos>|\\
+\hline
+\end{tabular}
+\end{center}
+
+La lista de métodos públicos o privados debe hacer referencia a métodos previamente definidos. Otra posibilidad es, similar a otros lenguajes, definirse el método en  ese momento. 
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{minted}{ruby}
+class A
+  private
+  def metodo_privado
+    # codigo
+  end
+end
+\end{minted}
+
+\subsection{Atributos miembro}
+
+Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma. En Ruby los atributos son llamados variables de instancia, y no requieren ser declarados fuera de los métodos. Podemos usar variables de instancia conforme se necesiten. Una variable de instancia debe llevar como prefijo el símbolo @, por ejemplo:
+
+\mint[linenos=false]{ruby}|@variableInstanciaOAtributo|
+
+Ejemplo:
+\begin{minted}{ruby}
+class InstTest
+     def set_foo(n)
+       @foo = n
+     end
+     def set_bar(n)
+       @bar = n
+     end
+end
+\end{minted}
+
+El detalle es que en Ruby las variables de instancia no son accesibles externamente. Para poder accederlas debemos crear métodos de acceso como en el ejemplo pasado, o definir explícitamente el acceso a los atributos, lo que genera métodos con el nombre del atributo ( pero sin el @ ). Existen 3 tipos de acceso a los atributos:
+
+
+\begin{enumerate}
+\item \textit{attr\_accesor}. Genera acceso de lectura y escritura a la variable de instancia.
+\item \textit{attr\_reader}. Genera acceso de lectura sobre la variable de instancia.
+\item \textit{attr\_writer}. Proporciona acceso de escritura sobre la variable de instancia.
+\end{enumerate}
+
+Ejemplo:
+
+\begin{minted}{ruby}
+class Usuario
+	attr_accessor :nombre
+	attr_accessor :apellidos
+	attr_reader :login
+	attr_writer :password
+...
+def muestra
+	@nombre+”  ”+@apellidos
+end
+end
+
+\end{minted}
+
+\section{Objetos de clase en Ruby}
+
+En Ruby todos los números, arreglos, cadenas y demás entidades son objetos, lo que permite aplicar métodos definidos para esos objetos directamente a las literales:
+
+\begin{minted}{ruby}
+10.succ                 # 11
+"hola".upcase           # "HOLA"
+[2,1,5,3,4].sort       # [1,2,3,4,5]
+objeto.metodo
+\end{minted}
+
+Esto implicaría que cada objeto en Ruby es un objeto de alguna clase. De hecho es posible preguntarle a un objeto a que clase pertenece:
+
+\mint[linenos=false]{ruby}|"hola".class |
+
+O mejor aún, los métodos que la clase tiene:
+
+\mint[linenos=false]{ruby}|"hola".methods |
+
+Aunque esto puede hacerse directamente con el nombre de la clase\footnote{Para saber la razón por la que es posible usar el nombre de una clase, ver el tema de miembros de clase.}. Sin embargo el resultado puede variar, por ejemplo si le preguntamos a una clase a que clase pertenece! :
+
+\begin{minted}{ruby}
+String.class
+
+String.methods
+\end{minted}
+
+\subsection{Asignación de memoria al objeto}
+
+En Ruby, un objeto es instanciado mediante la ejecución del \textbf{método} \textit{new}, el  crea automáticamente un área de memoria del tamaño adecuado, y regresa la referencia del área de memoria. El objeto instanciado típicamente es asignado a una variable. 
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{ruby}|identificador = Clase.new   |\\
+\hline
+\end{tabular}
+\end{center}
+
+Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class Ejemplo3
+	@i  # no es necesario
+	@j	# especificar los atributos
+	def unMetodo x,y
+		@i=x
+		@j=y
+		puts "El valor de i es " + @i.to_s 
+		puts "El valor de j es " + @j.to_s
+	end
+end
+
+require "Ejemplo3"
+# ó load "Ejemplo3.rb"
+
+obj1 = Ejemplo3.new
+obj2 = Ejemplo3.new
+
+obj1.unMetodo 10,20
+obj2.unMetodo 100, 20
+\end{minted}
+\caption{Ejemplo inicial de clases y objetos en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una estructura de cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class Cola
+	@q=[]
+	@sloc= @rloc=-1
+	
+	def ini 
+		@sloc= @rloc=-1
+		@q=[]
+	end
+	
+	def set val
+		if @sloc>1000
+			puts "La cola esta llena"
+			return false
+		end
+		@sloc+=1
+		@q[@sloc]=val
+		return true
+	end
+	
+	def get
+		if @rloc == @sloc then
+			puts "La cola esta vacia"
+			return false
+		else
+			@rloc+=1
+			return @q[@rloc]
+		end
+	end 
+end
+require "Cola"
+
+a = Cola.new
+b = Cola.new
+
+a.ini
+b.ini
+
+a.set 1
+b.set 2
+a.set 11
+b.set(22)
+
+puts a.get
+puts a.get
+puts b.get
+puts b.get()
+
+a.get
+\end{minted}
+\caption{Ejemplo 2 de clase en Ruby, una estructura simple de Cola.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+
+\section{Clases en Python}
+
+Una clase en \textbf{Python} consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase. Recordar que la identación es usada en Python para definir bloques de código. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class <nombre_clase> :
+		<cuerpo de la clase>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo\footnote{ Algunos ejemplos como este no son programas completos, sino simples ejemplos de clases. Python es un lenguaje interpretado. No existe un método principal que inicie la ejecución. El intérprete recibe una lista de instrucciones y éste comienza ejecutando de la línea inicial hasta la última línea.  }:	
+
+\begin{minted}{python}
+class Ejemplo01:
+	def fun(a,b):
+		x=a
+		y=b 
+\end{minted}
+
+\section{Miembros de una clase en Python}
+
+\subsection{Métodos miembro}
+
+	Un método es una operación que pertenece a una clase. La sintaxis básica para declarar a un método:
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+def nombreMétodo( <parámetros> ) :
+	<instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Un aspecto importante a considerar es que la lista de parámetros, al igual que el uso de variables, \textbf{no} requiere definir el tipo de dato, pues éste se determina en el momento de la llamada al método.	
+
+\subsection{Atributos miembro}
+Los atributos o variables de instancia en Python deben ser declarados dentro de un método de la clase mediante:
+
+\mint[linenos=false]{python}|self.nombre= valor|
+
+Los atributos podrán ser accedidos usando la misma notación (\textit{self.nombre})
+
+Ejemplo:
+\begin{minted}{python}
+class InstTest:
+    def set_foo(self, n):
+       self.foo = n
+    def set_bar(self, n):
+       self.bar = n
+\end{minted}
+
+Es importante señalar que los métodos deben recibir al objeto en el primer parámetro. Esto se hace nombrando al primer parámetro como \textit{self}. 
+
+\subsection{Acceso a miembros en Python}
+
+Estrictamente hablando, no existen miembros realmente privados en Python, todos los miembros son considerados públicos. Sin embargo, en la práctica tenemos dos formas de declarar miembros privados.
+
+Una opción entonces es declarar a los \textbf{elementos privados por convención}, declarando el nombre del miembro precedido por un guión bajo\_. Entonces una variable \textit{privada} deberá ser nombrada, por ejemplo, como $\_foo$. Esto es una señal a los programadores de que se considera al miembro privado y no debería accederse fuera de la clase. 
+
+La otra opción es definir un \textit{miembro privado} con un nombre precedido por doble guión bajo \_ . Entonces un miembro deberá de ser nombrado, por ejemplo $\_\_foo$. Si el nombre de un atributo o método - de instancia o de clase- inicia con dos guiones bajos - y no termina con dos guiones bajos-, el miembro se considera privado. El resto de los miembros son considerados públicos \cite{pilgrim2009dive}.
+
+Tener  en cuenta que este es un mecanismo débil ya que aún se puede acceder a estos miembros \textit{privados} a través de un truco conocido como \textit{name mangling} a través del nombre de la clase ($obj.\_\_nombreClase\_\_atributo$). No se recomienda ya que va en contra del diseño orientado a objetos y puede llevar a un código más difícil de mantener y errores inesperados.
+
+Ejemplo:
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Test:
+    def __init__(self):
+        self.__test=10
+        self.test=5
+    def getTest(self):
+        return self.__test
+
+#main script  
+t= Test()
+print(t.test)
+print(t.getTest())
+print(t._Test__test) # accediendo al atributo con el nombre de la clase
+
+print(t.__test)  #genera error
+
+\end{minted}
+\caption{Ejemplo de miembros privados en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Ahora bien, Python, de manera similar a Ruby,  se adhiere al Principio de Acceso Uniforme establecido por Bertrand Meyer \cite{meyer1997object}: \textit{''Todos los servicios ofrecidos por un módulo deben estar disponibles a través de una notación uniforme, que no traicione si se implementan mediante almacenamiento o mediante computación''}.  En una forma más simple, establece que no debería haber ninguna diferencia sintáctica entre trabajar con un atributo, una propiedad calculada previamente o un método/consulta de un objeto.
+
+Entonces de acuerdo a este principio, deberíamos acceder a los atributos directamente: $foo.x=0$, en lugar de por medio de un método $foo.set_x(0)$. Acceder directamente al atributo nos permitiría hacer expresiones más cortas:
+\begin{minted}{python}
+foo.x += 1
+\end{minted}
+
+En lugar de:
+\begin{minted}{python}
+foo.set_x(foo.get_x() + 1)
+\end{minted}
+
+Sin embargo esto va en contra del principio del mínimo privilegio. 
+
+
+
+%%%%%%%%%%
+% ADVANCED
+%%%%%%%%%%
+\ifadvanced
+
+
+\subsection{Acceso administrado a atributos en Python}
+
+Python tiene un protocolo de propiedades que nos permite dirigir acciones sobre atributos para operaciones tipo \textit{get}, \textit{set}, borrado y documentación básica.
+
+Una propiedad es creada al asignarle el resultado de una función incorporada para un atributo de clase:
+
+\begin{minted}{python}
+attribute = property(fget, fset, fdel, doc)
+\end{minted}
+
+La siguiente clase usa una propiedad para trazar el acceso al atributo nombre. El dato es almacenado en $\_nombre$.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+  def __init__(self, nombre):
+    self._nombre = nombre 
+
+  def getNombre(self):
+    print('obteniendo...')
+    return self._nombre
+  
+  def setNombre(self, val): 
+    print('cambiando...')
+    self._nombre = val
+  
+  def delNombre(self):
+    print('removiendo...')
+    del self._nombre
+  nombre = property(getNombre, setNombre, delNombre, "propiedad nombre ")
+
+per1 = Persona('Bob Esponja') 
+print(per1.nombre)
+per1.nombre = 'Roberto Esponja' 
+print(per1.nombre)
+del per1.nombre    # Ejecuta delnombre
+
+print('-'*20)   
+per2 = Persona('Susana F') 
+print(per2.nombre) 
+print(Persona.nombre.__doc__)  # O help(Persona.nombre)
+
+\end{minted}
+\caption{Definiendo las propiedades de acceso de un tributo en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Cuando el código es ejecutado, dos instancias reciben la propiedad del atributo, como sería con cualquier otro atributo definido en la clase.
+
+\subsubsection{Atributos calculados/validados}
+
+La ventaja de atributos administrados es que combinan la simplicidad de dar la impresión de acceder directamente al atributo al mismo tiempo que pueden hacer un cálculo o una validación.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class PropCuadrado:
+  def __init__(self, v): 
+    self.val = v 
+  def getX(self):           # Obtiene el atributo
+    return self.val ** 2 
+  def setX(self, val):    # asigna en el atributo
+    self.val = val 
+  X = property(getX, setX)   # Sin propiedades del o docs
+
+P= PropCuadrado(3)      # Dos instancias de la clase con property 
+Q= PropCuadrado(32)     # Cada una tiene un estado distinto
+
+print(P.X)          # 3 ** 2
+P.X = 4 
+print(P.X)          # 4 ** 2
+print(Q.X)          # 32 ** 2 (1024)
+
+\end{minted}
+\caption{Uso clásico de métodos get y set en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Definiendo propiedades de atributos con \textit{Decorators}}
+
+Podemos también definir los métodos de acceso (\textit{getter} y \textit{setter}) y de borrado usando decoraciones (\textit{decorators})
+
+Ejemplo:
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Foo:
+    def __init__(self):
+        self.__foo = 0
+
+    @property
+    def foo(self):  
+        return self.__foo
+
+    @foo.setter
+    def foo(self, value):
+        self.__foo = value
+
+f= Foo()
+f.foo= "asignando a través del método setter"
+print("Desplegando mediante el getter", f.foo)
+\end{minted}
+\caption{Ejemplo de decorators en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Veamos ahora el ejemplo inicial ahora con métodos decorados.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+  def __init__(self, nombre):
+    self._nombre = nombre 
+
+  @property
+  def nombre(self):
+    "propiedad nombre"
+    print('obteniendo...')
+    return self._nombre
+
+  @nombre.setter
+  def nombre(self, val): 
+    print('cambiando...')
+    self._nombre = val
+  
+  @nombre.deleter
+  def nombre(self):
+    print('removiendo...')
+    del self._nombre
+
+per1 = Persona('Bob Esponja') 
+print(per1.nombre)
+per1.nombre = 'Roberto Esponja' 
+print(per1.nombre)
+del per1.nombre    # Runs delnombre
+
+print('-'*20)   # sue inherits property too
+per2 = Persona('Susana F') 
+print(per2.nombre) 
+print(Persona.nombre.__doc__)  # Or help(Persona.nombre)
+
+\end{minted}
+\caption{Ejemplo de clase Persona con decorators en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsubsection{Definiendo propiedades de atributos con Descriptores}
+
+Otra opción para el manejo de atributos es el uso de descriptores (\textit{descriptors}). En realidad es otra forma de describir las propiedades de los atributos pero ahora en una clase separada. Los descriptores son creados entonces como clases independientes, y asignados a atributos de clase. Como una propiedad, una clase descriptora maneja un único atributo, pero al tener su propio alcance (siendo clases) pueden manejar las propiedades para atributos más complejos de una mejor manera.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class Descriptor:
+  "inserta aqui cadena de descripción"
+  def __get__(self, instance, owner): ... # regresa valor del atributo
+  def __set__(self, instance, value): ... # regresa nada None) 
+  def __delete__(self, instance): ...  # regresa nada (None)
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Nombre:
+    "propiedad nombre"
+    def __get__(self, instancia, dueño):
+      print('obteniendo...')
+      return instancia._nombre
+    def __set__(self, instancia, val):
+      print('cambiando...')
+      instancia._nombre = val
+    def __delete__(self, instancia):
+      print('borrando...') 
+      del instancia._nombre
+
+class Persona:
+    def __init__(self, nombre):
+      self._nombre = nombre 
+    nombre = Nombre()
+
+per1 = Persona('Bob Esponja') 
+print(per1.nombre)
+per1.nombre = 'Roberto Esponja' 
+print(per1.nombre)
+del per1.nombre    
+
+print('-'*20)   
+per2 = Persona('Susana F') 
+print(per2.nombre) 
+print(Nombre.__doc__)  
+
+
+\end{minted}
+\caption{Ejemplo de clase Persona con descriptores en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Inclusive se puede poner como clase anidada:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+    def __init__(self, nombre):
+        self._nombre = nombre
+    class Nombre:
+        "propiedad nombre"
+        def __get__(self, instancia, dueño):
+            print('obteniendo...')
+            return instancia._nombre
+        def __set__(self, instancia, val):
+            print('cambiando...')
+            instancia._nombre = val
+        def __delete__(self, instancia):
+            print('borrando...')
+            del instancia._nombre
+  
+    nombre = Nombre()
+
+#script de prueba
+per1 = Persona('Bob Esponja')
+print(per1.nombre)
+per1.nombre = 'Roberto Esponja'
+print(per1.nombre)
+del per1.nombre
+print('-'*20)
+per2 = Persona('Susana F')
+print(per2.nombre)
+print(Persona.Nombre.__doc__) 
+
+\end{minted}
+\caption{Ejemplo de clase Persona con descriptores en clase anidada en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Manejo genérico de atributos}
+
+También es posible manejar el acceso a los atributos redefiniendo los métodos especiales de acceso getattr, setattr y delattr.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Persona:
+  def __init__(self, nombre):
+    self._nombre = nombre       #lanza __setattr__
+
+  def __getattr__(self, attr): 
+    print('get: ' + attr)
+    if attr == 'nombre':        #intercepta nombre
+      return self._nombre       # no se cicla al ser el atributo real
+    else:                       #otros son errores
+      raise AttributeError(attr)
+  
+  def __setattr__(self, attr, val): 
+    print('set: ' + attr)
+    if attr == 'nombre':
+      attr = '_nombre'          #asigna nombre interno
+    self.__dict__[attr] = val   #evita ciclado recursivo de __setattr__
+
+  def __delattr__(self, attr): 
+    print('del: ' + attr)
+    if attr == 'nombre':
+      attr = '_nombre'          #evita ciclado recursivo 
+    del self.__dict__[attr]     #aunque mucho menos común
+
+per1 = Persona('Bob Esponja')   
+print(per1.nombre)              #Corre __getattr__
+per1.nombre = 'Roberto Esponja' #Corre __setattr__
+print(per1.nombre)
+del per1.nombre                 #Corre __delattr__
+
+print('-'*20)   
+per2 = Persona('Susana F') 
+print(per2.nombre) 
+
+\end{minted}
+\caption{Ejemplo de clase Persona con manejo genérico de atributos en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% ADVANCED_END
+%%%%%%%%%%
+
+\section{Objetos de clase en Python}
+
+En Python todos los números, arreglos, cadenas y demás entidades son objetos. Cada objeto tiene un valor, un identificador y un tipo. El identificador del objeto y el tipo pueden ser accedidos mediante las operaciones $id()$ y $type()$ respectivamente:
+
+\begin{minted}{python}
+>>> n=10
+>>> id(n)
+3492368
+>>> type(n)
+<class 'int'>
+>>> arr=[2,3,4]
+>>> id(arr)
+19201080
+>>> type(arr)
+<class 'list'>
+\end{minted}
+
+\subsection{Asignación de memoria al objeto}
+
+En Python, un objeto es instanciado mediante la ejecución objeto de la clase que se quiere instanciar, éste crea automáticamente un área de memoria del tamaño adecuado, y regresa la referencia del área de memoria. El objeto instanciado típicamente es asignado a una variable. 
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{python}|identificador = Clase()|\\
+\hline
+\end{tabular}
+\end{center}
+
+Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Ejemplo3:
+    def unMetodo(self, x, y):
+        self.i=x
+        self.j=y
+        print("El valor de i es " + str(self.i)) 
+        print("El valor de j es " + str(self.j))
+# script de ejecucion
+obj1= Ejemplo3()
+obj2= Ejemplo3()
+obj1.unMetodo(10, 20)
+obj2.unMetodo(100, 200)
+\end{minted}
+\caption{Ejemplo de clases en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una estructura de cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Cola:
+    def ini(self):
+        self.sloc= self.rloc=-1
+        self.q=[]
+
+    def setC(self, val):
+        if self.sloc>1000:
+            print("La cola esta llena")
+            return False
+        self.sloc+=1
+        self.q.append(val)
+        return True
+
+    def getC(self):
+        if self.rloc == self.sloc:
+            print("La cola esta vacia")
+            return False
+        else:
+            self.rloc+=1
+            return self.q[self.rloc]
+
+# script de ejecucion
+a = Cola()
+b = Cola()
+
+a.ini()
+b.ini()
+
+a.setC(1)
+b.setC(2)
+a.setC(11)
+b.setC(22)
+
+print(a.getC())
+print(a.getC())
+print(b.getC())
+print(b.getC())
+
+a.getC()
+\end{minted}
+\caption{Ejemplo.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+
+\section{Clases en Scala}
+
+Una clase en \textbf{Scala} consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+class <nombre_clase> {
+	<cuerpo de la clase>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{scala}
+class Ejemplo01 {
+  def fun(a:int,b:int) {
+    var x: int =a
+    val y: int =b
+    ...
+  }
+}
+\end{minted}
+
+\section{Miembros de una clase en Scala}
+
+\subsection{Métodos miembro}
+
+	Un método es una operación que pertenece a una clase. La sintaxis básica para declarar a un método:
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+def nombreMétodo [( <parámetros> ) ][: tipo retorno] =
+	<instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+La lista de parámetros es opcional. Un método sin parámetros no requiere los paréntesis en su uso (definición y/o llamada):
+
+\mint[linenos=false]{scala}|def foo = ''foo''|
+
+\subsubsection{Atributos miembro}
+
+Los atributos Scala deben ser declarados dentro la clase mediante:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{scala}|var nombre: tipo [= valor]|\\
+\hline
+\end{tabular}
+\end{center}
+
+Los atributos podrán ser accedidos usando la misma notación. 
+
+Es posible también definir atributos que no van a cambiar (su referencia, aunque el objeto referenciado pueda cambiar -similar a elementos final en Java-):
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{scala}|val nombre: tipo [= valor]|\\
+\hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{scala}
+class InstTest {
+  var foo: Int
+  var bar: Int
+}
+\end{minted}
+
+Scala puede inferir el tipo de dato cuando estos son inicializados:
+
+\mint[linenos=false]{scala}|var s= "cadena"  |
+
+\subsection{Un vistazo al acceso a miembros}
+
+La declaración de visibilidad o acceso a miembros es similar a la de Java y C\#. Sin embargo, los miembros son considerados \textbf{públicos por omisión }y no existe un modificador para este tipo de acceso.
+
+\subsubsection{Miembros públicos}
+Visibles donde la clase sea visible. No se tiene una palabra reservada para especificar al miembro como público.
+
+\subsubsection{Miembros privados}
+Solamente son accesible dentro de la clase (o tipo) que lo define, y sus tipos anidados. Accesibles únicamente dentro del mismo paquete.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{scala}|private <definición de miembro> |\\
+\hline
+\end{tabular}
+\end{center}
+
+Existen otras opciones de accesibilidad que serán comentadas más adelante. Ejemplo:
+
+\begin{minted}{scala}
+class Fecha {
+	private var dia: int
+	private var mes, an: int
+	
+	def setDia(d: Int): Boolean = {} 
+ 	def getDia(): Int =	{} 
+	def setMes(m: Int): Boolean = {}
+	def getMes(): Int = {}
+	def setAn(a: Int): Boolean = {}
+	def getAn(): Int = {}
+}
+\end{minted}
+
+\section{Objetos de clase en Scala}
+
+Scala es un lenguaje puro orientado a objetos. Todos los números, arreglos, cadenas y demás entidades son objetos. A diferencia de Java, inclusive los números y las funciones son considerados objetos. 
+
+\subsection{Números como objetos}
+
+\begin{minted}{scala}
+scala> 1
+res1: Int = 1
+
+scala> 1  
+res2: Int = 1
+
+scala> 1+2
+res3: Int = 3
+
+scala> (1).+(2)
+res4: Int = 3
+\end{minted}
+
+\subsection{Funciones como objetos}
+
+Puesto que Scala considera a las funciones como objetos, es posible pasar las funciones como argumentos en los parámetros, almacenarlos en variables y regresarlos como resultado de otras funciones. El hecho de que las funciones sean consideradas \textit{first-class citizens } es lo que hace que Scala puede ser considerado también un lenguaje con capacidades de \textbf{programación funcional}!
+
+\subsection{Asignación de memoria al objeto}
+
+En Scala, un objeto es instanciado igual que en Java, usando la instrucción \textit{new} seguida del nombre de la clase. El objeto instanciado típicamente es asignado a una variable. La variable puede o no haber sido definida con anterioridad. La excepción sería n los objetos que corresponden a valores primitivos en Java, para los cuales no es necesario usar específicamente el constructor. De hecho, tratar de usar un constructor para estos tipos generará un error de compilación.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{scala}|identificador = new Clase()|\\
+\hline
+\end{tabular}
+\end{center}
+
+Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Ejemplo3 {
+  private var i: Int =0
+  private var j: Int =0
+  def unMetodo(x: Int, y: Int) = {
+        i=x
+        j=y
+        println("El valor de i es " + i) 
+        println("El valor de j es " + j)
+  }
+}
+
+object HolaMundo {
+  def main(args: Array[String])  ={
+    var obj1 : Ejemplo3 = new Ejemplo3
+    var obj2 = new Ejemplo3
+    
+    obj1.unMetodo(10, 20)
+    obj2.unMetodo(100, 200)
+  }
+}
+\end{minted}
+\caption{Ejemplo de clase en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una estructura de cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Cola {
+  private var sloc, rloc = 0
+  private var q = new Array[Int] (0)//0 elementos
+  
+  def ini() = {
+    sloc  = -1
+    rloc = -1
+    q= new Array[Int] (10) //10 elementos
+  }
+
+def setC(valor: Int):Boolean = {
+    if (sloc>1000){
+    	println("La cola esta llena")
+        return false
+    }
+    sloc+=1
+    q(sloc)=valor
+    return true
+  }
+ 
+  def get :Int ={
+    if (rloc == sloc){
+      println("La cola esta vacia")
+      return -1
+    } else {
+      rloc += 1
+      return q(rloc)
+    }
+  }
+}
+
+object ColaTest {
+  def main(args : Array[String])  = {
+    val a,b: Cola = new Cola
+      
+    a.ini()
+    b.ini()
+
+    a.setC(1)
+    b.setC(2)
+    a.setC(11)
+    b.setC(22)
+
+    println(a.get)
+    println(a.get)	
+    println(b.get)
+    println(b.get)
+
+    a.get
+  }
+} 
+\end{minted}
+\caption{Ejemplo de clases en Scala, una estructura de Cola simple.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+
+\section{Clases en C\#}
+
+La definición en \textbf{C\#}, de manera similar a C++ y Java, consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase encerrado entre llaves. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+class <nombre_clase> {
+	<cuerpo de la clase>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{csharp}
+	public class Ejemplo01	{
+		int x;
+		float y;
+		void fun(int a, float b){
+			x=a;
+			y=b;
+		}
+	}
+\end{minted}
+
+\section{Miembros de una clase en C\#}
+
+Los miembros en C\# son esencialmente los atributos y los métodos de la clase.
+
+\subsection{Atributos miembro}
+
+Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma.
+
+La sintaxis mínima es la siguiente:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}|tipo nombreAtributo;   |\\
+ 
+ Los atributos pueden ser inicializados desde su lugar de declaración:
+ 
+\mint[linenos=false]{csharp}|tipo nombreAtributo = valor;  |\\
+
+o, en el caso de variables de objetos:
+
+\mint[linenos=false]{csharp}|tipo nombreAtributo = new Clase(); |\\
+
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Métodos miembro}
+
+	Un método es una operación que pertenece a una clase. \textbf{No} es posible declarar métodos fuera de la clase. Además, no existe el concepto de método prototipo como en C++.
+
+	Sin embargo, igual que en C++, la declaración de una función ó método miembro es considerada dentro del ámbito de su clase. 
+
+	La sintaxis básica para declarar a un método:
+	
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+tipoRetorno nombreMétodo ( [<parámetros>] ) {
+	<instrucciones>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}	
+
+\subsection{Tipos de parámetros}
+
+Existen 4 tipos de paso de parámetros en C\#. Pasó de parámetros por valor, por referencia, parámetros de salida y arreglos de parámetros.
+
+\begin{itemize}
+\item \textbf{Pasó de parámetros por valor}. Este es el tipo de parámetros por omisión. Se manda una copia del valor, sea un tipo de dato simple (o una enumeración o estructura), o una copia de la referencia al objeto.
+\item \textbf{Por referencia}. Parámetros por referencia usan la palabra clave \textit{ref}, y no usan los valores de las variables, sino las variables mismas. Ejemplo:
+
+\begin{minted}{csharp}
+void foo(ref MiClase c) {
+	c=null;
+}
+\end{minted}
+
+La modificación de c permanece después de la llamada al método \textit{foo}.
+
+\item \textbf{Parámetros de salid}a. Parámetros de salida usan la palabra clave \textit{out}, y no usan los valores de las variables, sino las variables mismas. Es similar al parámetro por referencia pero se considera como un parámetro sin asignación en la llamada al método, y el método debe asignarle un valor antes de terminar su ejecución.
+\item \textbf{Arreglos de parámetros}. Permiten pasar un número variable de parámetros en una llamada a un método. Utiliza el modificador \textit{params} en la definición del método. El número de parámetros puede ser de cero a n, respetando el tipo de dato del parámetro. Ejemplo:
+\begin{minted}{csharp}
+void muestra (params int[] num){
+    foreach (int x in num)
+    {
+        Console.Write (x+" ");
+    }
+    Console.WriteLine();
+}
+\end{minted}
+
+Llamando al método:
+
+\begin{minted}{csharp}
+muestra(1, 2, 3, 4, 5);
+int[] arr = {99, 88, 77};
+muestra(arr);
+\end{minted}
+
+\end{itemize}
+
+\subsection{Un vistazo al acceso a miembros}
+
+En C\#, como en Java, se define el acceso a cada miembro de manera unitaria, al contrario de la definición de acceso por grupos de miembros de C++. Miembros en clases son considerados privados por omisión\footnote{Accessibility Levels (C\# Reference) \href{ https://msdn.microsoft.com/en-us/library/ba0a1yw2.aspx}{(C\# Reference)}}.
+
+\subsubsection{Miembros públicos}
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}|public <definición de miembro>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Miembros privados}
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}|private <definición de miembro>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Miembros internos}
+Miembros definidos de esta manera son accesibles por métodos de cualquier clase que se encuentre en el mismo \textit{assembly}\footnote{Un \textit{assembly} es una colección de archivos compilados reunidos como un archivo ejecutable o un $DLL$.}. 
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}|internal <definición de miembro>  |\\
+\hline
+\end{tabular}
+\end{center}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Recordatorio} 
+\end{center} 
+\\ \hline
+Es una buena costumbre de programación acceder a los atributos solamente a través de las funciones de modificación, sobre todo si es necesario algún tipo de verificación sobre el valor del atributo. Estos métodos de acceso y modificación comúnmente tienen el prefijo \textit{get} y \textit{set}, respectivamente.   
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{csharp}
+public class Fecha{
+		private int dia;
+		private int mes, an;
+	
+		public bool setDia(int d){}   //poner día
+		public int getDia()	{} //devuelve día
+		public bool setMes(int m){}
+		public int getMes(){}
+		public bool setAn(int a) {}
+		public int getAn() {}
+	}
+\end{minted}
+
+\section{Objetos de clase en C\#}
+
+Como en Java, en C\# todos los objetos son creados dinámicamente, por lo que se necesita reservar la memoria de estos en el momento en que se van a ocupar. El operador es también \textit{new}.
+
+\subsection{Asignación de memoria al objeto}
+
+	El operador \textit{new} crea automáticamente un área de memoria del tamaño adecuado, y regresa la referencia del área de memoria. Esta referencia debe de recibirla un identificador de la misma clase de la que se haya reservado la memoria. 
+	
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{csharp}| <identificador> = new Clase();  |\\
+ o en el momento de declarar a la variable de objeto:
+  \mint[linenos=false]{csharp}| Clase <identificador> = new Clase();  |\\
+\hline
+\end{tabular}
+\end{center}	
+	
+El concepto de \textit{new} va asociado de la noción de constructor, pero esta se verá más adelante, por el momento basta con adoptar esta sintaxis para poder completar ejemplos de instanciación.	
+
+Un \textcolor{blue}{ejemplo} completo:	
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+
+namespace Application
+{
+	public class Ejemplo3 {
+		public int i, j;
+	
+		static void Main() {
+			Ejemplo3 e3= new Ejemplo3();
+        		Ejemplo3 e1= new Ejemplo3();
+
+        		e1.i=10;
+        		e1.j=20;
+        		e3.i=100;
+        		e3.j=20;
+        	
+			Console.WriteLine(e1.i);
+        		Console.WriteLine(e3.i);
+		}
+ 	} 
+}
+\end{minted}
+\caption{Ejemplo de clase en C\#.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una estructura de cola:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {csharp}
+using System;
+
+namespace Application
+{
+
+	class Cola{
+		private int [] q;
+		private int sloc, rloc;
+
+		public void ini() { 
+			sloc=rloc=-1;
+        		q=new int[10];
+		}
+
+		public bool set(int val){
+			if(sloc>=10){
+				Console.WriteLine("la cola esta llena");
+				return false;
+			}
+			sloc++;
+			q[sloc]=val;
+			return true;
+		}
+
+		public int get(){
+        	  if(rloc==sloc) {
+            	Console.WriteLine("la cola esta vacia");
+            	return -1;
+        	  }
+		  else {
+				rloc++;
+				return q[rloc];
+		  }
+		}
+	}
+
+	public class PruebaCola {
+		static void Main(){
+
+			Cola a= new Cola(); // new crea realmente el objeto
+			Cola b= new Cola(); // reservando la memoria
+			Cola pCola= new Cola();  
+
+    	    		//Inicializacion de los objetos
+			a.ini();
+			b.ini();
+			pCola.ini();
+
+			a.set(1);
+			b.set(2);
+			pCola.set(3);
+			a.set(11);
+			b.set(22);
+			pCola.set(33);
+
+			Console.WriteLine(a.get());
+			Console.WriteLine(a.get());
+			Console.WriteLine(b.get());
+			Console.WriteLine(b.get());
+			Console.WriteLine(pCola.get());
+			Console.WriteLine(pCola.get());
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo 2 de clase en C\#, una estructura simple de Cola.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Clases en D}
+
+La definición de una en \textbf{D} consiste de la palabra reservada \textit{class}, seguida del nombre de la clase y finalmente el cuerpo de la clase encerrado entre. Recordar que D es un lenguaje sintácticamente similar a C++.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+class <nombre_clase> {
+	<cuerpo de la clase>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{d}
+class Ejemplo1 {
+	int x;
+ 	float y;
+ 	void fun(int a, float b) {
+		x=a;
+		y=b;
+ 	}
+}
+\end{minted}
+
+\section{Miembros de una clase en D}
+
+	Al igual que en C++, en D una clase está formada por un conjunto de miembros que pueden ser datos, funciones, clases anidadas, enumeraciones, tipos de dato, etc. 
+	
+Ejemplo:
+
+\begin{minted}{d}
+class Ejemplo2{
+	int i;
+	int i;   //error
+	int j;
+	void func() {}
+}
+\end{minted}
+
+\subsection{Atributos miembro}
+
+Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma.
+
+\subsection{Métodos miembro}
+
+	Los métodos al igual que los atributos, deber ser definidos en la clase. A diferencia de C++, la definición completa del método debe ir dentro de la clase.
+
+Ejemplo:
+
+\begin{minted}{d}
+//código en ejemplo3.h
+class Ejemplo3 {
+	public:
+	int x;
+ 	float y;
+ 	int funX(int a) {
+		x=a;
+		return x;
+	}
+}
+\end{minted}
+	
+\subsection{Un vistazo al acceso a miembros}
+
+\subsubsection{Miembros públicos}
+
+Se utiliza cuando queremos dar a usuarios de una clase(no implementadores el acceso a miembros de esa clase, los miembros deben ser declarados públicos.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+public:
+		<definición de miembros>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Miembros privados}
+
+Si queremos ocultar ciertos miembros de una clase de los usuarios de la misma, debemos declarar a los miembros como privados Por omisión los miembros se consideran privados %requiere referencia
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+private:
+		<definición de miembros>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+\begin{minted}{d}
+class Fecha {
+   	private:
+	  int dia;
+	  int mes;
+	  int an;
+
+	public:
+	  char setDia(int d) {…}   //poner día
+	  int getDia(){…}	//devuelve día
+	  char setMes(int m) {…}
+	  int getMes(){…}
+	  char setAn(int a) {…}
+	  int getAn(){…}
+}
+\end{minted}
+
+\section{Objetos de clase en D}
+
+Vamos a ver como es posible crear objetos o instancias de clase en D.  En D, un objeto es una variable de un tipo definido por el usuario\cite{alexandrescu2010d}. Para indicar al recolector de basura que un objeto se puede liberar, es posible ejecutar \textit{objeto.destroy()}\footnote{Anteriormente se usaba la instrucción \textit{delete}, pero ha sido descontinuada en las versiones actuales del compilador: \textit{Deprecation: The delete keyword has been deprecated.  Use object.destroy() (and core.memory.GC.free() if applicable) instead}.
+1}.
+
+%La instrucción \textit{delete} existe en D para decirle al $gc$ que la memoria esta lista para liberarse, aunque hay la intención de desaprobarla en futuras versiones del lenguaje.
+
+Un \textcolor{blue}{ejemplo} completo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Ejemplo3;
+import std.stdio;
+
+class Ejemplo3 {
+	public:
+		int i;
+		int j;
+}
+
+void main(string[] args) {
+	Ejemplo3 e1= new Ejemplo3;
+	Ejemplo3 e2= new Ejemplo3();
+	e1.i=10;
+	e1.j=20;
+	e2.i=100;
+	e2.j=20;
+	writeln(e1.i);
+	writeln(e2.i);
+}
+\end{minted}
+\caption{Ejemplo de clase en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Otro \textcolor{blue}{ejemplo}, una cola:
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Cola;
+
+import std.stdio;
+
+class Cola{
+	private:
+	  int [10] q;
+	  int sloc, rloc;
+	public:
+	  void ini() {
+		sloc=rloc=-1;
+	  }
+	  
+	  char set(int val){
+		  if(sloc>=10){
+			  writeln("la cola esta llena");
+			  return 0;
+		  }
+		  sloc++;
+		  q[sloc]=val;
+		  return 1;
+	  }
+	  
+	  int get(){
+		  if(rloc==sloc)
+			  writeln("la cola esta vacia");
+		  else {
+			  rloc++;
+			  return q[rloc];
+		  }
+		  return 0;
+	  }
+}
+
+//cola definida en un arreglo
+int main(){
+	Cola a,b, pCola= new Cola; 
+	a= new Cola;
+	b= new Cola;
+	
+	a.ini();
+	b.ini();
+	pCola.ini();
+	a.set(1);
+	b.set(2);
+	pCola.set(3);
+	a.set(11);
+	b.set(22);
+	pCola.set(33);
+	writeln(a.get());
+	writeln(a.get());
+	writeln(b.get());
+	writeln(b.get());
+	writeln(pCola.get());
+	writeln(pCola.get());	
+   	pCola.destroy();
+   	return 0;
+}
+\end{minted}
+\caption{Ejemplo 2 de clase en D, una estructura de Cola simple.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+
+\section{Usando la palabra reservada this en C++, C\#, D, Scala y Java}
+
+Cuando en algún punto dentro del código de algunos de los métodos se quiere hacer referencia al objeto ligado en ese momento con la ejecución del método, podemos hacerlo usando la palabra reservada \textit{this}. 
+
+	Una razón para usarlo es querer tener acceso a algún atributo posiblemente oculto por un parámetro del mismo nombre.
+
+También puede ser usado para regresar el objeto a través del método, sin necesidad de realizar una copia en un objeto temporal.
+
+La sintaxis es la misma en C++ y en Java, con la única diferencia del manejo del operador de indirección “*” si, por ejemplo, se quiere regresar una copia y no la referencia del objeto. \textbf{D}, \textbf{C\#} y \textbf{Scala} también utilizan \textit{this}.
+
+Ejemplo en C++:
+\begin{minted}{cpp}
+Fecha Fecha::getFecha(){
+	return *this;
+}
+\end{minted}
+
+Ejemplo en Java:
+\begin{minted}{java}
+class Fecha {
+	private int dia;
+	private int mes, an;
+	…
+	public Fecha getFecha(){
+		 return this;
+    }   
+	…
+}
+\end{minted}
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+
+\section{Usando la palabra reservada \textit{self} en Ruby}
+
+En Ruby, para hacer referencia en un método al objeto donde es ejecutado el método (el mismo que recibe el mensaje) se usa la palabra reservada \textit{self}, en lugar de \textit{this}. 
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class SelfEjemplo
+	@x=0
+	@y=0
+	def getSelfEjemplo
+		return self
+	end
+	attr_accessor :x, :y
+end
+
+#código de prueba
+obj1= SelfEjemplo.new
+
+obj1.x=10
+puts obj1.x	
+obj1.y="YY"
+puts obj1.y
+
+obj2=obj1.getSelfEjemplo
+
+puts obj2.x
+
+obj1.y=123
+puts obj1.y  # despliega 123
+puts obj2.y  # despliega 123 
+\end{minted}
+\caption{Ejemplo de uso de \textit{self} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+
+\section{Usando \textit{self} en Python}
+
+En Python, el primer argumento de un método es llamado \textit{self}. Esto no es más que una convención puesto que no se trata de una palabra reservada. Es utilizado para identificar al objeto que ejecuta al método y es necesario inclusive para el uso de sus atributos y métodos, como se ha visto en ejemplos anteriores.
+	
+\textcolor{blue}{Ejemplo:}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+
+class SelfEjemplo:
+    def ini(self):
+        self.x=0
+        self.y=0
+        
+    def getSelfEjemplo(self):
+        return self
+
+
+# script de ejecucion
+obj1 = SelfEjemplo()
+obj1.ini()
+
+obj1.x=10
+print(obj1.x)
+obj1.y="YY"
+print(obj1.y)
+
+obj2=obj1.getSelfEjemplo()
+
+print(obj2.x)
+
+obj1.y=123
+print(obj1.y) #despliega 123
+print(obj2.y) #despliega 123
+
+\end{minted}
+\caption{Ejemplo de uso de \textit{self} en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+\newpage

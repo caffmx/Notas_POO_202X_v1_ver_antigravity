@@ -1,0 +1,376 @@
+\chapter{Multihilos: Introducción a la Programación Concurrente en Java}
+
+\section{Introducción}
+
+Un programa concurrente es aquel que puede ejecutar varias tareas al mismo tiempo. Aunque en la vida diaria las cosas suceden concurrentemente o en paralelo, es interesante notar que los principales lenguajes de programación no permiten especificar actividades concurrentes de manera natural. Antes de Java, el lenguaje Ada implemento, como parte de su lenguaje, primitivas de concurrencia. Sin embargo, \textbf{Ada} no se hizo un lenguaje popular  a pesar de haber sido el lenguaje oficial para el desarrollo de aplicaciones para el Departamento de Defensa de los Estados Unidos.
+
+En general, si se quieren crear tareas concurrentes en un lenguaje como C++, se realiza a través de llamadas a primitivas de control del sistema operativo. Lógicamente, estas primitivas dependen del dominio que tenga el programador sobre la plataforma (no tanto del lenguaje) y varían de un sistema operativo a otro.
+
+El lenguaje Java permite un manejo relativamente fácil de procesos concurrentes, respetando la independencia de la plataforma. Esto quiere decir que un programa con manejo de concurrencia en Java corre sin ninguna modificación en las máquinas cuyos sistemas operativos cuenten con una máquina virtual de java\footnote{En realidad puede existir alguna diferencia en el comportamiento de los programas, pero se ahondará en el tema más adelante.}. 
+
+\section{Concurrencia}
+
+Pero retrocedamos un poco y vamos a ponernos de acuerdo en el concepto de concurrencia. Veamos la diferencia entre concurrencia y paralelismo.
+
+Creo que estaremos de acuerdo en que las \textbf{operaciones secuenciales} son aquellas que ocurren una después de otra; es decir, están ordenadas en el tiempo. De aquí se desprende que las \textbf{operaciones paralelas} son aquellas que ocurren al mismo tiempo. Es común hablar de paralelismo cuando hablamos de operaciones de hardware.  
+
+Sin embargo al hablar de concurrencia nos referimos por lo general al código fuente, donde un conjunto de operaciones son concurrentes si pueden ejecutarse en paralelo, lo que no quiere decir que obligatoriamente se ejecuten así. Es por eso que podemos tener procesos concurrentes sin tener hardware paralelo. Por ejemplo, las computadoras con \textit{Windows} que realizan varios procesos al mismo tiempo como mandar a imprimir, bajar un archivo de Internet, enviar un \textit{eMail}, etc. Las PC's son por lo general de un solo procesador y no cuentan con procesamiento paralelo; sin embargo, estamos realizando procesos concurrentes. Lo mismo sucede con todas las máquinas que tienen un solo procesador y cuentan con sistema operativo  multitareas como  \textit{Unix} o \textit{Linux}\footnote{Independientemente de que algunos sistemas operativos pueden ser usados en máquinas con múltiples procesadores.}.  Podemos decir que la concurrencia es cuando un conjunto de instrucciones no depende de otro conjunto y no importa el orden de ejecución entre ellas: son \textbf{potencialmente paralelas}.	
+
+\section{Multihilos}
+
+Existen diversas técnicas de manejo de procesos concurrentes. Java maneja la concurrencia a través de los hilos (\textit{threads}) de control. Los hilos tienen la característica de ejecutarse cada uno de ellos como un proceso independiente pero compartiendo un único espacio de direcciones.  Estos procesos se conocen como \textbf{procesos ligeros} o hilos\footnote{También llamados \textbf{contextos de ejecución}}, a diferencia de los demás procesos que no comparten el espacio de direcciones y donde la comunicación tiene que darse a través de primitivas de comunicación (semáforos, monitores o mensajes).
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{imagenes/multihilos01.png}
+    \caption{ Múltiples procesos vs. múltiples hilos en un proceso }
+    \label{fig:multihilos01}
+\end{figure}	
+
+Los procesos ligeros o hilos son como miniprocesos, pues cada hilo se ejecuta de forma secuencial, con su propio contador de programa y pila de control. Además, al igual que los procesos, en una máquina de un solo procesador se van turnando su ejecución, lo que se conoce como \textbf{tiempo compartido}.
+
+Anteriormente se mencionó que los hilos comparten un único espacio de direcciones. Esto quiere decir que tienen acceso a las mismas variables globales\footnote{ El concepto de variables globales no existe en Java, pero es un término común que nos da la idea del alcance. No olvidar además que el manejo de hilos nuevo o exclusivo del lenguaje Java.} o ámbito  de trabajo. En términos de objetos, los objetos de un hilo pueden ver a los de otro hilo si el alcance y las restricciones de acceso se lo permiten. 
+
+\section{Multihilos en Java}
+
+Aunque de manera estricta todos los programas de Java manejan más de un hilo, de vista al usuario los programas por lo general son de un único hilo de control (\textbf{flujo único}). Sin embargo pueden contar con varios hilos de control (\textbf{flujo múltiple}).
+
+Existen dos formas de implementar hilos en un programa de Java. La forma más común es mediante herencia, extendiendo la clase \textit{Thread}.
+
+\subsection{Programas de flujo único}
+
+Un programa de flujo único utiliza un único hilo de control  para controlar su ejecución. Muchos programas no necesitan la potencia o utilidad de múltiples flujos de control. Sin necesidad de especificar explícitamente que se quiere un único flujo de control, muchas de las aplicaciones son de flujo único.
+
+Por ejemplo, en la aplicación clásica de ''Hola mundo!'':
+
+\begin{minted}{java}
+public class HolaMundo {
+    static public void main( String args[] ) {
+        System.out.println( "Hola Mundo!" );
+    }
+}
+\end{minted}
+
+Aquí, cuando se llama a \textit{ main()}, la aplicación imprime el mensaje y termina. Esto ocurre dentro de un único hilo.
+
+\subsection{Programas de flujo múltiple}
+
+Los programas en Java implementan un flujo único de manera implícita. Sin embargo, Java posibilita la creación y control de hilos explícitamente. La utilización de hilos en Java, permite una enorme flexibilidad a los programadores a la hora de plantearse el desarrollo de aplicaciones. La simplicidad para crear, configurar y ejecutar hilos, permite que se puedan implementar muy poderosas y portables aplicaciones. 
+
+Las aplicaciones multihilos utilizan muchos contextos de ejecución para cumplir su trabajo. Hacen uso del hecho de que muchas tareas contienen subtareas distintas e independientes. Se puede utilizar un hilo para cada subtarea.
+
+Mientras que los programas de flujo único pueden realizar su tarea ejecutando las subtareas secuencialmente, un programa multihilos permite que cada hilo comience y termine tan pronto como sea posible. Este comportamiento presenta una mejor respuesta a las necesidades de muchas aplicaciones.
+
+	Veamos un ejemplo de un pequeño programa multihilos en Java.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class MiHilo extends Thread {
+
+  public MiHilo (String nombre) {
+    super (nombre);
+  }
+ 
+  public void run() {
+    for( int i=0; i<4; i++){
+        System.out.println( getName() + " " + i );
+        try {
+            sleep(400);
+        } catch( InterruptedException e) { }
+    }
+  }
+}
+
+public class MultiHilo {
+    public static void main(String arrg[]) {
+        MiHilo mascar = new MiHilo("Mascando");
+        MiHilo silbar = new MiHilo("Silbar");
+        mascar.start();
+        silbar.start();
+    }
+}
+\end{minted}
+\caption{Ejemplo básico de multihilos en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Este pequeño ejemplo ejecuta dos hilos. Uno llamado \textit{mascar} y otro \textit{silbar}. Por lo que el programa es capaz de ''mascar'' y ''silbar'' al mismo tiempo, aunque como ya sabemos, en una computadora de un solo procesador tendrá que dejar de mascar para poder silbar, y viceversa.
+
+\section{Estados de un hilo}
+
+Cada hilo de ejecución en Java, es un objeto que puede estar en diferentes estados.
+
+En la figura \ref{fig:multi_estados}  podemos apreciar que cuando un hilo es creado, no quiere decir que se encuentre corriendo, sino que esto sucede cuando es invocado el método \textit{start()} del objeto. Es hasta entonces que se encuentra en un estado de  "Listo para ejecutarse".
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{imagenes/multihilos02_estados.png}
+    \caption{Estados de un hilo en Java}
+    \label{fig:multi_estados}
+\end{figure}
+
+
+Cuando un hilo está ejecutándose pueden pasar varias cosas con ese hilo en particular. El método \textit{start()} llama en forma automática al método \textit{run()}. Este método contiene el código principal del hilo, algo así como un método \textit{main} para un programa principal. 
+
+Un hilo que está en ejecución puede pasar a un estado de muerto si termina de ejecutar al método \textit{run( )}.
+
+El estado de ''no-ejecutable''. Se llega a este estado cuando el hilo no esta ''en ejecución'', debido a una llamada del método \textit{sleep()}, \textit{wait()} o porque se está realizando un proceso de entrada/salida que tarda cierto tiempo en ejecutarse.
+
+Existen los métodos \textit{stop()}, \textit{suspend()} y \textit{resume()}, pero estos han sido desaprobados en la versión 2 de Java debido a que se consideran potencialmente peligrosos para la ejecución de los programas concurrentes\footnote{ El que sean desaprobados no quiere decir que ya no puedan ser usados. Se conservan por compatibilidad hacia atrás con el lenguaje, pero se ha visto que no es recomendable su uso. En algunos ejemplos pueden aparecer estas instrucciones por simplicidad.}.
+
+Veamos ahora un diagrama (figura \ref{fig:multi_estado03}) que muestra de manera más completa los estados en los que puede estar un hilo.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{imagenes/multihilos03_estados.png}
+    \caption{ Estados de un hilo en Java (2) }
+    \label{fig:multi_estado03}
+\end{figure}
+
+\section{La clase \textit{Thread}}
+
+El programa de ejemplo que se vio antes, corresponde a la forma de implementación más común de un hilo: mediante la extensión de la clase Thread.  Por lo que se pudo apreciar, la sintaxis para la creación de un hilo seria:
+
+\begin{minted}{java}
+class MiHilo extends Thread {
+    public void run() {
+        . . .
+        }
+}
+\end{minted}
+
+Esta técnica, extiende a la clase \textit{Thread}, y redefine el método \textit{run()}, el cual debe contener un implementación propia, de acuerdo a lo que se quiera que realice el hilo.
+
+Vamos a mencionar ahora los principales métodos de la clase\footnote{Para las características completas ver la documentación: \textit{Java Platform API Specification}}.
+
+
+\begin{itemize}
+\item \textit{Thread(String nombreThread)}. Constructor de la clase Thread, recibe una cadena para el nombre del hilo.
+\item \textit{Thread( )}. Constructor sin parámetros. Crea de manera automática nombres para los hilos. Llamados Thread1, Thread2, etc.
+\item \textit{start()}. Inicia la ejecución de un hilo. Invoca al método run().
+\item \textit{run()}. Este método se redefine para controlar la ejecución del hilo.
+\item sleep( tiempo ). Causa que el hilo se "duerma" un tiempo determinado. Un hilo dormido no compite por el procesador.
+\item \textit{interrupt( )}. Interrumpe la ejecución de un hilo.
+\item \textit{interrupted()}. Método estático que devuelve verdadero si el hilo actual ha sido interrumpido.
+\item \textit{isInterrupted()}. Método no estático que verifica si un hilo ha sido interrumpido.
+\item \textit{join( )}. Espera a que un hilo específico muera antes de continuar. Está sobrecargado para recibir un tiempo límite de espera  como parámetro.
+\item \textit{yield( )}. El hilo cede la ejecución a otros hilos.
+\end{itemize}
+
+Métodos usados también con los hilos son $notify ()$ y $wait( )$, aunque estos en realidad están definidos y heredados desde la clase $Object$.
+
+\section{Prioridades de los hilos}
+
+A cada uno de los hilos de Java se les puede asignar una \textbf{prioridad}. ¿Por qué es  esto necesario? Recordemos que en las máquinas con un solo procesador solo se tiene la impresión de que todos los hilos se están ejecutando al mismo tiempo, cuando en realidad se están repartiendo el tiempo del procesador.
+
+Ahora, suponga que tiene un programa con varios hilos de ejecución, y uno de los hilos lleva a cabo una tarea más importante o que requiera mayores recursos. Una opción lógica sería asignarle una prioridad mayor que al resto de los hilos para que tenga preferencia al competir por tiempo del procesador.
+
+La prioridad de un hilo en Java puede ir de 1 a 10. Si se le asigna 10 como prioridad a un hilo, se le estaría asignando la prioridad más alta. Un hilo al que no se le especifica su prioridad, toma una prioridad normal con un valor de 5. Si un hilo es creado por otro, el nuevo hilo hereda la prioridad del hilo padre.
+	
+Java tiene predefinidas 3 constantes de prioridad:
+
+
+\begin{itemize}
+\item \textit{MIN\_PRIORITY}. Para asignar la mínima prioridad que puede tener un hilo (1).
+\item \textit{NORM\_PRIORITY}. Prioridad intermedia (5), asignada por omisión.
+\item \textit{MAX\_PRIORITY}. Asigna la máxima prioridad que puede tener un hilo (10).
+
+\end{itemize}
+
+
+El siguiente ejemplo muestra el uso de prioridades en los hilos e introduce además el manejo del  método \textit{setPriority}; el cual, junto con \textit{getPriority}, sirven para modificar y consultar la prioridad de un hilo respectivamente.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class miHilo extends Thread {
+
+   public miHilo (String nombre)
+     {
+       super (nombre);
+     }
+
+   public void run()
+     {
+       for (int i = 0; i < 20; i++)
+         {
+           System.out.println(getName() + " " + i);
+           try {
+               sleep(10);
+           } 
+           catch (InterruptedException e) {}
+         }
+     }
+ }
+
+public class prioridadHilo  {
+
+    
+   public static void main(String args[])
+     { 
+       miHilo hilo_min = new miHilo ("Hilo Min");
+       miHilo hilo_max = new miHilo ("Hilo Max");
+
+       hilo_min.setPriority(Thread.MIN_PRIORITY);
+       hilo_max.setPriority(Thread.MAX_PRIORITY);
+       hilo_min.start();
+       hilo_max.start();
+     }    
+ }
+\end{minted}
+\caption{Ejemplo de prioridades en multhilos con Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Mostramos a continuación un ejemplo parecido que genera cuatro hilos y son puestos a dormir un tiempo aleatorio, de entre 0 y 5 segundos. En este caso todos los hilos tienen la misma prioridad, y su ejecución depende del momento en que soliciten el procesador.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Muestra múltiples hilos desplegándose a diferentes
+// intervalos.
+
+public class PrintTest {
+   public static void main( String args[] )
+   {
+      PrintThread thread1, thread2, thread3, thread4;
+
+      thread1 = new PrintThread( "1" );
+      thread2 = new PrintThread( "2" );
+      thread3 = new PrintThread( "3" );
+      thread4 = new PrintThread( "4" );
+
+      thread1.start();
+      thread2.start();
+      thread3.start();
+      thread4.start();
+   }
+}
+
+class PrintThread extends Thread {
+   int sleepTime;
+
+   // constructor PrintThread asigna nombre al hilo
+   // llamando al constructor de Thread
+   public PrintThread( String id )
+   {
+      super( id );
+
+      // valor aleatorio para dormir el hilo de 0 a 5 segundos
+      sleepTime = (int) ( Math.random() * 5000 );
+
+      System.out.println( "Nombre: " + getName() +
+                          ";  durmiendo: " + sleepTime );
+   }
+
+   // ejecuta el hilo
+   public void run()
+   {
+      try {
+         sleep( sleepTime );
+      }
+      catch ( InterruptedException exception ) {
+         System.err.println( "Excepcion: " +
+                             exception.toString() );
+      }
+      System.out.println( "Hilo " + getName() );                             
+   }
+}
+\end{minted}
+\caption{Ejemplo múltiples hilos desplegándose a diferentes
+// intervalos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Comportamiento de los hilos}
+
+La implementación real de los hilos puede variar un poco de una plataforma a otra. Algunos sistemas como \textit{Windows}, los hilos funcionan por \textbf{rebanadas de tiempo} y otros como muchas versiones de \textit{Unix} no tienen esta característica.
+
+En los sistemas que se manejan rebanadas de tiempo, los hilos de igual prioridad se reparten el tiempo de ejecución en partes iguales. En los sistemas que no tienen rebanadas de tiempo, un hilo se ejecuta hasta que cede el control voluntariamente, se lo quita un hilo de \textbf{mayor} prioridad, o termina su ejecución.
+
+Bajo este último esquema, es importante que un hilo delegue el control cada determinado tiempo a hilos de igual prioridad. Para esto sirve poner a dormir el hilo con \textit{sleep()}, o ceder el control con el método \textit{yield()}. Un método que tiene estas consideraciones se conoce como hilo compartido, el caso contrario se conoce como \textbf{hilo egoísta}.
+
+Tener en cuenta que el método \textit{yield()} cede el control a hilos de la misma prioridad. Esto es útil en plataformas que no cuenten con rebanadas de tiempo, pero no tiene sentido en sistemas que si cuentan con esta técnica\footnote{Sin embargo debería siempre considerarse el uso de \textit{yield()} si se piensa en sistemas multiplataformas.}.
+
+Veamos una clase que implementa un hilo y cede el control a otros hilos.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class HiloEterno extends Thread {
+
+  public HiloEterno (String nombre) {
+    super (nombre);
+  }
+
+   public void run()
+     {
+       int i=0;
+        
+       while (true)     // Iterar para siempre
+         {
+          System.out.println(getName() + " " +"Ciclo " + i++);
+	       if (i%100==0)  
+       		yield();     // Ceder el procesador a otros hilos
+         }
+     }
+ }
+
+public class MultiHilo2 {
+    public static void main(String arg[]) {
+        HiloEterno infinito = new HiloEterno("Al infinito");
+        HiloEterno  masAlla = new HiloEterno("y mas alla");
+        infinito.start();
+        masAlla.start();
+    }
+}
+
+\end{minted}
+\caption{Ejemplo que implementa un hilo y cede el control a otros hilos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+	
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

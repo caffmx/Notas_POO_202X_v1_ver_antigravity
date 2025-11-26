@@ -1,0 +1,577 @@
+\chapter{Objetos constantes}
+	Algunas ocasiones puede ser útil tener objetos constantes, los cuales no puedan ser modificados. Sin embargo, cada lenguaje interpreta de manera ligeramente distinta, como se verá a continuación.
+	
+
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+%\newpage
+
+\section{Objetos constantes en C++}
+
+En C++, es posible tener objetos de tipo constante, los cuales no podrán ser modificados en ningún momento\footnote{Ayuda a cumplir el principio del mínimo privilegio, donde se debe restringir al máximo el acceso a los datos cuando este acceso estaría de sobra\cite{mcaffer2010eclipse}.} Tratar de modificar un objeto constante se detecta como un error en tiempo de compilación.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| const <clase> <lista de objetos>;  |\\
+\hline
+\end{tabular}
+\end{center}	
+
+Ejemplo:
+
+\mint[linenos=false]{cpp}| const Hora h1(9,30,20); |
+
+Para estos objetos, algunos compiladores llegan a ser tan rígidos en el cumplimiento de la instrucción, que no permiten que se hagan llamadas a métodos sobre esos objetos.  La compilación estándar permite la ejecución de métodos, siempre y cuando no modifiquen el estado del objeto. 
+
+Si se quiere  consultar al objeto mediante llamadas a métodos get, lo correcto es declarar métodos con la palabra reservada \textit{const}, para permitirles actuar libremente sobre los objetos sin modificarlo. La sintaxis requiere añadir después de la lista de parámetros la palabra reservada \textit{const} en la declaración y en su definición. 
+
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+Declaración.
+\\ 
+    \begin{minted} [linenos=false]{cpp}
+<tipo> <nombre> (<parámetros>) const;
+    \end{minted}
+\\ 
+Definición del método fuera de la declaración de la clase.
+\\
+    \begin{minted} [linenos=false]{cpp}
+	<tipo> <clase> :: <nombre> (<parámetros>) const {
+		<código>
+	}
+	\end{minted}
+\\
+Definición del método dentro de la declaración de la clase.
+\\
+    \begin{minted} [linenos=false]{cpp}
+	<tipo> <nombre> (<parámetros>) const {
+		<código>
+	}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Los compiladores generalmente restringen el uso de métodos constantes a objetos constantes. Para solucionarlo es posible sobrecargar  el método con la única diferencia de la palabra \textit{const}, aunque el resto de la firma del método sea la misma. 
+
+Un método puede ser declarado dos veces tan sólo con que la firma del método difiera por el uso de \textit{const}. Objetos constantes ejecutarán al método definido con \textit{const}, y objetos variables ejecutarán al método sin esta restricción. De hecho, un objeto variable puede ejecutar el método no definido con \textit{const} por lo que si el objetivo del método es el mismo, y este no modifica al objeto (e.g., métodos tipo \textit{get}) bastaría con definir al método una vez\footnote{Además, declarar a los métodos \textit{get} y otros métodos que no modifican al objeto con el calificador \textit{const} es una buena práctica de programación.}.
+
+Los constructores no necesitan la declaración \textit{const}, puesto que deben poder modificar al objeto.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+#include <iostream>
+#include <time.h>
+#include <stdlib.h>
+
+using namespace std;
+
+class Arr{
+	private:
+	int a[10];
+	public:
+	Arr(int x=0) {
+		srand( time(NULL) );
+		for( int i=0; i<10; i++){
+			if (x==0)
+				x=rand()%100;
+			a[i]=x;
+		}
+	}
+	char set(int, int);
+	int get(int) const ;
+	int get(int);
+};
+
+char Arr::set(int pos, int val ){
+	if(pos>=0 && pos<10){
+		a[pos]=val;
+		return 1; 
+	}
+	return 0;
+}
+
+int Arr::get(int pos) const {
+	if(pos>=0 && pos<10)
+		return a[pos];
+//   a[9]=0;  error en un método constante
+	return 0;
+}
+
+int Arr::get(int pos) {  //no es necesario sobrecargar
+	if(pos>=0 && pos<10)   // si el método no modifica
+		return a[pos];
+	return 0;
+}
+
+int main(){
+	const Arr a(5),b;
+	Arr c; 
+	
+//	a.set(0,1);  //error llamar a un método no const
+//	b.set(0,2);	 // para un objeto constante (comentar estas lineas)
+	c.set(0,3);
+//	a.set(1,11); //error llamar a un método no const
+//	b.set(1,22); // para un objeto constante (comentar estas lineas)
+	c.set(1,33);
+	cout<<a.get(0)<<endl; // ejecuta int get(int) const ;
+	cout<<a.get(1)<<endl; 
+	cout<<b.get(0)<<endl;
+	cout<<b.get(1)<<endl;
+	cout<<c.get(0)<<endl; // ejecuta int get(int);
+	cout<<c.get(1)<<endl;
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de objetos constantes en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+%\newpage
+\section{Objetos finales en Java}
+
+Ya se mencionó en la sección de fundamentos de Java el uso de la palabra reservada \textit{final}, la cual permite a una variable ser inicializada sólo una vez. En el caso de los objetos o referencias a los objetos el comportamiento es el mismo. Si se agrega la palabra \textit{final} a la declaración de una referencia a un objeto, significa que la  variable podrá ser inicializada una sola vez, en el momento que sea necesario.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{java}| final <clase> <lista de identificadores de objetos>;  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Por ejemplo:
+
+ \mint[linenos=false]{java}| final Hora h1= new Hora(9,30,20);  |
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+  Es importante remarcar que no es el mismo sentido de \textit{const} en C++. Aquí lo único que se limita es la posibilidad de una variable de referencia a ser inicializada de nuevo, pero no inhibe la modificación de miembros.
+\\ \hline
+\end{tabular}
+\end{center}
+
+Por ejemplo:
+
+\begin{minted}{java}
+final Light aLight = new Light();  // variable local final
+aLight.noOfWhatts = 100;	//Ok. Cambio en el edo. del objeto
+
+aLight = new Light();	// Inválido. No se puede modificar la referencia
+\end{minted}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class Fecha {
+	private int dia;
+	private int mes, año;
+	
+	public Fecha(){
+		dia=mes=1;
+		año=1900;
+	}
+	public boolean setDia(int d){
+		if (d >=1 && d<=31){
+			dia= d;
+			return true;
+		}
+		return false;
+			
+	}   //poner día
+	public int getDia()	{
+		return dia;
+	} //devuelve día
+	public boolean setMes(int m){
+		if (m>=1 && m<=12){
+			mes=m;
+			return true;
+		}
+		return false;
+	}
+	public int getMes(){
+		return mes;
+	}
+
+	public boolean setAño(int a) {
+		if (a>=1900){
+			año=a;
+			return true;
+		}
+		return false;
+	}
+	public int getAño() {
+		return año;
+	}
+}
+
+public class MainF {
+
+	public static void main(String[] args) {
+		final Fecha f;
+		
+		f= new Fecha();
+		
+		f.setDia(10);
+		f.setMes(3);
+		f.setAño(2001);
+		System.out.println(f.getDia()+"/"+f.getMes()+"/"+f.getAño());
+		f= new Fecha(); //Error: la variable f es final y no puede ser reasignada
+	}
+}
+\end{minted}
+\caption{Ejemplo de objetos finales en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Objetos constantes en Ruby}
+Los objetos constantes ya fueron indirectamente explicados al mencionar el manejo de constantes en Ruby, debido a que todos los datos son manejados como objetos. Recordemos que deben empezar con una \textbf{letra mayúscula} y pueden ser definidas dentro de una clase o módulo y serán visibles dentro de ese ámbito. Una constante definida fuera de un clase o módulo será vista globalmente. Es posible reasignar un valor a una constante, pero esto producirá una advertencia (pero no un error).
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+class Fecha
+	def initialize
+		@dia= @mes =1
+		@anio=1900
+	end
+	
+	def setDia dia
+		if dia>=1 && dia<=31
+			@dia=dia
+			return true
+		end
+		return false
+	end
+	
+	def setMes mes
+		if mes>=1 && mes<=12
+			@mes=mes
+			return true
+		end
+		return false
+	end
+
+	def setAnio a
+		if a>=1900
+			@anio=a
+			return true
+		end
+		return false
+	end
+	
+	attr_reader :dia, :mes, :anio
+end
+
+#Código de prueba
+
+Fe = Fecha.new  # es constante por ser nombrada con una mayúscula como prefijo
+
+Fe.setDia 10
+Fe.setMes 3
+Fe.setAnio 2008
+
+puts Fe.dia.to_s+"/"+Fe.mes.to_s+"/"+Fe.anio.to_s
+# ó:
+puts "#{Fe.dia}/#{Fe.mes}/#{Fe.anio}"
+
+Fe=Fecha.new   # genera un warning pero no es un error al ser reasignado el identificador constante
+\end{minted}
+\caption{Ejemplo de objetos constantes en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Tenemos entonces que los objetos constantes tienen una mayor similitud con Java, siendo la diferencia principal que la modificación de un objeto constante en Ruby únicamente genera un \textit{warning}, mientras que en Java genera un error. Siendo Ruby un lenguaje interpretado es una buena solución que, al no poder ser detectado este problema en tiempo de compilación, solo genera una advertencia y continúe la ejecución.
+
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Objetos constantes en Python}
+
+Python no cuenta con objetos ni variables constantes. Se acostumbra definir variables de referencia a objetos que no se deben cambiar con mayúsculas, pero no existe ningún mecanismo que el lenguaje proporciona para evitar la modificación de los objetos.
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+\section{Objetos constantes en Scala}
+Scala cuenta con identificadores constantes definidos mediante \textit{val} que tienen un comportamiento similar a los definidos con \textit{final}  en Java. Del mismo modo, puede agregarse el modificador \textit{final} aunque el comportamiento es idéntico. Las diferencias básicas con el \textit{final} de Java es que un identificador \textit{val} debe ser inicializado al declararse y el identificador puede ser redefinido.
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {scala}
+class Fecha {
+  var dia, mes: Int=0
+  var anio: Int=1900
+ 	
+  def setDia(mdia: Int): Boolean ={
+		if (mdia>=1 && mdia<=31){
+      dia=mdia
+      return true
+    }
+		return false
+  }
+
+  def setMes(mmes: Int): Boolean ={
+		if (mmes>=1 && mmes<=12){
+			mes=mmes
+			return true
+		}
+		return false
+	}
+
+  def setAnio (manio: Int): Boolean ={
+		if (manio>=1900) {
+			anio=manio
+			return true
+		}
+		return false
+	}
+}
+
+//Código de prueba  
+object Constantes {
+  val fe = new Fecha()  // similar a final en java, salvo que puede ser redefinido
+  final val fe2= new Fecha()  // similar a final en java, salvo que no puede ser redefinido
+   
+  def main(args: Array[String]) ={
+	  System.out.println("Constantes")
+      var f= new Fecha()
+           
+      f.setDia(10)
+      f.setMes(3)
+      f.setAnio(2010)
+	 
+    //  fe2=fe  //no se puede reasignar
+    //  fe=fe2  //no se puede reasignar
+        
+      val fe = new Fecha() // se puede redefinir fe
+      val fe2 = new Fecha() // se puede redefinir fe2
+      System.out.println("fin de Constantes")
+  }  
+}
+\end{minted}
+\caption{Ejemplo de objetos constantes en Scala.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+\section{Objetos constantes en C\#}
+
+C\# no permite el uso de objetos constantes. Aunque existe la palabra clave \textit{const}, ésta es usada para definir un identificador para una expresión constante. Esto no permite la asignación de objetos puesto que son creados dinámicamente. De hecho:
+
+\mint[linenos=false]{csharp}| public const int i = x; |
+
+es un error si $x$ no es constante.
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Objetos constantes en D}
+
+El manejo de objetos constantes en D es básicamente como el de C++. Aparte de los ajustes en la sintaxis, la única diferencia es el uso de objetos dinámicos ya que D no maneja objetos estáticos.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {d}
+module Arr;
+
+import std.stdio;
+
+class Arr{
+        private:
+        int a[10];
+        public:
+        this(int x=0) {
+                for( int i=0; i<10; i++){
+                        if (x==0)
+                                x=i;
+                        a[i]=x;
+                }
+        }
+
+char set(int pos, int val ){
+        if(pos>=0 && pos<10){
+                a[pos]=val;
+                return 1; 
+        }
+        return 0;
+}
+ 
+int get(int pos) const {
+       writeln("Ejecuta int get(int) const");
+        if(pos>=0 && pos<10)
+                return a[pos];
+  //  a[9]=0;  // error en un método constante
+       return 0;
+}
+ 
+int get(int pos) {  //no es necesario sobrecargar
+        writeln("Ejecuta int get(int)");        
+        if(pos>=0 && pos<10)   // si el método no modifica
+                return a[pos];
+        return 0;
+}
+}
+int main(){
+        const Arr a= new Arr(5), b=new Arr();
+        Arr c; 
+        
+        c = new Arr();
+        
+//      a.set(0,1);  //error llamar a un método no const
+//      b.set(0,2);      // para un objeto constante (comentar estas lineas)
+        c.set(0,3);
+//      a.set(1,11); //error llamar a un método no const
+//      b.set(1,22); // para un objeto constante (comentar estas lineas)
+        c.set(1,33);
+        writeln(a.get(0)); // ejecuta int get(int) const ;
+        writeln(a.get(1)); 
+        writeln(b.get(0));
+        writeln(b.get(1));
+        writeln(c.get(0)); // ejecuta int get(int);
+        writeln(c.get(1));
+        return 0;
+}
+\end{minted}
+\caption{Ejemplo de objetos constantes en D.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage

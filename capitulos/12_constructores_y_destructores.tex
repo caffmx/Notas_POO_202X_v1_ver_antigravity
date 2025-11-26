@@ -1,0 +1,772 @@
+\chapter{Constructores y destructores}
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Constructores y destructores en C++}
+
+Con el manejo de los tipos de datos primitivos, el compilador se encarga de reservar la memoria y de liberarla cuando estos datos salen de su ámbito. 
+
+En la programación orientada a objetos, se trata de proporcionar mecanismos similares, aunque con mayor funcionalidad. Cuando un objeto es creado es llamado un método conocido como \textbf{constructor}, y al salir se llama a otro conocido como \textbf{destructor}. Si no se proporcionan estos métodos  se asume la acción más simple.
+
+\subsection{Constructor}
+
+Un \textbf{constructor} es un método con el mismo nombre de la clase. Este método no puede tener un tipo de dato y si puede permitir la homonimia o sobrecarga.
+
+Ejemplo:
+\begin{minted}{cpp}
+class Cola{
+	private:
+	int q[100];
+	int sloc, rloc;
+ 	
+ 	public:
+	Cola( );	//constructor
+	void put(int);
+	int get( );
+};
+
+//implementación del constructor
+Cola::Cola ( ) {
+	sloc=rloc=0;
+	cout<<"Cola inicializada \n";
+}
+\end{minted}
+
+Un constructor si puede ser llamado desde un método de la clase.
+
+\subsubsection{Lista de inicialización de atributos Constructor }
+En C++, se pueden  inicializar los atributos de una clase después de los parámetros del constructor utilizando una lista de inicialización. La lista de inicialización se coloca después de la lista de parámetros del constructor y antes del cuerpo del constructor.
+
+Aquí se presenta un ejemplo:
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+
+#include <iostream>
+
+class MiClase {
+public:
+    // Constructor con parámetros
+    MiClase(int parametro1, int parametro2) 
+        : atributo1(parametro1), atributo2(parametro2) {
+        // Cuerpo del constructor (si es necesario)
+        // Puedes realizar más inicializaciones o lógica aquí
+    }
+
+    // Otros métodos y miembros de la clase
+
+private:
+    int atributo1;
+    int atributo2;
+};
+
+int main() {
+    // Crear un objeto de la clase MiClase e inicializar sus atributos
+    MiClase objeto(10, 20);
+
+    return 0;
+}
+
+\end{minted}
+\caption{Ejemplo de lista de inicialización de atributos en un constructor en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El constructor de \textit{MiClase} toma dos parámetros enteros y utiliza una lista de inicialización para asignar esos valores a los atributos \textit{atributo1} y \textit{atributo2}. Esto es una práctica recomendada en C++ porque puede ayudar a mejorar el rendimiento y evitar ambigüedades en la inicialización de los miembros de la clase, pero tiene como desventaja que no incluye la validación de los mismos.
+
+\subsubsection{Constructor de Copia}
+
+Es útil agregar a todas las clases un constructor de copia que reciba como parámetro un objeto de la clase y copie sus datos al nuevo objeto. 
+
+C++ proporciona un constructor de copia por omisión, sin embargo es una \textbf{copia a nivel de miembro} y puede no realizar una copia exacta de lo que queremos. Por ejemplo en casos de apuntadores a memoria dinámica, se tendría una copia de la dirección y no de la información referenciada.
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| <nombre clase>(const <nombre clase> &<objeto>);  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\textcolor{blue}{Ejemplo:}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo de constructor de copia
+#include <iostream>
+#include <time.h>
+#include <stdlib.h>
+
+using namespace std;
+
+class Arr{
+	private:
+	int a[10];
+	public:
+	
+	Arr(int x=0) {
+		for( int i=0; i<10; i++){
+			if (x==0)
+				x=rand();
+			a[i]=x;
+	}
+}
+
+	Arr(const Arr &copia){   //constructor de copia
+		for( int i=0; i<10; i++)
+			a[i]=copia.a[i];
+	}
+
+	char set(int, int);
+	int get(int) const ;
+	int get(int);
+};
+
+char Arr::set(int pos, int val ){
+	if(pos>=0 && pos<10){
+		a[pos]=val;
+		return 1;
+	}
+	return 0;
+} 
+
+int Arr::get(int pos) const {
+	if(pos>=0 && pos<10)
+		return a[pos];
+	//   a[9]=0;  error en un metodo constante
+	return 0;
+}
+
+int Arr::get(int pos) {  //no es necesario sobrecargar
+	if(pos>=0 && pos<10)   // si el metodo no modifica
+		return a[pos];
+	return 0;
+}
+
+int main(){
+	Arr a(5), b;
+	srand( time(NULL) );
+	
+	a.set(0,1);
+	a.set(1,11);
+	cout<<a.get(0)<<endl;
+	cout<<a.get(1)<<endl;
+
+	b.set(0,2);
+	b.set(1,22);
+	cout<<b.get(0)<<endl;
+	cout<<b.get(1)<<endl;
+
+	Arr d(a);
+	cout<<d.get(0)<<endl;
+	cout<<d.get(1)<<endl;
+	
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de constructor de copia en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Destructor}
+
+ 	La contraparte del constructor es el \textbf{destructor}. Este se ejecuta momentos antes de que el objeto sea destruido, ya sea porque salen de su ámbito o por medio de una instrucción \textit{delete}. El uso más común para un destructor es liberar la memoria asignada dinámicamente, aunque puede ser utilizado para otras operaciones de finalización, como cerrar archivos, una conexión a red, etc.
+
+	El destructor tiene al igual que el constructor el nombre de la clase pero con una tilde como prefijo (\~).
+
+	El destructor tampoco regresa valores ni tiene parámetros. 
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{minted}{cpp}
+class Cola{
+ 	private:
+	int q[100];
+	int sloc, rloc;
+ 	
+ 	public:
+	Cola( );	//constructor
+	~Cola();  //destructor
+	void put(int);
+	int get( );
+};
+
+Cola::~Cola( ){
+	cout<<"cola destruida\n";
+}
+\end{minted}
+
+\textcolor{blue}{Ejemplo} completo de Cola con constructor y destructor:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//cola definida en un arreglo
+//incluye constructores y destructores de ejemplo
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+
+using namespace std;
+
+class Cola{
+	private:
+	int q[10], sloc, rloc;
+	char *nom;
+
+	public:
+	Cola(const char *cad=NULL) {  //funcion en linea
+		if(cad){   //cadena!=NULL
+			nom=new char[strlen(cad)+1];
+			strcpy(nom, cad);
+		}else
+			nom=NULL;
+		sloc=rloc=-1;
+	}
+	~Cola( ) {
+		if(nom){  //nom!=NULL
+			cout<<"Cola : "<<nom<<" destruida\n";
+			delete [] nom;
+		}
+	}
+
+	char set(int);
+	int get();
+};
+
+char Cola::set(int val){
+	if(sloc>=10){
+		cout<<"la cola esta llena";
+		return 0;
+	}
+	sloc++;
+	q[sloc]=val;
+	return 1;
+}
+int Cola::get(){
+	if(rloc==sloc)
+		cout<<"la cola esta vacia";
+	else {
+		rloc++;
+		return q[rloc];
+	}
+	return 0;
+}
+
+int main(){
+	Cola a("Cola a"),b("Cola b"),
+		*pCola= new Cola("Cola dinamica pCola");
+	a.set(1);
+	b.set(2);
+	pCola->set(3);
+	a.set(11);
+	b.set(22);
+	pCola->set(33);
+	cout<<a.get()<<endl;
+	cout<<a.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<pCola->get()<<endl;
+	cout<<pCola->get()<<endl;
+	
+	delete pCola;
+}
+\end{minted}
+\caption{Ejemplo completo de Cola con constructor y destructor en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+
+\section{Constructores y finalizadores en Java}
+
+En Java, cuando un objeto es creado es llamada un método conocido como \textbf{constructor}, y al salir se llama a otro conocido como \textbf{finalizador}\footnote{En C++ no existe el concepto de finalizador, sino el de destructor, porque su tarea primordial es liberar la memoria ocupada por el objeto, cosa que no es necesario realizar en Java.}. Si no se proporcionan estos métodos se asume la acción más simple.
+
+\subsection{Constructor}
+
+Un constructor es un método con el mismo nombre de la clase. Este método no puede tener un tipo de dato de retorno y si puede permitir la homonimia o sobrecarga, y la modificación de acceso al mismo.
+
+Ejemplo:
+
+\begin{minted}{java}
+public class Cola{
+	private int q[];
+	private int sloc, rloc;
+	public void put(int){ ... }
+	public int get( ){ ... }
+	//	implementación del constructor
+	public Cola ( ) {
+		sloc=rloc=0;
+		q= new int[100];
+		System.out.println("Cola inicializada ");
+	}
+}
+\end{minted}
+
+El constructor se ejecuta en el momento de asignarle la memoria a un objeto, y es la razón de usar los paréntesis junto al nombre de la clase al usar la instrucción \textit{new}:
+
+\mint[linenos=false]{java}| Fecha f = new Fecha(10,4,2007); |
+
+Si no se especifica un constructor, Java incluye uno predeterminado, que asigna memoria para el objeto e inicializa  las variables de instancia a valores predeterminados. Este constructor se omite si se especifica uno o más por parte del programador.
+
+\subsection{Finalizador}
+
+La contraparte del constructor en Java es el método \textit{finalize} o finalizador. Este se ejecuta momentos antes de que el objeto sea destruido por el recolector de basura. El uso más común para un finalizador es liberar los recursos utilizados por el objeto, como una conexión de red o cerrar algún archivo abierto.
+
+No es muy común utilizar un método finalizador, más que para asegurar situaciones como las mencionadas antes. El método iría en términos generales como se muestra a continuación\footnote{ No se ha mencionado el modificador \textit{protected}. Este concepto se explicará una vez que se haya visto el manejo de herencia.}:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+protected void finalize() {
+	<instrucciones>
+} 
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+El finalizador puede ser llamado como un método normal, inclusive puede ser sobrecargado, pero un finalizador con parámetros no puede ser ejecutado automáticamente por la máquina virtual de Java. Se recomienda evitar el definir un finalizador con parámetros.
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+
+\section{Inicializadores en Ruby}
+
+En Ruby, el método que podemos usar para inicializar un objeto es llamado \textit{initialize}. No es llamado constructor porque, en Ruby, son internamente dos procesos separados. El método \textit{initialize} no es un constructor y es definido automáticamente como privado.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\hline
+La explicación para esto es que las clases en Ruby son instancias de la clase \textit{Class}. Por cada clase definida, un objeto de tipo \textit{Class} es creado y asignado a una constante del nombre especificado en la declaración de la clase. Cuando el método \textit{new} es llamado ($NombreClase.new$) para crear un objeto, se ejecuta por default el método \textit{new} de \textit{Class}, el cual ejecuta al método \textit{allocate} para asignar la memoria del objeto, y por último, el método \textit{initialize} del nuevo objeto es ejecutado.  
+\\ \hline
+\end{tabular}
+\end{center}
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+class NombreClase
+	def initialize [(lista de parámetros)] 
+		<código>
+	end
+	...
+end
+...
+obj = NombreClase.new [(parámetros)]
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{ruby}
+class Cola
+	def initialize
+		@sloc= @rloc=-1
+		@q=[]
+	end
+	...	
+end
+\end{minted}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+
+\section{Inicializando y eliminando en Python}
+
+Clases en Python no tienen  constructores ni destructores explícitos. Lo más parecido a un constructor es el método \_\_init()\_\_ . El concepto es similar al de inicialización de objetos en Ruby.
+El método \_\_init()\_\_ está implementado por omisión y no estamos obligados a definirlo. Podemos añadir atributos en otros métodos sin necesidad de inicializarlos en el método \textit{init}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+class Rectángulo:
+       def area(self) -> float:
+           return self.largo * self.ancho
+
+r = Rectángulo()
+r.largo, r.ancho = 11, 9
+print(r.area())
+\end{minted}
+\caption{Ejemplo mostrando el uso de atributos sin añadirlos en \textit{init}.}
+\label{listing:1}
+\end{longlisting}
+
+Sin embargo, no se considera una buena práctica pues puede generar confusión y errores. Lo mejor es inicializar los atributos en el método \textit{init}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+class NombreClase:
+    def __init__(self, [<parametros>]):
+	<código>
+	...
+
+obj = NombreClase([<parámetros>])
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+%\end{minted}
+
+Ejemplo:
+
+\begin{minted}{python}
+class Cola:
+	
+	def __init__(self)
+		self.sloc= self.rloc=-1
+		self.q=[]
+	end
+	...	
+end
+\end{minted}
+
+Por otro lado, el método $\_\_del\_\_()$ es lo más parecido que se tiene a un destructor, más parecido realmente al finalizador de java, ya que es llamado cuando todas las referencias a un objeto se han eliminado y éste es recogido por el recolector de basura.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#Ejemplo de inicializador y eliminador en Python
+class Empleado: 
+    # Inicializador 
+    def __init__(self): 
+        print('Objeto empleado creado.') 
+  
+    # Eliminando (Llamando al 'destructor') 
+    def __del__(self): 
+        print('Destructor llamado, Empleado borrado.') 
+  
+obj = Empleado() 
+del obj 
+\end{minted}
+\caption{Ejemplo mostrando el uso de los métodos \_\_init\_\_() y \_\_del\_\_() en Python.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% SCALA
+%%%%%%%%%%
+\ifscala
+\newpage
+
+\section{Constructores en Scala}
+
+Scala distingue entre un constructor primario y constructores secundarios. El constructor primario en realidad se forma con la definición de la clase seguida de una lista de parámetros. Una clase en Scala con su sección de parámetros es llamada clase \textbf{polimórfica}, de otro modo, una clase sin parámetros es una clase \textbf{monomórfica}. Estos parámetros de clase pueden ser usados directamente dentro de la definición de la misma y ya no es necesario definirlos como atributos.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+class NombreClase (<parametros>) {
+ 
+}
+…
+obj = new NombreClase([<parámetros>])
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Esto permite ahorrar espacio y tener una clase potencialmente más concisa. Pero ¿Qué pasa si yo necesito validar los valores de los parámetros? Dentro del código de la clase es posible insertar dicho código y formará parte del constructor primario.
+
+Ejemplo\footnote{Si no se especifica un identificador de tipo var, se toma como de tipo val por omisión}:
+\begin{minted}{scala}
+class Cola(var sloc: Int, var rloc: Int, var q: Array[Int]) {
+	if (q==null) {
+		sloc=-1
+		rloc=-1
+	}
+	
+}
+\end{minted}
+
+Es posible tener constructores auxiliares de la forma:
+
+ TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{scala}
+def this([<parámetros>])
+    <instrucciones>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+\fi
+%%%%%%%%%%
+% SCALA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% CSHARP
+%%%%%%%%%%
+\ifcsharp
+\newpage
+
+\section{Constructores y destructores en C\#}
+
+Constructores y destructores pueden ser definidos en C\# de forma similar a C++.
+
+\subsection{Constructor}
+	Un constructor en C\# es definido especificando un método del mismo nombre de la clase.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{csharp}
+class NombreClase {
+    NombreClase([<parametros>]) {
+		<código>
+	}
+}
+...
+obj = new NombreClase([<parámetros>]);
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{csharp}
+class Cola{
+	private int q[];
+	private int sloc, rloc;
+	public void put(int){ 
+//...
+	 }
+	public int get( ){ 
+//... 
+	}
+	//	implementación del constructor
+	public Cola ( ) {
+		sloc=rloc=0;
+		q= new int[100];
+		Console.WriteLine("Cola inicializada ");
+	}
+}
+\end{minted}
+
+\subsection{Destructor}
+
+C\# cuenta con un recolector de basura, por lo que el uso del destructor no es tan frecuente como en C++. Aún así es posible definir un destructor usando la misma sintaxis de C++:
+
+\begin{minted}{csharp}
+~Cola( ){
+	Console.WriteLine("cola destruida");
+}
+\end{minted}
+
+Su comportamiento en realidad es más parecido al finalizador de Java.
+
+
+\fi
+%%%%%%%%%%
+% CSHARP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% D
+%%%%%%%%%%
+\ifd
+\newpage
+\section{Constructores y destructores en D}
+
+D incluye también el concepto de y destructor de objetos.
+
+\subsection{Constructor}
+
+Aunque los miembros de una clase son incializados en D por su valor por omisión o inicializándolos estáticamente en el momento de la definición del miembro,  es posible definir un constructor en D es definido especificando un método con el nombre de \textit{this}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{d}
+class NombreClase {
+    this([<parametros>]) {
+		<código>
+	}
+}
+...
+obj = new NombreClase([<parámetros>]);
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+
+\begin{minted}{d}
+class Cola{
+	private:
+int q[];
+		int sloc, rloc;
+	public:
+void put(int){ 
+//...
+	 	}
+		int get( ){ 
+//... 
+		}
+	//	implementación del constructor
+	this ( ) {
+		sloc=rloc=0;
+		q= new int[100];
+		writeln("Cola inicializada ");
+	}
+}
+\end{minted}
+
+\subsection{Destructor}
+
+ D cuenta con un recolector de basura, sin embargo al igual que C\# cuenta con la opción de definir un destructor.
+ 
+\begin{minted}{d}
+~this( ){
+	writeln("cola destruida");
+}
+\end{minted}
+
+\fi
+%%%%%%%%%%
+% D_END
+%%%%%%%%%%
+

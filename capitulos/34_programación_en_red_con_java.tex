@@ -1,0 +1,825 @@
+\chapter{Programación en Red con Java}
+
+Java, como un lenguaje de programación moderno, provee de clases para el manejo de información en red. De hecho, el uso de otras tecnologías como JDBC involucra el acceso a bases de datos locales y remotas de forma prácticamente transparente.
+
+\section{Paquete \textit{java.net}}
+
+Dentro del paquete \textit{java.net} se tienen un conjunto de clases que dan soporte a los diversos protocolos de comunicación de Internet, conocido como paquete de protocolos de Internet, dentro de los cuales se encuentran:
+
+ 
+\begin{enumerate}
+\item IP. \textit{Internet Protocol}.
+\item TCP. \textit{Transmission Control Protocol}.
+\item UDP. \textit{User Datagram Protocol}.
+\end{enumerate}
+
+La mayor parte de las aplicaciones están basadas en los protocolos TCP/IP, las cuales muchas veces hacen uso de otros protocolos intermediarios entre TCP/IP y la aplicación.
+
+La tabla \ref{tab:protocolos} muestra una lista de protocolos de uso común en Internet.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\caption{Protocolos comunes}
+\label{tab:protocolos}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{Acrónimo}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{Nombre}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{Descripción}} \\ \hline
+HTTP                                                            & \textit{HyperText Transport Protocol}                        & Protocolo de hipertexto. Es la base del World Wide Web.           \\ \hline
+FTP                                                             & \textit{File Transfer,Protocol}                              & Protocolo de transferencia de archivos.                           \\ \hline
+POP3                                                            & \textit{Post Office Protocol}                                & Protocolo que permite el acceso al correo electrónico.            \\ \hline
+SMTP                                                            & \textit{Simple Mail Transfer Protocol}                       & Protocolo para transferencia de correo electrónico.               \\ \hline
+NNTP                                                            & \textit{Network News Transfer Protocol}                      & Protocolo para grupos de noticias (news)                          \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+El paquete \textit{java.net} cuenta hasta la versión 1.4 del jdk con 6 interfaces, 27 clases y 11 excepciones. Las clases más usadas son:
+
+ 
+\begin{enumerate}
+\item \textit{URL}. Representa un URL de Internet.
+\item \textit{URLConnection}. Es un complemento de URL (no una subclase de ella). Cubre algunas operaciones más complejas.
+\item \textit{Socket}. Establece conexiones TCP/IP.
+\item \textit{DatagramPacket}. Establece conexiones de tipo UDP.
+\item \textit{InetAddress}. Representa una dirección IP.
+\end{enumerate}
+
+\subsection{Clase \textit{URL}}
+
+Esta clase permite crear instancias que almacenen direcciones de recursos en Internet\footnote{URL. \textit{Uniform Resource Locator}}. Este recurso puede ser un archivo, directorio, o inclusive una consulta a un motor de búsqueda. En caso de que el URL tenga una sintaxis incorrecta se lanza una excepción \textit{MalformedURLException}.
+
+\ejemplo  %ACTUALIZAR
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Ejemplo de uso de URL
+import java.applet.*;
+import java.net.*;
+import java.awt.*;
+
+public class URLEjemplo extends Applet {
+
+   URL utm = null;
+ 
+   public void init()
+     {
+
+       try {
+           utm = new URL("http://www.utm.mx");
+         } 
+       catch (MalformedURLException e)
+         {
+           System.out.println("Error:" + e.getMessage());
+         }
+     }
+
+   public boolean mouseDown(Event evt, int x, int y)
+     {
+       getAppletContext().showDocument(utm);
+       return(true);
+     }
+  }
+\end{minted}
+\caption{Ejemplo de clase URL.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Este programa detecta un \textit{click} del ratón sobre el área del \textit{applet} y como acción asociada despliega una página de html en el navegador\footnote{No se pruebe en el \textit{appletviewer} ya que este no despliega más que el \textit{applet} y no muestra la página html.}.
+
+Este es sólo un ejemplo, pero la clase URL es usada por todos aquellos programas que requieran del uso de direcciones de recursos de Internet.
+
+\subsection{Clase \textit{InetAddress}}
+
+Como se mencionó antes, esta clase representar una dirección IP. La clase no maneja atributos ni constructores. Ofrece en cambio métodos de acceso para operaciones comunes de Internet.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//obtiene la dirección IP de la máquina local
+
+import java.net.*;
+
+public class ObtenIPLocal {
+
+    public static void main(String args[]) {
+        InetAddress IPLocal=null;
+
+        try {
+            IPLocal= InetAddress.getLocalHost();
+        }catch (UnknownHostException e) {}
+
+        System.out.println(IPLocal);
+    }
+}
+\end{minted}
+\caption{Ejemplo de \textit{InetAddress}, obtiene la dirección IP de la máquina local.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El programa anterior usa una instancia de \textit{InetAddress} para obtener la dirección de la máquina local mediante el método $getLocalHost()$ de la clase. Es un ejemplo muy simple del uso de la clase.
+
+El siguiente programa  recibe como parámetro el nombre de un servidor y obtiene la dirección asociada a ese nombre.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//identifica la direccion IP asociada al host
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.lang.System;
+
+public class NSLookupApp {
+ public static void main(String args[]) {
+  try {
+   if(args.length!=1){
+    System.out.println("Sintaxis: java NSLookupApp nombreServidor");
+    return;
+   }
+   InetAddress host = InetAddress.getByName(args[0]);
+   String hostName = host.getHostName();
+   System.out.println("Nombre servidor: "+hostName);
+   System.out.println("Direccion IP: "+host.getHostAddress());
+  }catch(UnknownHostException ex) {
+   System.out.println("Servidor desconocido");
+   return;
+  }
+ }
+}
+\end{minted}
+\caption{Ejemplo de \textit{InetAddress}, identifica la dirección IP asociada al \textit{host}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+%\\
+Ejecutando por ejemplo:
+
+\mint[linenos=false]{bash}| \$java NSLookupApp www.utm.mx |
+
+
+\subsection{Clase \textit{Socket}}
+
+Esta clase se usa para la implementación de \textit{sockets} de cliente basados en una conexión.  La aplicación cliente debe comúnmente iniciar la conexión de \textit{sockets} hacia el servidor.
+
+Una instancia de la clase \textit{Socket} es creada con el constructor recibiendo como parámetros por lo general el número IP o nombre de dominio del servidor y el puerto del servidor, creando una conexión a un puerto y \textit{host} de destino.
+
+Un \textit{socket} se puede crear de la siguiente forma:
+
+\mint[linenos=false]{java}| miSocket = new Socket ("mixteco.utm.mx", 1111); |
+
+Esta línea de código tiene que estar dentro de un segmento \textit{try} para recibir una excepción en caso de que se produzca. 
+
+Algunos métodos importantes de la clase \textit{Socket}:
+
+\begin{itemize}
+\item \textit{getInetAddress()}.  Obtiene la dirección IP del servidor destino.
+\item \textit{getPort()}. Obtiene el puerto del servidor destino.
+\item \textit{getLocalAddress()}. Obtiene la dirección IP local.
+\item \textit{getLocalPort()}. Obtiene el número de puerto local.
+\item \textit{getInputStream()}. Para acceder a los flujos de entrada.
+\item \textit{getOutputStream()}. Para acceder a los flujos de salida.
+\item \textit{close()}. Cerrar el socket cliente.
+\end{itemize}
+
+\subsection{Clase ServerSocket}
+
+Esta clase implementa un \textit{socket} del servidor TCP. Una instancia de la clase recibe comúnmente el número de puerto por el cual va a \textbf{escuchar} las solicitudes de conexión del cliente.
+
+Dentro de código para manejo de excepciones se declara un \textit{socket} servidor de la siguiente forma:
+
+\mint[linenos=false]{java}| miServidor = new ServerSocket(1111); |
+
+Algunos métodos importantes de la clase \textit{ServerSocket}:
+
+
+\begin{itemize}
+\item \textit{accept()}. Hace que el \textit{socket} servidor escuche y espere hasta que se establezca una conexión entrante.
+\item \textit{getSoTimeout()}. Devuelve el tiempo que va a estar bloqueado el \textit{socket} con respecto a una llamada al método \textit{accept()}.
+\item \textit{setSoTimeout()}. Modifica el tiempo de bloqueo del \textit{socket}.
+\item \textit{close()}. Cierra el \textit{socket} servidor.
+\end{itemize}
+
+Veamos ahora un ejemplo con una clase cliente y otra clase servidor. Este programa aprovecha las características de multihilos de Java creando un hilo cliente y otro servidor.
+
+\ejemplo %ACTUALIZAR
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Programa cliente servidor con sockets
+import java.awt.*;
+import java.net.*;
+import java.io.*;
+
+class hiloCliente extends Thread {
+
+   DataInputStream dis = null;
+   Socket s = null;
+
+   public hiloCliente() {
+        try {
+           //se crea socket con dirección de máquina local
+           s = new Socket("127.0.0.1", 2525);
+           dis = new DataInputStream(s.getInputStream());
+        } 
+        catch (IOException e)
+        {
+            System.out.println("Error: " + e);
+        }
+   }
+
+   public void run()
+   {
+       while (true)
+       {
+            try {
+               String mensaje = dis.readLine();
+               if (mensaje == null)
+                 break;
+               System.out.println(mensaje);
+           } 
+           catch (IOException e)
+           {
+               System.out.println("Error: " + e);
+           }
+       }
+   }
+}
+
+public class clienteYServidor extends Frame {
+   static ServerSocket servidor = null;
+
+   public boolean handleEvent (Event evt)
+   {
+       if (evt.id == Event.WINDOW_DESTROY)
+       {
+           System.exit(0);
+       }
+       return super.handleEvent (evt);
+   }
+
+   public boolean mouseDown(Event evt, int x, int y)
+   {
+       new hiloCliente().start(); // Iniciar el hilo cliente
+       return(true);
+   }
+
+   public static void main(String args[])
+   {
+      clienteYServidor f = new clienteYServidor();
+      f.resize (200, 200);
+      f.show();
+      try {
+            //genera el socket servidor
+          servidor = new ServerSocket(2525);
+      } 
+      catch (IOException e)
+      {
+          System.out.println("Error: " + e);
+      }
+      while (true)
+      {
+          Socket s = null;
+          try {
+              s = servidor.accept();
+          } 
+          catch (IOException e)
+          {
+              System.out.println("Error: " + e);
+          }
+
+          try {
+            PrintStream ps = new  PrintStream(s.getOutputStream());
+            ps.println("Hola, Mundo");
+            ps.flush();
+            s.close();
+          } 
+          catch (IOException e)
+          {
+             System.out.println("Error: " + e);
+          }
+      }
+  }
+}
+\end{minted}
+\caption{Ejemplo de programa cliente servidor con sockets .}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El programa muestra a un hilo cliente solicitando una cadena de un flujo de datos al servidor: cada vez que se da \textit{click} sobre la ventana el servidor inicia a un hilo cliente que a su vez se comunica con el servidor.
+
+En el \textbf{sección complementaria uno }se muestra otro ejemplo de uso de la clase \textit{Socket} para crear un cliente y en la \textbf{sección complementaria dos} se muestra el código correspondiente al servidor. Estos programas se comunican entre sí: el cliente es capaz de enviar una cadena y recibirla de vuelta modificada por el servidor. Cada uno corre de manera independiente e idealmente debería ser probado en distintas máquinas en red.
+
+Ejemplo de ejecución del \textbf{cliente}:
+
+\begin{minted}{bash}
+$ java PortTalkApp yodocono.utm.mx 1234
+Conectando a: yodocono.utm.mx puerto 1234.
+servidor destino yodocono.utm.mx.
+IP servidor destino 192.100.170.5.
+numero de puerto servidor destino 1234.
+servidor Local iec23.
+IP servidor Local 192.100.170.33.
+numero de puerto servidor Local 2162.
+Enviar, recibir, o salir (E/R/S): e
+Hola yodocono
+Enviar, recibir, o salir (E/R/S): r
+***onocodoy aloH
+\end{minted}
+
+Ejemplo de ejecución del \textbf{servidor}:
+
+\begin{minted}{bash}
+$ java ReverServerApp
+Servidor escuchando en puerto: 1234.
+Aceptando conexion a iec23.utm.mx en puerto 2162.
+Recibido: Hola yodocono
+Enviado: onocodoy aloH
+\end{minted}
+
+
+\subsection{Clase \textit{DatagramSocket}}
+
+Esta clase es el punto de entrada de todas las acciones sobre datagramas UDP\footnote{UDP es un protocolo que carece de conexión y que permite que los programas de aplicación intercambien información por medio de trozos de información a los que se conoce datagramas.}. Sería el equivalente a la clase \textit{Socket} y \textit{ServerSocket} para el protocolo TCP, ya que implementa los \textit{sockets} cliente y servidor.
+
+	Principales métodos\footnote{Algunos métodos importantes no se mencionan porque son comunes a los proporcionados por otras clases con anterioridad.} de la clase \textit{DatagramSocket}:
+
+
+\begin{itemize}
+\item \textit{send()}. Enviar un datagrama a través del \textit{socket}.
+\item \textit{receive()}. Recibir un datagrama a través del \textit{socket}.
+\item \textit{close()}. Cerrar el \textit{socket}.
+\end{itemize}
+
+\subsection{Clase \textit{DatagramPacket}}
+
+Esta clase representa un paquete de datos recibido o enviado mediante un \textit{socket} a través del protocolo UDP. Se le considera una clase de bajo nivel que sólo resulta útil para aplicaciones que deben leer o escribir datos según un formato específico, pero que no necesitan garantizar la integridad de la llamada.
+
+Cada datagrama es enviado de una máquina a otra a partir de la información del paquete. Si un conjunto de paquetes son enviados hacia una máquina estos podrían ser enviados por caminos distintos y tener un orden de llegada distinto.
+
+A continuación se muestra la salida generada por dos programas que se detallan en las \textbf{secciones complementarias tres y cuatro}. El programa \textit{TimeServerApp} esta a la espera de solicitudes de \textbf{tiempo} o \textbf{salida} y de acuerdo a estas solicitudes enviará al cliente la fecha y hora o provocará la finalización del servidor. 
+
+Ejemplo de ejecución de \textit{TimeServerApp}:
+
+\begin{minted}{bash}
+$ java TimeServerApp
+iec23: TimeServer escuchando el puerto 2345.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: tiempo
+Enviando: Fri Jun 02 17:20:58 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: tiempo
+Enviando: Fri Jun 02 17:20:59 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: tiempo
+Enviando: Fri Jun 02 17:20:59 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: tiempo
+Enviando: Fri Jun 02 17:20:59 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: tiempo
+Enviando: Fri Jun 02 17:20:59 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+
+Recibiendo un datagrama desde iec23.utm.mx puerto 1188.
+Contenido del datagrama: salida
+Enviando: Fri Jun 02 17:21:00 GMT-05:00 2000 a iec23.utm.mx al puerto 1188.
+\end{minted}
+
+Por su parte, el programa \textit{GetTimeApp} envía cinco solicitudes de "tiempo"  y una de "salida" al servidor.
+
+Ejemplo de ejecución de \textit{GetTimeApp}:
+
+\begin{minted}{java}
+$ java GetTimeApp
+
+Envia peticion de tiempo a iec23 al puerto 2345.
+Recibiendo un datagrama desde iec23.utm.mx at port 2345.
+El datagrama contiene los sig. datos: Fri Jun 02 17:20:58 GMT-05:00 2000
+
+Envia peticion de tiempo a iec23 al puerto 2345.
+Recibiendo un datagrama desde iec23.utm.mx at port 2345.
+El datagrama contiene los sig. datos: Fri Jun 02 17:20:59 GMT-05:00 2000
+
+Envia peticion de tiempo a iec23 al puerto 2345.
+Recibiendo un datagrama desde iec23.utm.mx at port 2345.
+El datagrama contiene los sig. datos: Fri Jun 02 17:20:59 GMT-05:00 2000
+
+Envia peticion de tiempo a iec23 al puerto 2345.
+Recibiendo un datagrama desde iec23.utm.mx at port 2345.
+El datagrama contiene los sig. datos: Fri Jun 02 17:20:59 GMT-05:00 2000
+
+Envia peticion de tiempo a iec23 al puerto 2345.
+Recibiendo un datagrama desde iec23.utm.mx at port 2345.
+El datagrama contiene los sig. datos: Fri Jun 02 17:20:59 GMT-05:00 2000
+\end{minted}
+
+En este ejemplo se asume el funcionamiento en una sola máquina pues se toma la dirección de la máquina local, pero modificarlo para probarlo en máquinas distintas no debe ser problema.
+
+\section{Complemento 1. \textit{PortTalkApp}}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Ejemplo de uso de la clase Socket
+import java.lang.System;
+import java.net.Socket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.io.*;
+
+public class PortTalkApp {
+ public static void main(String args[]){
+  PortTalk portTalk = new PortTalk(args);
+  portTalk.displayDestinationParameters();
+  portTalk.displayLocalParameters();
+  portTalk.chat();
+  portTalk.shutdown();
+ }
+}
+
+class PortTalk {
+ Socket connection;
+ DataOutputStream outStream;
+ BufferedReader inStream;
+ public PortTalk(String args[]){
+  if(args.length!=2) error("Sintaxis: java PortTalkApp <servidor> <puerto>");
+  String destination = args[0];
+  int port = 0;
+  try {
+   port = Integer.valueOf(args[1]).intValue();
+  }catch (NumberFormatException ex){
+   error("N£mero de puerto inv lido");
+  }
+  try{
+   connection = new Socket(destination,port);
+  }catch (UnknownHostException ex){
+   error("Servidor desconocido");
+  }
+  catch (IOException ex){
+   error("Error E/S: al crear el socket");
+  }
+  try{
+   inStream = new BufferedReader(
+    new InputStreamReader(connection.getInputStream()));
+   outStream = new DataOutputStream(connection.getOutputStream());
+  }catch (IOException ex){
+   error("Error E/S: obteniendo el flujo");
+  }
+  System.out.println("Conectando a: "+destination+" puerto "+port+".");
+ }
+ public void displayDestinationParameters(){
+  InetAddress destAddress = connection.getInetAddress();
+  String name = destAddress.getHostName();
+  byte ipAddress[] = destAddress.getAddress();
+  int port = connection.getPort();
+  displayParameters("servidor destino ",name,ipAddress,port);
+ }
+ public void displayLocalParameters(){
+  InetAddress localAddress = null;
+  try{
+   localAddress = InetAddress.getLocalHost();
+  }catch (UnknownHostException ex){
+   error("Error obteniendo informaci¢n de servidor local");
+  }
+  String name = localAddress.getHostName();
+  byte ipAddress[] = localAddress.getAddress();
+  int port = connection.getLocalPort();
+  displayParameters("servidor Local ",name,ipAddress,port);
+ }
+ public void displayParameters(String s,String name,byte ipAddress[],int port){
+  System.out.println(s+name+".");
+  System.out.print("IP "+s);
+  for(int i=0;i<ipAddress.length;++i)
+   System.out.print((ipAddress[i]+256)%256+".");
+  System.out.println();
+  System.out.println("numero de puerto "+s+port+".");
+ }
+ public void chat(){
+  BufferedReader keyboardInput = new BufferedReader(
+   new InputStreamReader(System.in));
+  boolean finished = false;
+  do {
+   try{
+    System.out.print("Enviar, recibir, o salir (E/R/S): ");
+    System.out.flush();
+    String line = keyboardInput.readLine();
+    if(line.length()>0){
+     line=line.toUpperCase();
+     switch (line.charAt(0)){
+     case 'E':
+      String sendLine = keyboardInput.readLine();
+      outStream.writeBytes(sendLine);
+      outStream.write(13);
+      outStream.write(10);
+      outStream.flush();
+      break;
+     case 'R':
+      int inByte;
+      System.out.print("***");
+      while ((inByte = inStream.read()) != '\n')
+      System.out.write(inByte);
+      System.out.println();
+      break;
+     case 'S':
+      finished=true;
+      break;
+     default:
+      break;
+     }
+    }
+   }catch (IOException ex){
+    error("Error leyendo del teclado o socket");
+   }
+  } while(!finished);
+ }
+ public void shutdown(){
+  try{
+   connection.close();
+  }catch (IOException ex){
+   error("Error e/S cerrando socket");
+  }
+ }
+ public void error(String s){
+  System.out.println(s);
+  System.exit(1);
+ }
+}
+\end{minted}
+\caption{Ejemplo de uso de la clase Socket. \textit{PortTalkApp}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Complemento 2. \textit{ServerSocket}}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo de uso de la clase ServerSocket
+import java.lang.System;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.*;
+
+public class ReverServerApp {
+ public static void main(String args[]){
+  try{
+   ServerSocket server = new ServerSocket(1234);
+   int localPort = server.getLocalPort();
+   System.out.println("Servidor escuchando en puerto: "+localPort+".");
+   Socket client = server.accept();
+   String destName = client.getInetAddress().getHostName();
+   int destPort = client.getPort();
+   System.out.println("Aceptando conexion a "+destName+" en puerto "+
+    destPort+".");
+   BufferedReader inStream = new BufferedReader(
+    new InputStreamReader(client.getInputStream()));
+   DataOutputStream outStream = new DataOutputStream(client.getOutputStream());
+   boolean finished = false;
+   do {
+    String inLine = inStream.readLine();
+    System.out.println("Recibido: "+inLine);
+    if(inLine.equalsIgnoreCase("salir")) finished=true;
+    String outLine=new ReverseString(inLine.trim()).getString();
+    for(int i=0;i<outLine.length();++i)
+     outStream.write((byte)outLine.charAt(i));
+    outStream.write(13);
+    outStream.write(10);
+    outStream.flush();
+    System.out.println("Enviado: "+outLine);
+   } while(!finished);
+   inStream.close();
+   outStream.close();
+   client.close();
+   server.close();
+  }catch (IOException ex){
+   System.out.println("excepcion: IOException .");
+  }
+ }
+}
+class ReverseString {
+ String s;
+ public ReverseString(String in){
+  int len = in.length();
+  char outChars[] = new char[len];
+  for(int i=0;i<len;++i)
+   outChars[len-1-i]=in.charAt(i);
+  s = String.valueOf(outChars);
+ }
+ public String getString(){
+  return s;
+ }
+}
+\end{minted}
+\caption{Ejemplo de uso de la clase \textit{ServerSocket}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\section{Complemento 3. \textit{TimeServerApp}}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo de escucha de un socket UDP
+import java.lang.System;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.io.IOException;
+import java.util.Date;
+
+public class TimeServerApp {
+ public static void main(String args[]){
+  try{
+   DatagramSocket socket = new DatagramSocket(2345);
+   String localAddress = InetAddress.getLocalHost().getHostName().trim();
+   int localPort = socket.getLocalPort();
+   System.out.print(localAddress+": ");
+   System.out.println("TimeServer escuchando el puerto "+localPort+".");
+   int bufferLength = 256;
+   byte outBuffer[];
+   byte inBuffer[] = new byte[bufferLength];
+   DatagramPacket outDatagram;
+   DatagramPacket inDatagram = new DatagramPacket(inBuffer,inBuffer.length);
+   boolean finished = false;
+   do {
+    socket.receive(inDatagram);
+    InetAddress destAddress = inDatagram.getAddress();
+    String destHost = destAddress.getHostName().trim();
+    int destPort = inDatagram.getPort();
+    System.out.println("\nRecibiendo un datagrama desde "+destHost+" puerto "+
+     destPort+".");
+    String data = new String(inDatagram.getData()).trim();
+    System.out.println("Contenido del datagrama: "+data);
+    if(data.equalsIgnoreCase("salida")) finished=true;
+    String time = new Date().toString();
+    outBuffer=time.getBytes();
+    outDatagram = new DatagramPacket(outBuffer,outBuffer.length,destAddress,
+     destPort);
+    socket.send(outDatagram);
+    System.out.println("Enviando: "+time+" a "+destHost+" al puerto "+destPort+".");
+   } while(!finished);
+  }catch (IOException ex){
+   System.out.println("Excepcion: IOException");
+  }
+ }
+}
+
+\end{minted}
+\caption{Ejemplo de escucha de un socket UDP. \textit{TimeServerApp}}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Complemento 4. \textit{GetTimeApp}}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo de uso de datagramas
+import java.lang.System;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.io.IOException;
+
+public class GetTimeApp {
+ public static void main(String args[]){
+  try{
+   DatagramSocket socket = new DatagramSocket();
+   InetAddress localAddress = InetAddress.getLocalHost();
+   String localHost = localAddress.getHostName();
+   int bufferLength = 256;
+   byte outBuffer[];
+   byte inBuffer[] = new byte[bufferLength];
+   DatagramPacket outDatagram;
+   DatagramPacket inDatagram = new DatagramPacket(inBuffer,inBuffer.length);
+   for(int i=0;i<5;++i){
+    outBuffer = new byte[bufferLength];
+    outBuffer = "tiempo".getBytes();
+    outDatagram = new DatagramPacket(outBuffer,outBuffer.length,
+     localAddress,2345);
+    socket.send(outDatagram);
+    System.out.println("\nEnvia peticion de tiempo a "+localHost+" al puerto 2345.");
+    socket.receive(inDatagram);
+    InetAddress destAddress = inDatagram.getAddress();
+    String destHost = destAddress.getHostName().trim();
+    int destPort = inDatagram.getPort();
+    System.out.println("Recibiendo un datagrama desde "+destHost+" at port "+
+     destPort+".");
+    String data = new String(inDatagram.getData());
+    data=data.trim();
+    System.out.println("El datagrama contiene los sig. datos: "+data);
+   }
+   outBuffer = new byte[bufferLength];
+   outBuffer = "salida".getBytes();
+   outDatagram = new DatagramPacket(outBuffer,outBuffer.length,
+    localAddress,2345);
+   socket.send(outDatagram);
+  }catch (IOException ex){
+   System.out.println("excepci¢n: IOException");
+  }
+ }
+}
+\end{minted}
+\caption{Ejemplo de uso de datagramas. \textit{GetTimeApp}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Ejercicios sugeridos} 
+\end{center} 
+\\ \hline
+
+\begin{itemize}
+\item      • ¿Qué pasa si al programa \textit{ReverServerApp} se tratan de conectar dos o más clientes? Proponga e implemente una solución para recibir más de un cliente. 
+\item     • Modifique el ejemplo de uso de datagramas para poder conectarse desde cualquier máquina en la red al servidor \textit{TimeServerApp}.
+\end{itemize}
+
+\\ \hline
+\end{tabular}
+\end{center}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

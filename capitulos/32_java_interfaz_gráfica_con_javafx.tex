@@ -1,0 +1,396 @@
+\chapter{Java: Interfaz gráfica con JavaFX}
+\section{Introducción}
+
+JavaFX es el framework más reciente para el desarrollo de interfaces gráficas en Java. Como ya se mencionó, la AWT (\textit{Abstract Window Toolkit}) es útil para desarrollar aplicaciones con interfaces gráficas simples, pero es dependiente de la plataforma. AWT fue reemplazada por Swing - fue incluida inicialmente en Java 1.1-,  incluyendo componentes más robustos que son puestos en lienzos (canvas) y estos componentes son menos dependientes  de la plataforma de ejecución, usando menos recursos nativos\footnote{Información sobre JavaFX y Swing: \href{http://docs.oracle.com/javase/8/javase-clienttechnologies.htm}{Java SE client technologies}}. Swing incluyó componentes ligeros construidos enteramente en Java y \textit{look \& feel} independiente de la plataforma, separando la vista de la lógica del componente.
+
+JavaFX es un conjunto nuevo de componentes para interfaces gráficas que permite desarrollar RIA (\textit{Rich Internet Applications}). Una aplicación RIA es una aplicación Web que ofrece las mismas características que una aplicación de escritorio. Agrega  soporte \textit{multi-touch} (para tabletas y \textit{smartphones}), animación 2D y 3D, reproducción de audio, video, etc.\cite{liang2015introduction}
+
+Una aplicación JavaFX puede ejecutarse\footnote{\href{http://docs.oracle.com/javafx/2/get_started/basic_deployment.htm}{Basic deployment}}:
+
+\begin{itemize}
+\item Como aplicación de escritorio desde un archivo JAR
+\item Desde la línea de comandos usando el lanzador JavaBeans
+\item Dando click en un navegador y bajando la aplicación
+\item En una página web al abrirse.
+\end{itemize}
+
+La arquitectura de JavaFX puede apreciarse en la  figura \ref{fig:javaFX_architecture}  \footnote{\url{https://docs.oracle.com/javafx/2/architecture/jfxpub-architecture.htm}}.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.7]{imagenes/javafx01_architecture.png}
+    \caption{ Arquitectura de JavaFX }
+    \label{fig:javaFX_architecture}
+\end{figure}	
+
+El framework de JavaFX  esta contenido con el prefijo \textit{javafx}, contando con más de 30 paquetes es la API de Java. La estructura general de una interfaz de usuario JavaFX está basada en:
+
+ \begin{itemize}
+\item \textit{Stage}  (Escenario)
+\item \textit{Scene} (Escena)
+\item \textit{Node}
+\item \textit{Layout} (Esquema, disposición) 
+\end{itemize}
+
+ JavaFX utiliza una \textbf{metáfora de escenario}. En una obra teatral un escenario contiene a una escena. De esta forma un escenario define un espacio y una escena define que va en ese espacio. Podríamos decir que un escenario es un contenedor de escenas y una escena es un contenedor de los elementos relacionados con dicha escena. 
+
+Una aplicación JavaFX tiene al menos un escenario y una escena mediante las clases \textit{Stage} y \textit{Scene}. \textit{Stage} es un contenedor de alto nivel llamado \textbf{escenario primario}. Es posible tener más de un escenario pero solo un escenario primario es requerido.
+
+Los elementos de una escena son nodos. Puede tratarse de un elemento único (e.g., un botón) hasta grupos de nodos. Adicionalmente, un nodo puede tener un nodo hijo. Por lo que podemos tener: nodos padre, nodos hijo, hojas (o nodos terminales) y el nodo raíz (el nodo en el nivel más alto del árbol). La clase base para todos los nodos es \textit{Node}, algunas de sus principales subclases son \textit{Parent}, \textit{Group}, \textit{Region} y \textit{Control}.
+
+Los \textit{Layouts}  son esquemas que se utilizan para organizar el contenido de los elementos en una escena. Se tienen diferentes clases de “páneles” que heredan de la clase \textit{Node}.
+
+El siguiente \textcolor{blue}{ejemplo} es generado por default en NetBeans al crear un proyecto JavaFX:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+public class MyJavaFX extends Application {
+	
+	@Override // Sobreescribe el método start en la clase Application
+	public void start(Stage primaryStage) {
+		// Crea una escena y coloca un botón en la escena
+		Button btOK = new Button("OK");
+		Scene scene = new Scene(btOK, 200, 250);
+		primaryStage.setTitle("MyJavaFX"); 
+		primaryStage.setScene(scene); // Coloca escena en escenario
+		primaryStage.show(); // Despliega escenario
+}
+	
+	/**
+	 * El método main solo es necesario para IDEs con soporte limitado
+         * de JavaFX. No necesario para ejecución en línea de comandos.
+	 */
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
+}
+\end{minted}
+\caption{Ejemplo JavaFX generado por NetBeans.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Otro \textcolor{blue}{ejemplo:}\cite{liang2015introduction}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+package javafxapplication1;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+
+public class JavaFXApplication1 extends Application {
+    
+    @Override
+    public void start(Stage escenarioPrimario) {
+        Button btn = new Button();
+        btn.setText("Di 'Hola Mundo'");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("¡Hola, Mundo!");
+            }
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren()1.add(btn);
+        
+        Scene escena = new Scene(root, 300, 250);
+        
+        escenarioPrimario.setTitle("¡Hola Mundo!");
+        escenarioPrimario.setScene(escena);
+        escenarioPrimario.show();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
+\end{minted}
+\caption{Ejemplo JavaFX "¡Hola, Mundo!".}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+El método \textit{launch()} es un método estático definido en la clase \textit{Application} y que se ocupa para lanzar la aplicación \textit{stand-alone}  de JavaFX. El método\textit{ main(...)} no es necesario si se ejecuta de la terminal, pero puede ser necesario para ejecutar el programa en un IDE que no tenga soporte completo para JavaFX. Al ejecutarse la aplicación JavaFX sin el método \textit{main}, la máquina virtual de Java ejecuta el método\textit{ run()} de la aplicación.
+
+En este ejemplo, la clase redefine el método start() originalmente definido en: 
+
+\textit{javafx.application.Application} 
+
+Al ejecutarse el programa, la máquina virtual genera una instancia de la clase usando el constructor sin parámetros e invoca a su método \textit{start()}. 
+
+El método \textit{start()} usualmente se encarga de colocar los controles de la interfaz de usuario en una escena (\textit{scene}) y la despliega en un escenario (\textit{stage}). 
+
+El ejemplo crea un objeto \textit{Button}  y lo coloca en un objeto Scene. El objeto Scene puede ser creado con el constructor \textit{Scene(node, width, height)} . Se especifica el ancho y alto de la escena y coloca el nodo en la escena.
+
+Un objeto \textit{Stage} es una ventana. Un objeto \textit{Stage} llamado \textit{primaryStage} es creado automáticamente por la JVM al lanzarse la aplicación.
+
+Recordemos que JavaFX usa una \textbf{analogía de un teatro} con clases de escenas y escenarios. Puede verse a un escenario como una plataforma que soporta escenas y nodos como actores que intervienen en las escenas.
+
+Un \textcolor{blue}{ejemplo}\cite{liang2015introduction} con múltiples escenarios, se omite el método \textit{main} ya que, como se explicó no debe ser necesario:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+public class MúltipleEscenario extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        // Crea una escena y coloca un botón en la escena
+        Scene escena = new Scene(new Button("OK"), 200, 250);
+        escenarioPrimario.setTitle("MúltipleEscenarioApp"); // asigna título al escenario
+        escenarioPrimario.setScene(escena); // Coloca la escena en el escenario
+        escenarioPrimario.show(); // Despliega el escenario
+        
+        Stage escenario = new Stage(); // Crea un nuevo escenario
+        escenario.setTitle("Segundo escenario"); 
+        // Coloca una escena con un butón en el escenario
+        escenario.setScene(new Scene(new Button("Nuevo escenario"), 100, 100));
+        escenario.show();
+    }
+}
+\end{minted}
+\caption{Ejemplo de JavaFX con múltiples escenarios.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Elementos de interfaz de usuario}
+
+Los elementos de interfaz con el usuario se pueden posicionar estableciendo las posiciones y el tamaño de los elementos en la ventana, pero esto no es la mejor solución. Un modelo más flexible es usar clases contenedoras de tipo panel (\textit{pane}) para colocar los nodos. Un nodo es un componente visual que puede ser un control de interfaz de usuario, una figura o un panel . Se colocan los nodos en un panel y se coloca el panel en una escena. La escena puede ser mostrada en un escenario, como ya se vió en los ejemplos anteriores. Ver figura \ref{fig:javafx_panel} \cite{liang2015introduction}.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.6]{imagenes/javaFX_pane.png}
+    \caption{ (a) Paneles son usados para mantener nodos. (b) Nodos pueden ser figuras, vstas de imágenes, controles IU, y paneles. }
+    \label{fig:javafx_panel}
+\end{figure}
+
+Un ejemplo \cite{liang2015introduction} con panel:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
+
+public class BotónEnPanel extends Application {
+    @Override 
+    public void start(Stage primaryStage) {
+        // Crea una escena  y coloca botón en la escena
+        StackPane panel = new StackPane();
+        panel.getChildren().add(new Button("OK"));
+        Scene escena = new Scene(panel, 200, 50);
+        primaryStage.setTitle("Botón en un panel"); 
+        primaryStage.setScene(escena); 
+        primaryStage.show(); 
+    }
+}
+\end{minted}
+\caption{Ejemplo de JavaFX con panel.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Aunque aquí solo hay un objeto, un objeto \textit{StackPane} coloca los nodos en el centro del panel y los apila, respetando el tamaño preferido del nodo.
+
+\subsection{Diseño de paneles}
+
+De forma similar a las otras bibliotecas de IU, JavaFX ofrece un conjunto de tipos de páneles  para posicionar automáticamente los nodos en un tamaño y posición necesarios. A continuación se describen de manera general los principales paneles manejados.
+
+
+\begin{itemize}
+\item \textit{Pane}. 		Es la clase base de diseño de paneles. Contiene el método \textit{getChildren()} que regresa la lista de nodos del panel. 
+\item \textit{StackPane}. 	Coloca los nodos encima unos de otros en el centro del panel.
+\item \textit{FlowPane}. 	Coloca los nodos renglón por renglón de manera horizontal o columna por columna, verticalmente. 
+\item \textit{GridPane}. 	Coloca los nodos en celdas en una tabla de dos dimensiones. 
+\item \textit{BorderPane}. 	Coloca los nodos en las zonas de arriba, derecha, abajo, izquierda y centro.
+\item \textit{HBox}. 		Coloca los nodos en un renglón simple. 
+\item \textit{VBox}. 		Coloca los nodos en una columna sencilla.  
+\end{itemize}
+%\\
+
+Los nodos se agregan a la lista del panel  con el método $add( <nodo>)$ de forma individual o con el método $addAll( <nodo 1>, <nodo 2>, ..., <nodo _n>)$  para añadir un conjunto de nodos al panel.
+
+Usando \textit{FlowPane}. \ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
+
+public class MuestraFlowPane extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        // Crea un panel y asigna sus propiedades
+        FlowPane panel = new FlowPane();
+		// asigna las propiedades de relleno de espacio 
+		// con un objeto de Insets
+		//Construye una nueva instancia Insets 
+		//con cuatro diferentes offsets . 
+		//Parámetros: top - the top offset; 
+		//   right - the right offset; 
+		// bottom - the bottom offset; left - the left offset. 
+		//Fuente: 
+		// https://docs.oracle.com/javase/8/javafx/api/javafx/geometry/Insets.html 
+        panel.setPadding(new Insets(11, 12, 13, 14)1);
+        panel.setHgap(5);
+        panel.setVgap(5);
+        // Coloca los nodos en el panel
+        panel.getChildren().addAll(new Label("Nombre:"),
+            new TextField());
+        TextField tfIniciales = new TextField();
+        tfIniciales.setPrefColumnCount(2);
+        panel.getChildren().addAll(new Label("Apellidos:"),
+            new TextField(), new Label("Iniciales:"), tfIniciales);
+        // Crea una escena y la coloca en el escenario
+        Scene escena = new Scene(panel, 200, 250);
+        escenarioPrimario.setTitle("MuestraFlowPane"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX de panel usando \textit{FlowPane}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Usando BorderPane. \ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class MuestraBorderPane extends Application {
+    @Override 
+    public void start(Stage escenarioPrimario) {
+        // Crea un BorderPane
+        BorderPane panel = new BorderPane();
+        // Coloca nodos en el panel
+        panel.setTop(new PanelAdaptado("Arriba"));
+        panel.setRight(new PanelAdaptado("Derecha"));
+        panel.setBottom(new PanelAdaptado("Abajo"));
+        panel.setLeft(new PanelAdaptado("Izquierda"));
+        panel.setCenter(new PanelAdaptado("Centro"));
+
+        // Crea una escena y la coloca en el escenario
+        Scene escena = new Scene(panel);
+        escenarioPrimario.setTitle("MuestraBorderPane"); 
+        escenarioPrimario.setScene(escena); 
+        escenarioPrimario.show(); 
+    }
+}
+
+// Define un panel adaptado para mantener una etiqueta en el centro del panel
+class PanelAdaptado extends StackPane {
+    public PanelAdaptado(String title) {
+        getChildren().add(new Label(title));
+        setStyle("-fx-border-color: red");
+        setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
+    }
+}
+\end{minted}
+\caption{Ejemplo JavaFX usando BorderPane.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+Resumiendo:
+
+
+\begin{itemize}
+\item JavaFX es un framework para interfaces de usuario de aplicaciones tanto \textit{stand-alone} como web
+\item La idea es reemplazar \textit{AWT} y \textit{Swing}.
+\item Una clase principal de JavaFX debe extender la clase \textit{javafx.application.Application} e implementar el método \textit{start()}. 
+\item El escenario primario es creado automáticamente por la JVM y pasado al método \textit{start()}.
+\item Un escenario es una ventana para el desplegado de una escena. Se pueden añadir nodos a una escena. Paneles, controles y figuras son nodos. Paneles pueden ser usados como contenedores de nodos.
+\item La clase \textit{Node} define muchas propiedades que son comunes a todos los nodos. Estas propiedades pueden ser aplicadas a paneles, controles y figuras.
+\end{itemize}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava

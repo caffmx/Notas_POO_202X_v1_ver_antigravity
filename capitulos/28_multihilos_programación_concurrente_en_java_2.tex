@@ -1,0 +1,752 @@
+\chapter{Multihilos:  Programación Concurrente en Java (2)}
+\section{Sincronización de hilos}
+
+Es lógico pensar que un programa concurrente puede tener problemas al tratar de acceder datos comunes. Por ejemplo, si dos hilos tratan de manipular una variable al mismo tiempo, puede ocasionarse un valor inesperado en la misma.  Para evitar este tipo de problemas, Java utiliza \textbf{monitores}\footnote{Un monitor es una colección de variables y procedimientos compartidos, con la restricción de que sólo un proceso a la vez puede ejecutar un procedimiento del monitor.}, permitiendo poner un \textbf{candado} para que un solo hilo pueda acceder a los datos a la vez. 
+
+Existen dos formas de proteger el acceso a datos. El primero es ejecutar un método sincronizado, el cual es definido mediante la palabra reservada \textit{synchronized}, de manera que \textbf{sólo un método sincronizado puede ejecutarse para el objeto}. Hasta que termina de ejecutarse un método sincronizado, se permite que entre a ejecutarse el hilo con mayor prioridad, el cual puede ser a su vez un método sincronizado\footnote{Una opción adicional de implementar sincronización en Java es mediante la clase \textit{ReentrantLock}, pero no se verá en el curso. Ver: \href{https://www.geeksforgeeks.org/reentrant-lock-java/}{Reentrant lock Java}}.
+
+Veamos un primer ejemplo de sincronización.  Se trata del control de una cuenta de cheques, en donde es posible que se trate de cobrar más de un cheque al mismo tiempo (en este caso se muestran dos hilos). El problema se daría si el método que modifica el balance de la cuenta no estuviera sincronizado, pues pudiera darse el caso de que no se registren correctamente los cambios. La modificación del balance es una \textbf{sección crítica}, y por lo mismo se encuentra protegida con monitores.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class Cuenta {
+ 
+  static int balance = 1000;
+  static int gasto = 0;
+
+   static public synchronized void retirar(int cantidad)
+     {
+       if (cantidad <= balance)
+         {
+           System.out.println("cheque: " + cantidad);
+           balance -= cantidad;
+           gasto += cantidad;
+           System.out.print("balance: " + balance);
+           System.out.println(", se gastó: " + gasto);
+         }
+       else
+         {
+           System.out.println("rebotó: " + cantidad);
+         }
+     }
+ }
+
+class miHilo extends Thread {
+   public void run()
+     {
+       for (int i = 0; i < 10; i++)
+         {
+           try {
+              sleep(100);
+             } 
+           catch (InterruptedException e) {}
+           Cuenta.retirar((int) (Math.random() * 500 ));
+         }
+     }
+ }
+
+public class Sincronizar  {
+ 
+	public static void main(String arg[]){
+      new miHilo().start();
+      new miHilo().start();
+    }    
+}
+
+\end{minted}
+\caption{Ejemplo de sincronización de hilos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Además de declarar un método como \textit{synchronized}, es posible declarar a un objeto y un bloque de código como sincronizados. Esto determina que \textbf{sólo un hilo puede ejecutar métodos del objeto en cuestión}. Por lo tanto, nadie puede modificar sus atributos más que el bloque de código declarado como sincronizado. Veamos el mismo ejemplo anterior implementado ahora con esta técnica:
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class miHilo extends Thread {
+   
+   static Integer balance = new Integer(1000);
+   static int gasto = 0;
+   static {  // bloque estático se ejecuta cuando la JVM carga la clase
+      System.out.print("Balance inicial: " + balance);
+     }
+ 
+   public void run()
+     {
+        int cuenta;
+  
+        for (int i = 0; i < 10; i++)
+          {
+            try {
+                sleep(100);
+              } 
+            catch (InterruptedException e) {}
+          
+            cuenta = ((int) (Math.random() * 500 ));
+            synchronized (balance)
+            {
+                if (cuenta <= balance.intValue())
+                 {
+                   System.out.println("cheque: " + cuenta);
+                   balance = new Integer(balance.intValue()-cuenta);
+                   gasto += cuenta;
+                   System.out.print("bal: "+balance.intValue());
+                   System.out.println(", se gastó: " + gasto);
+                 }else 
+                  {
+                   System.out.println("rebotó: " + cuenta);
+                  }
+              }
+          }
+     }
+  }
+ 
+public class ObjetoSincronizado {
+
+   public static void main(String args[]){
+       new miHilo().start();
+       new miHilo().start();
+     }    
+}
+\end{minted}
+\caption{Ejemplo de multihilos declarando un bloque de código sincronizado.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Problema Productor / Consumidor}
+
+En el sentido clásico, el problema del productor /consumidor se presenta cuando  en datos compartidos, un proceso necesita cierto dato (\textbf{consumidor}) que está preparando otro proceso (\textbf{productor}). Es lógico que ninguno de los dos deben acceder el dato al mismo tiempo. Pero también puede suceder que el consumidor llegue antes de que el productor tenga listos los datos; o viceversa, que el productor genere los datos y el consumidor todavía no pueda tomarlos.
+
+El siguiente ejemplo muestra un caso de Productor /Consumidor \textbf{sin} sincronización. Existe un objeto productor que va generando números consecutivos y un objeto consumidor que los va obteniendo. En la ejecución se podrá apreciar que el consumidor ocasionalmente recupera un número más de una vez, lo cual no debería ocurrir\footnote{ Por la forma en que está programado el objeto productor, éste no genera dos veces el mismo número. Pero se daría este caso si obtuviera el último número generado del valor compartido como base para generar el siguiente número.}.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class SharedCell {
+   public static void main( String args[] )
+   {
+      HoldInteger h = new HoldInteger();
+      ProduceInteger p = new ProduceInteger( h );
+      ConsumeInteger c = new ConsumeInteger( h );
+
+      p.start();
+      c.start();
+   }
+}
+
+class ProduceInteger extends Thread {
+   private HoldInteger pHold;
+
+   public ProduceInteger( HoldInteger h )
+   {
+      pHold = h;
+   }
+
+   public void run()
+   {
+      for ( int count = 0; count < 10; count++ ) {
+         pHold.setSharedInt( count );
+         System.out.println( "El productor puso: " +
+                             count );
+
+        try {
+            sleep( (int) ( Math.random() * 3000 ) );
+         }
+         catch( InterruptedException e ) {
+            System.err.println( "Excepcion " + e.toString());
+         }
+      }
+   }
+}
+
+class ConsumeInteger extends Thread {
+   private HoldInteger cHold;
+
+   public ConsumeInteger( HoldInteger h )
+   {
+      cHold = h;
+   }
+
+   public void run()
+   {
+      int val;
+
+      val = cHold.getSharedInt();
+      System.out.println( "Recuperado por el consumidor: " + val );
+
+      while ( val != 9 ) {
+
+         try {
+            sleep( (int) ( Math.random() * 3000 ) );
+         }
+         catch( InterruptedException e ) {
+            System.err.println( "Excepcion " + e.toString() );
+         }
+
+         val = cHold.getSharedInt();
+         System.out.println( "Recuperado por el consumidor: " + val );
+      }
+   }
+}
+
+class HoldInteger {
+   private int sharedInt;
+
+   public void setSharedInt( int val ) {
+    sharedInt = val;
+   }
+
+   public int getSharedInt() {
+    return sharedInt;
+   }
+}
+\end{minted}
+\caption{Ejemplo: Problema Productor / Consumidor. Modificacion de un objeto compartido sin sincronizacion.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+A continuación veremos el mismo programa, pero resuelto con sincronización:
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//Problema Productor /Consumidor
+// con sincronizacion de hilos.
+
+public class SharedCell {
+   public static void main( String args[] )
+   {
+      HoldInteger h = new HoldInteger();
+      ProduceInteger p = new ProduceInteger( h );
+      ConsumeInteger c = new ConsumeInteger( h );
+
+      p.start();
+      c.start();
+   }
+}
+
+class ProduceInteger extends Thread {
+   private HoldInteger pHold;
+
+   public ProduceInteger( HoldInteger h )
+   {
+      pHold = h;
+   }
+
+   public void run()
+   {
+      for ( int count = 0; count < 10; count++ ) {
+         pHold.setSharedInt( count );
+         System.out.println( "Productor asigna a sharedInt el valor: " +
+                             count );
+
+         try {
+            sleep( (int) ( Math.random() * 3000 ) );
+         }
+         catch( InterruptedException e ) {
+            System.err.println( "Excepcion " + e.toString() );
+         }
+      }
+   }
+}
+
+class ConsumeInteger extends Thread {
+   private HoldInteger cHold;
+
+   public ConsumeInteger( HoldInteger h )
+   {
+      cHold = h;
+   }
+
+   public void run()
+   {
+      int val;
+
+      val = cHold.getSharedInt();
+      System.out.println( "Recuperado por Consumidor: " + val );
+
+      while ( val != 9 ) {
+         try {
+            sleep( (int) ( Math.random() * 3000 ) );
+         }
+         catch( InterruptedException e ) {
+            System.err.println( "Excepcion " + e.toString() );
+         }
+
+         val = cHold.getSharedInt();
+         System.out.println( "Recuperado por consumidor: " + val );
+      }
+   }
+}
+
+class HoldInteger {
+   private int sharedInt;
+   private boolean writeable = true;
+
+   public synchronized void setSharedInt( int val )
+   {
+      while ( !writeable ) {
+         try {
+            wait();
+         }
+         catch ( InterruptedException e ) {
+            System.err.println( "Excepcion: " + e.toString() );
+         }
+      }
+
+      sharedInt = val;
+      writeable = false;
+      notify();
+   }
+
+   public synchronized int getSharedInt()
+   {
+      while ( writeable ) {
+         try {
+            wait();
+         }
+         catch ( InterruptedException e ) {
+            System.err.println( "Excepcion: " + e.toString() );
+         }
+      }
+
+      writeable = true;
+      notify();
+      return sharedInt;
+   }
+}
+\end{minted}
+\caption{Ejemplo: Problema Productor /Consumidor
+// con sincronizacion de hilos.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+En el ejemplo anterior se introducen los métodos \textit{wait()} y \textit{notify()}. Estos ayudan a mejorar el funcionamiento de los métodos sincronizados. Cuando un hilo sincronizado no puede continuar por algún motivo, deberá llamar al método \textit{wait()}, permitiendo que el hilo deje de competir por el tiempo de procesador y que otro hilo pueda procesar los datos compartidos. El método \textit{notify()} es ocupado para avisar a un hilo que se encuentra en espera, que el hilo que hizo la llamada ha terminado de realizar su proceso crítico y que pueden intentar ejecutarse, obteniendo para esto el \textbf{candado} del objeto monitor.
+
+Veamos un último ejemplo para dejar claro el uso de \textit{wait()} y \textit{notify()}, usando el mismo concepto de Productor/consumidor.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class Tienda {
+   int mercancia = 0;
+    
+   public synchronized int consumir()
+     {
+       int temp;
+       while (mercancia == 0)
+         {
+           try {
+              wait();
+            } 
+          catch (InterruptedException e) {}
+         }
+
+       temp = mercancia;
+       mercancia = 0;
+       System.out.println("Se consumió: " + temp);
+       notify();
+       return temp;
+     }
+
+   public synchronized void producir(int cantidad)
+     {
+       while (mercancia != 0)
+         {
+           try {
+               wait();
+             } 
+           catch (InterruptedException e) {}
+         }
+
+       mercancia = cantidad;
+       notify();
+       System.out.println("Se produjo: " + mercancia);
+     }
+ }
+ 
+class miHilo extends Thread {
+ 
+   boolean productor = false;
+   Tienda tienda;
+ 
+   public miHilo(Tienda d, String tipo)
+     {
+       tienda = d;
+
+       if (tipo.equals("Productor"))
+         productor = true;
+     }
+    
+   public void run()
+     {
+       for (int i = 0; i < 10; i++) 
+        {
+          try {
+             sleep((int)(Math.random() * 200 ));
+           } 
+          catch (InterruptedException e) {}
+          
+          if (productor)
+            tienda.producir((int)(Math.random() * 10 ) + 1);
+          else // debe ser un consumidor 
+            tienda.consumir();
+        }
+     }
+ }
+
+public class WaitNotify  {
+ 
+   Tienda tienda = new Tienda();
+
+   public static void main(String args[]){
+	   WaitNotify wn = new WaitNotify();
+	   wn.ini();
+   }
+   
+   public void ini(){
+       new miHilo(tienda, "Consumidor").start();
+       new miHilo(tienda, "Productor").start();
+     }    
+ }
+\end{minted}
+\caption{Ejemplo adicional de productor/consumidor.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Esperando que haya  quedado claro el uso de \textit{wait()} y \textit{notify()}, mencionaremos algunas observaciones que consideramos importantes. En primer lugar, un hilo que es puesto en espera mediante el método \textit{wait()}, debe ser notificado en algún momento de que puede continuar, de lo contrario puede quedarse esperando indefinidamente. Es vital entonces que para cada llamada a \textit{wait()} haya una correspondiente llamada a \textit{notify()}. Un hilo también puede ser mandado a la cola de espera porque trate de entrar un método sincronizado y ya se encuentre en ejecución un método sincronizado para ese objeto; pero, a diferencia de un hilo puesto en espera explícitamente, este hilo se reactivará cuando tenga oportunidad de entrar sin necesidad de que le notifiquen.
+
+El método \textit{notify()} sólo le indica a un hilo que puede dejar de esperar. Existe además un método \textit{notifyAll()}, que hace que todos los hilos que están en espera traten de ejecutarse. Obviamente sólo uno podrá hacerlo, pero todos tendrán la oportunidad de entrar. 
+
+Hay que tener cuidado con las sincronizaciones, ya que demasiado código sincronizado puede hacer muy lenta la ejecución de los hilos. Se debe sincronizar únicamente cuando se trate de situaciones críticas que tienen que ver con datos compartidos.
+
+Un problema común es que un programa muy sincronizado genere una ejecución casi secuencial. Otro problema más grave es que puede llegarse a dar el caso de que todos los hilos se queden esperando, esto se conoce como \textbf{abrazo mortal} (\textit{deadlock}), y por supuesto que hay que tratar de evitarlo\footnote{Investigar sobre el problema de los filósofos tragones.}.  El abrazo mortal se puede evitar con una cuidadosa programación que promueva el uso ordenado de los recursos\footnote{Existen algunos métodos formales que salen del alcance de este curso.}.
+
+\section{Grupos de hilos}
+
+Cuando se tiene un programa que necesita manejar múltiples hilos, es posible que varios de ellos estén trabajando en procesos similares. En Java, es posible agrupar los hilos para poder manipularlos de manera más eficiente, ya que se pueden enviar mensajes al grupo de hilos - como una unidad - en lugar de tener que hacerlo a cada uno de los hilos.
+
+Para lograr esto, se provee de la clase \textit{ThreadGroup}, la cual proporciona métodos para el control de los hilos que en general son versiones de grupo de los métodos que proporciona la clase \textit{Thread}. La formación de un grupo de hilos puede darse de la siguiente forma:
+
+\begin{minted}{java}
+ThreadGroup nombreGrupo = new ThreadGroup( "nombre del   grupo");
+miHilo mh1 = new miHilo (nombreGrupo, "hilo 1");
+miHilo mh2 = new miHilo (nombreGrupo, "hilo 2");
+\end{minted}
+
+\section{Hilos Demonios}
+
+Es posible tener en Java hilos demonio o \textit{daemon}. Estos hilos tienen este nombre ya que -como los \textit{daemon} de un sistema operativo- son procesos servidores que se encuentran corriendo con el propósito de proporcionar un servicio a otros hilos.
+
+Estos hilos \textit{daemon} se ejecutan por lo general con una prioridad baja, y si no hay ningún otro hilo al que le deban prestar servicio, finalizan. Un ejemplo de un hilo \textit{daemon} es el recolector de basura\footnote{garbage collector} de Java. Para que un hilo definido por nosotros sea considerado \textit{daemon} debe especificarse mediante el uso del método \textit{setDaemon()}:
+	
+\begin{minted}{java}
+	Thread miHilo= new Thread();
+	miHilo.setDaemon(true);
+\end{minted}
+Es importante señalar que un hilo debe de ser determinado como \textit{daemon} antes de que se ejecute el método \textit{start()} de ese hilo, o será lanzada la excepción \textit{IllegalThreadStateException}.
+
+\section{La interfaz \textit{Runnable}}
+
+Se ha visto la implementación de hilos heredando de la clase \textit{Thread}, la cual es la forma más común. Pero puede ser que la clase, a la que queremos implementar funcionalidades de hilos, ya tenga definida herencia de otra clase. Como Java no soporta herencia múltiple, para implementar el hilo en la clase tendría que hacerse a través de la interfaz \textit{Runnable}.
+
+Esta interfaz únicamente tiene definido el método \textit{run()}, el cual debe implementarse al igual que en la clase que se extiende la clase Thread. El esquema general para usar la interfaz \textit{Runnable} es:
+
+\begin{minted}{java}
+public class MiHilo implements Runnable {
+
+  public void run(){
+     //código del hilo
+  }
+}
+\end{minted}
+
+El inicio de la ejecución de un hilo difiere cuando se implementa esta interfaz, ya que se debe crear una instancia de la clase \textit{Thread} y pasarle como parámetro al constructor del hilo un objeto de la clase que implementa la interfaz \textit{Runnable}:
+
+\begin{minted}{java}
+Thread miHilo= new Thread( new MiHilo() );
+
+miHilo.start();
+\end{minted}
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class DemoThread implements Runnable {
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Hilo Hijo ");
+
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ie) {
+                System.out.println("Hilo hijo se ha interrumpido! " + ie);
+            }
+        }
+
+        System.out.println("Hilo hijo finalizado!");
+    }
+
+    public static void main(String[] args) {
+        Thread t = new Thread(new DemoThread ());
+
+        t.start();
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Hilo principal");
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ie) {
+                System.out.println("Hilo hijo interrumpido! " + ie);
+            }
+        }
+        System.out.println("Hilo principal finalizado!");
+    }
+}
+\end{minted}
+\caption{Ejemplo de multihilos usando la interfaz Runnable.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\ejemplo \footnote{ Al compilar este programa el compilador nos avisará del uso de métodos deprecated, debido a que el código incluye llamadas a suspend() y resume().}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Ejemplo de implementacion de la interfaz Runnable
+import java.awt.*;
+import java.applet.Applet;
+
+public class RandomCharacters extends Applet
+                              implements Runnable {
+
+   String alphabet;
+   TextField output1, output2, output3;
+   Button button1, button2, button3;
+
+   Thread thread1, thread2, thread3;
+
+   boolean suspend1, suspend2, suspend3;
+
+   public void init()
+   {
+      alphabet = new String( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
+      output1 = new TextField( 10 );
+      output1.setEditable( false );
+      output2 = new TextField( 10 );
+      output2.setEditable( false );
+      output3 = new TextField( 10 );
+      output3.setEditable( false );
+      button1 = new Button( "Suspender/Continuar 1" );
+      button2 = new Button( "Suspender/Continuar 2" );
+      button3 = new Button( "Suspender/Continuar 3" );
+
+      add( output1 );
+      add( button1 );
+      add( output2 );
+      add( button2 );
+      add( output3 );
+      add( button3 );
+   }
+
+   public void start()
+   {
+      // crea hilos e inicia cada vez que se invoca start()
+      thread1 = new Thread( this, "Hilo 1" );
+      thread2 = new Thread( this, "Hilo 2" );
+      thread3 = new Thread( this, "Hilo 3" );
+
+      thread1.start();
+      thread2.start();
+      thread3.start();
+   }
+
+   public void stop()
+   {
+      // detiene los hilos cada vez que se invoca stop()
+      thread1.stop();
+      thread2.stop();
+      thread3.stop();
+   }
+
+   public boolean action( Event event, Object obj )
+   {
+      if ( event.target == button1 )
+         if ( suspend1 ) {
+            thread1.resume();
+            suspend1 = false;
+         }
+         else {
+            thread1.suspend();
+            output1.setText( "suspendido" );
+            suspend1 = true;
+         }
+      else if ( event.target == button2 )
+         if ( suspend2 ) {
+            thread2.resume();
+            suspend2 = false;
+         }
+         else {
+            thread2.suspend();
+            output2.setText( "suspendido" );
+            suspend2 = true;
+         }
+      else if ( event.target == button3 ) 
+         if ( suspend3 ) {
+            thread3.resume();
+            suspend3 = false;
+         }
+         else {
+            thread3.suspend();
+            output3.setText( "suspendido" );
+            suspend3 = true;
+         }
+
+      return true;
+   }
+
+   public void run(){
+      int location;
+      char display;
+      String executingThread;
+
+      while ( true ) {
+         try {
+            Thread.sleep( (int) ( Math.random() * 5000 ) );
+         }
+         catch ( InterruptedException e ) {
+            e.printStackTrace();
+         }
+
+         location = (int) ( Math.random() * 26 );
+         display = alphabet.charAt( location );
+
+         executingThread = Thread.currentThread().getName();
+
+         if ( executingThread.equals( "Hilo 1" ) )
+            output1.setText( "Hilo 1: " + display );
+         else if ( executingThread.equals( "Hilo 2" ) )
+            output2.setText( "Hilo 2: " + display );
+         else if ( executingThread.equals( "Hilo 3" ) )
+            output3.setText( "Hilo 3: " + display );
+      }
+   }
+}
+\end{minted}
+\caption{Ejemplo de implementacion de la interfaz \textit{Runnable} con un \textit{applet}.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\section{Actividades sugeridas}
+
+Hacer un programa que simule el problema de los filósofos tragones (ver figura \ref{fig:filosofos}).
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.35]{imagenes/filosofos.png}
+    \caption{ Filósofos tragones }
+    \label{fig:filosofos}
+\end{figure}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Lecturas complementarias recomendadas} 
+\end{center} 
+\\ \hline
+     • Writing multithreaded Java applications   \footnote{\url{http://www-128.ibm.com/developerworks/library/j-thread.html}} \\
+    • Synchronization is not the enemy \\
+    • Reducing contention  \\
+    • Threading lightly : Sometimes it's best not to share \\
+\\ \hline
+\end{tabular}
+\end{center}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+
+
+
+
+
+
+

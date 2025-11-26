@@ -1,0 +1,1258 @@
+\chapter{Manejo de Excepciones}
+
+Siempre se ha considerado importante el manejo de los errores en un programa, pero no fue hasta que surgió el concepto de\textbf{ manejo de excepciones }que se dio una estructura más formal para hacerlo.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ El término de \textbf{excepción} viene de la posibilidad de detectar eventos que no forman parte del curso normal del programa, pero que de todas formas ocurren. 
+\\ \hline
+\end{tabular}
+\end{center}
+
+Un evento \textbf{''excepcional''} puede ser generado por una falla en la conexión a red, un archivo que no puede encontrarse, o un acceso indebido en memoria. La intención de una excepción es responder de manera dinámica a los errores, sin que afecte gravemente la ejecución de un programa, o que al menos se controle la situación posterior al error.
+
+	¿Cuál es la ventaja con respecto al manejo común de errores? 
+
+Normalmente, cada programador agrega su propio código de manejo de errores y queda revuelto con el código del programa. El manejo de excepciones indica claramente en que parte se encuentra el manejo de los errores, separándolo del código normal.  
+
+Además, es posible recibir y tratar muchos de los errores de ejecución y tratarlos correctamente, como podría ser una división entre cero.
+
+Se recomienda el manejo de errores para aquellas situaciones en las cuales el programa necesita ayuda para recuperarse. 
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Manejo de Excepciones en C++}
+
+
+El manejo de excepciones en C++, involucra los siguientes elementos sintácticos:
+ 
+\textbf{try}. El bloque definido por la instrucción try, especifica el código que potencialmente podría generar un error que deba ser manejado por la excepción:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+try {
+        // instrucciones donde las excepciones 
+        // pueden ser generadas
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{throw}. Esta instrucción seguida por una expresión de un cierto tipo, genera  una excepción del tipo de la expresión. Esta instrucción debería ser ejecutada dentro de algún bloque \textit{try}, de manera directa o indirecta:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| throw "Se genera una excepción de tipo char *";  |\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{catch}. La instrucción \textit{catch} va seguida de un bloque \textit{try}. \textit{Catch} define un segmento de código para tratar una excepción (de un tipo) lanzada:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+catch (char *mensaje) {
+        // instrucciones donde la excepción
+        // thrown char * 
+        // será procesada
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// exceptions
+#include <iostream>
+using namespace std;
+
+int main () {
+  try
+  {
+    throw 20;
+  }
+  catch (int e)
+  {
+    cout << "Una excepción ocurrió. Número: " << e << endl;
+  }
+  return 0;
+}
+\end{minted}
+\caption{Ejemplo de manejo de excepciones en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\subsection{Excepciones estandar en C++}
+
+La biblioteca estándar de C++ proporciona una clase base diseñada específicamente para declarar objetos que pueden ser lanzados como excepciones. La clase \textit{exception} esta declarada en $<exception>$ (en el espacio de nombres \textit{std}).  La clase tiene entre otras cosas un método virtual llamado \textit{what} que regresa un arreglo de caracteres y puede ser redefinida en clases derivadas para describir la excepción.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// excepciones estándar
+#include <iostream>
+#include <exception>
+using namespace std;
+
+class myexception: public exception
+{
+  virtual const char* what() const throw()
+  {
+    return "Mi excepción se ejecutó";
+  }
+} myex;
+
+int main () {
+  try
+  {
+    throw myex;
+  }
+  catch (exception& e)
+  {
+    cout << e.what() << endl;
+  }
+  return 0;
+}
+\end{minted}
+\caption{Ejemplo excepciones estandar en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Las clases de la biblioteca estándar implementan clases derivadas de la clase \textit{exception} para poder lanzar excepciones derivadas de esta clase.
+
+\ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// excepción bad_alloc 
+#include <iostream>
+#include <exception>
+using namespace std;
+
+int main () {
+  try
+  {
+    int* myarray= new int[1000];
+  }
+  catch (exception& e)
+  {
+    cout << "Excepción estándar: " << e.what() << endl;
+  }
+  return 0;
+}
+\end{minted}
+\caption{Ejemplo excepción C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Manejo de Excepciones en Java}
+
+El modelo de excepciones de Java es similar al de C y C++, pero mientras en estos lenguajes no estamos obligados a manejar las excepciones, en Java es forzoso para el uso de ciertas clases; de lo contrario, el compilador generará un error.
+
+\subsection{¿Cómo funciona?}
+
+Muchas tipos de errores pueden provocar una excepción, desde un desbordamiento de memoria o un disco duro estropeado hasta un intento de dividir por cero o intentar acceder a un arreglo fuera de sus límites. Cuando esto ocurre, la máquina virtual de Java crea un objeto de la clase \textit{Exception} o \textit{Error} y se notifica el hecho al sistema de ejecución. En este punto, se dice que se ha lanzado una excepción. 
+
+Un método se dice que es capaz de tratar una excepción si ha \textbf{previsto} el error que se ha producido y prevé también las operaciones a realizar para “recuperar” el programa de ese estado de error.
+
+En el momento en que es lanzada una excepción, la máquina virtual de Java recorre la pila de llamadas de métodos en busca de alguno que sea capaz de tratar la clase de excepción lanzada. Para ello, comienza examinando el método donde se ha producido la excepción; si este método no es capaz de tratarla, examina el método desde el que se realizó la llamada al método donde se produjo la excepción y así sucesivamente hasta llegar al último de ellos. En caso de que ninguno de los métodos de la pila sea capaz de tratar la excepción, la máquina virtual de Java muestra un mensaje de error y el programa termina.
+
+Los programas escritos en Java también pueden lanzar excepciones explícitamente mediante la instrucción throw, lo que facilita la devolución de un código de error al método que invocó el método que causó el error. 
+
+	Un \textcolor{blue}{ejemplo} de una excepción generada (y no tratada) es el siguiente programa:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class Excepcion {
+	public static void main(String argumentos[]) {
+		int i=5, j=0;
+		int k=i/j; // División por cero
+	}
+}
+\end{minted}
+\caption{Ejemplo de excepción en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Al ejecutarlo, se verá que la máquina virtual Java ha detecta una condición de error y ha crea un objeto de la clase $java.lang.ArithmeticException$. Como el método donde se ha producido la excepción no es capaz de tratarla, es manejada por la máquina virtual Java, que muestra un mensaje de error y finaliza la ejecución del programa.
+
+\subsection{Lanzamiento de excepciones (\textit{throw})}
+
+Como se ha comentado anteriormente, un método también es capaz de lanzar excepciones. 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+método ( ) throws <lista de excepciones> {
+	//código
+	...	
+	throw new <nombre Excepción>
+	...
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+donde $<lista de excepciones>$ es el nombre de cada una de las excepciones que el método puede lanzar.
+
+Por ejemplo, en el siguiente programa se genera una condición de error si el dividendo es menor que el divisor:
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class LanzaExcepcion {
+	public static void main(String argumentos[]) throws ArithmeticException {
+		
+		int i=1, j=0;
+		if (j==0)
+			throw new ArithmeticException();
+		else
+			System.out.println(i/j);
+	}
+}
+\end{minted}
+\caption{Ejemplo lanzamiento de excepción en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Para lanzar la excepción es necesario crear un objeto de tipo \textit{Exception} o alguna de sus subclases (por ejemplo: $ArithmeticException$) y lanzarlo mediante la instrucción \textit{throw}.
+
+Los dos ejemplos vistos anteriormente, son capaces de lanzar una excepción en un momento dado, pero hasta aquí no difieren en mucho en su ejecución, ya que el resultado finalmente es la terminación del programa. En la siguiente sección se menciona como podemos darles un manejo especial a las excepciones, de tal forma que el resultado puede ser previsto por el programador.
+
+\subsection{Manejo de excepciones}
+
+En Java, de forma similar a C++ se pueden tratar las excepciones previstas por el programador utilizando unos mecanismos, los manejadores de excepciones, que se estructuran en tres bloques:
+
+
+\begin{itemize}
+\item El bloque \textit{try}.
+\item El bloque \textit{catch}.
+\item El bloque \textit{finally}.
+\end{itemize}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+Un \textbf{manejador de excepciones} es una porción de código que se va a encargar de tratar las posibles excepciones que se puedan generar. 
+\\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{El bloque \textit{try}}
+
+Lo primero que hay que hacer para que un método sea capaz de tratar una excepción generada por la máquina virtual Java o por el propio programa mediante una  instrucción \textit{throw}, es encerrar las instrucciones susceptibles de generarla en un bloque \textit{try}.
+
+\begin{minted}{java}
+try {
+<instrucciones>
+}
+...
+\end{minted}
+
+Cualquier excepción que se produzca dentro del bloque \textit{try} será analizada por el bloque o bloques \textit{catch} que se verá en el punto siguiente. En el momento en que se produzca la excepción, se abandona el bloque \textit{try} y, por lo tanto, las instrucciones que sigan al punto donde se produjo la excepción no serán ejecutadas. 
+
+\subsubsection{El bloque catch}
+
+Cada bloque \textit{try} debe tener asociado por lo menos un bloque \textit{catch}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+try {
+	<instrucciones>
+} catch (TipoExcepción1 nombreVariable1) {
+<instruccionesBloqueCatch1>
+} catch (TipoExcepción2 nombreVariable2) {
+<instruccionesBloqueCatch2>
+}
+...
+catch (TipoExcepciónN nombreVariableN) {
+<instruccionesBloqueCatchN>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Por cada bloque \textit{try} pueden declararse uno o varios bloques \textit{catch}, cada uno de ellos capaz de tratar un tipo de excepción.
+
+Para declarar el tipo de excepción que es capaz de tratar un bloque \textit{catch}, se declara un objeto cuya clase es la clase de la excepción que se desea tratar o una de sus superclases.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class ExcepcionTratada {
+	public static void main(String argumentos[]) {
+		int i=5, j=0;
+		try {
+			int k=i/j;
+			System.out.println("Esto no se va a ejecutar.");
+		}
+		catch (ArithmeticException ex) {
+			System.out.println("Ha intentado dividir por cero");
+		}
+		System.out.println("Fin del programa");
+	}
+}
+\end{minted}
+\caption{Ejemplo de excepción tratada en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+La ejecución se resuelve de la siguiente forma:
+
+    
+\begin{enumerate}
+\item Cuando se intenta dividir por cero, la máquina virtual Java genera un objeto de la clase \textit{ArithmeticException}. 
+\item Al producirse la excepción dentro de un bloque \textit{try}, la ejecución del programa se pasa al primer bloque \textit{catch}. 
+\item Si la clase de la excepción se corresponde con la clase o alguna subclase de la clase declarada en el bloque \textit{catch}, se ejecuta el bloque de instrucciones catch y a continuación se pasa el control del programa a la primera instrucción a partir de los bloques \textit{try-catch}.
+\end{enumerate}
+
+También se podría haber utilizado en la declaración del bloque \textit{catch}, una superclase de la clase \textit{ArithmeticException}. 
+
+Por ejemplo:
+
+\mint[linenos=false]{java}| catch (RuntimeException ex) |
+
+o
+
+\mint[linenos=false]{java}| catch (Exception ex) |
+
+Sin embargo, es mejor utilizar excepciones más cercanas al tipo de error previsto, ya que lo que se pretende es recuperar al programa de alguna condición de error y si tratan de capturar todas las excepciones de una forma muy general, posiblemente habrá que averiguar después qué condición de error se produjo para poder dar una respuesta adecuada. 
+
+\subsubsection{El bloque \textit{finally}}
+
+El bloque \textit{finally} se utiliza para ejecutar un bloque de instrucciones sea cual sea la excepción que se produzca. Este bloque se ejecutará en cualquier caso, \textbf{incluso} si no se produce ninguna excepción. 
+
+Este bloque \textbf{garantiza} que el código que contiene será ejecutado independientemente de que se genere o no una excepción:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+try {
+	<instrucciones>
+	}
+catch (TipoExcepción1 nombreVariable1) {
+	<instruccionesBloqueCatch1>
+} 
+
+catch (TipoExcepción2 nombreVariable2) {
+	<instruccionesBloqueCatch2>
+}
+	...
+catch (TipoExcepciónN nombreVariableN) {
+	<instruccionesBloqueCatchN>
+}
+finally {
+	<instruccionesBloqueFinally>
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Es utilizado para no tener que repetir código en el bloque \textit{try} y en los bloques \textit{catch}. Este código sirve para llevar a buen término el bloque de código independientemente del resultado.
+
+Veamos ahora la clase \textit{ExcepcionTratada} con el bloque \textit{finally}. \ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+public class ExcepcionTratada {
+	public static void main(String argumentos[]) {
+		int i=5, j=0;
+		try {
+			int k=i /* /j */;//probar con y sin error
+		} 
+		catch (ArithmeticException ex) {
+			System.out.println("Ha intentado dividir por cero");
+		}
+		finally {
+			System.out.println("Salida de finally");
+		}
+		System.out.println("Fin del programa");
+	}
+}
+\end{minted}
+\caption{Ejemplo de excepción con \textit{finally} en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Un \textcolor{blue}{ejemplo} derivando la clase Exception de Java en un estilo similar al uso de la clase correspondiente en C++:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class DivisionByZeroException extends Exception {
+		DivisionByZeroException(String msg) { super(msg); }
+}  
+ 
+public class DivisionByZero {
+    public void division() throws DivisionByZeroException {            
+        int num1 = 10;
+        int num2 = 0;
+
+        if (num2 == 0) 
+        	throw new DivisionByZeroException("/ entre 0");  
+        System.out.println(num1 + " / " + num2 + " = " + (num1 / num2));
+        System.out.println("terminando division().");
+    }
+
+    public static void main(String args[]) {
+         try {
+        	 new DivisionByZero().division();
+         } catch (DivisionByZeroException e) {                       
+        	 System.out.println("En main, tratando con " + e);
+         } finally {                                               
+             System.out.println("Finally ejecutado en main.");
+         }
+         System.out.println("Finalizando main.");               
+    }
+}
+\end{minted}
+\caption{Ejemplo derivando de \textit{Exception} en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Jerarquía de excepciones}
+
+Las excepciones son objetos pertenecientes a la clase \textit{Throwable} o alguna de sus subclases.
+
+Dependiendo del lugar donde se produzcan existen dos tipos de excepciones:
+
+
+\begin{enumerate}
+\item Las excepciones \textbf{síncronas} no son lanzadas en un punto arbitrario del programa sino que, en cierta forma, son previsibles en determinados puntos del programa como resultado de evaluar ciertas expresiones o la invocación de determinadas  instrucciones o métodos.
+\item Las excepciones \textbf{asíncronas} pueden producirse en cualquier parte del programa y no son tan previsibles. Pueden producirse excepciones asíncronas debido a dos razones:
+\begin{itemize}
+\item La invocación del método \textit{stop()} de la clase \textit{Thread} que se está ejecutando. 
+\item Un error interno en la máquina virtual Java.
+\end{itemize}
+\end{enumerate}
+
+
+Dependiendo de si el compilador comprueba o no que se declare un manejador para tratar las excepciones, se pueden dividir en:
+
+
+\begin{enumerate}
+\item Las excepciones \textbf{comprobables} son repasadas por el compilador Java durante el proceso de compilación, de forma que si no existe un manejador que las trate, generará un mensaje de error.
+\item Las excepciones \textbf{no comprobables} son la clase \textit{RuntimeException} y sus subclases junto con la clase \textit{Error} y sus subclases.
+\end{enumerate}
+
+También pueden definirse por el programador subclases de las excepciones anteriores. Las más interesantes desde el punto de vista del programador son las subclases de la superclase \textit{Exception} ya que éstas pueden ser \textbf{comprobadas} por el compilador.
+
+La jerarquía completa de excepciones existentes en el paquete $java.lang$ se puede consultar más adelante\footnote{Para un listado actual ver la documentación del jdk de Java más reciente.}.
+
+
+\subsection{Excepciones definidas por el usuario}
+
+A partir de la jerarquía de excepciones definidas, es posible para el programador especificar su propia excepción tomando como base alguna de las excepciones de la jerarquía. Por ejemplo:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+class MiExcepcion extends Exception{
+    String cad;
+    
+    /* El constructor de nuestra excepción copia a una cadena
+    el mensaje que se pasa al lanzar la excepción
+    */
+    
+    MiExcepcion(String msj) {
+     cad=msj;
+    }
+    public String toString(){ 
+     return ("Se lanzó MiExcepcion: "+cad) ;
+    }
+ }
+ 
+ class EjemploMiExcepcion{
+    public static void main(String args[]){
+     try{
+         System.out.println("Iniciando bloque try");
+         // Lanzando mi propia excepción
+         throw new MiExcepcion("Mi mensaje de error");
+     }
+     catch(MiExcepcion exp){
+         System.out.println("Bloque catch") ;
+         System.out.println(exp) ;
+     }
+    }
+ }
+\end{minted}
+\caption{Ejemplo de excepción definida por el programador.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+
+
+\subsection{Ventajas del tratamiento de excepciones}
+
+Las ventajas, mencionadas por Díaz-Alejo\footnote{Díaz-Alejo Gómez, J.A., Programación con Java, IES Camp, Valencia, España, Last access: September 2006}, de un mecanismo de tratamiento de excepciones como este son varias:
+
+
+\begin{itemize}
+\item Separación del código ''útil'' del tratamiento de errores.
+\item Propagación de errores a través de la pila de métodos.
+\item Agrupación y diferenciación de errores mediante jerarquías.
+\item Claridad del código y obligación del tratamiento de errores.
+\end{itemize}
+
+\subsection{Lista de Excepciones\protect\footnote{Lista obtenida de la documentación del jdk en su versión 1.6}}
+
+La jerarquía de clases derivadas de \textit{Error} existentes en el paquete $java.lang$ es la siguiente:
+
+\begin{alltt}
+    •  java.lang.Object
+        ◦ java.lang.Throwable (implements java.io.Serializable) 
+    • java.lang.Error
+        ◦ java.lang.AssertionError
+        ◦ java.lang.LinkageError
+             java.lang.ClassCircularityError
+             java.lang.ClassFormatError
+                • java.lang.UnsupportedClassVersionError
+             java.lang.ExceptionInInitializerError
+             java.lang.IncompatibleClassChangeError
+                • java.lang.AbstractMethodError
+                • java.lang.IllegalAccessError
+                • java.lang.InstantiationError
+                • java.lang.NoSuchFieldError
+                • java.lang.NoSuchMethodError
+             java.lang.NoClassDefFoundError
+             java.lang.UnsatisfiedLinkError
+             java.lang.VerifyError
+        ◦ java.lang.ThreadDeath
+        ◦ java.lang.VirtualMachineError
+             java.lang.InternalError
+             java.lang.OutOfMemoryError
+             java.lang.StackOverflowError
+             java.lang.UnknownError
+\end{alltt}
+
+La jerarquía de clases derivadas de \textit{Exception} existentes en el paquete $java.lang$ es la siguiente:
+
+\begin{alltt}
+    • java.lang.Object
+        ◦ java.lang.Throwable (implements java.io.Serializable) 
+        ◦ java.lang.Exception
+    • java.lang.ClassNotFoundException
+    • java.lang.CloneNotSupportedException
+    • java.lang.IllegalAccessException
+    • java.lang.InstantiationException
+    • java.lang.InterruptedException
+    • java.lang.NoSuchFieldException
+    • java.lang.NoSuchMethodException
+    • java.lang.RuntimeException
+        ◦ java.lang.ArithmeticException
+        ◦ java.lang.ArrayStoreException
+        ◦ java.lang.ClassCastException
+        ◦ java.lang.EnumConstantNotPresentException
+        ◦ java.lang.IllegalArgumentException
+             java.lang.IllegalThreadStateException
+             java.lang.NumberFormatException
+        ◦ java.lang.IllegalMonitorStateException
+        ◦ java.lang.IllegalStateException
+        ◦ java.lang.IndexOutOfBoundsException
+             java.lang.ArrayIndexOutOfBoundsException
+             java.lang.StringIndexOutOfBoundsException
+        ◦ java.lang.NegativeArraySizeException
+        ◦ java.lang.NullPointerException
+        ◦ java.lang.SecurityException
+        ◦ java.lang.TypeNotPresentException
+        ◦ java.lang.UnsupportedOperationException
+\end{alltt}
+
+Las  principales excepciones en otros paquetes Java son:
+
+\begin{alltt}
+    • class java.lang.Object
+        ◦ class java.lang.Throwable 
+             class java.lang.Error 
+                • java.awt.AWTError
+             class java.lang.Exception 
+    • java.io.IOException
+    • java.io.EOFException
+    • java.io.FileNotFoundException
+    • java.io.InterruptedIOException
+    • java.io.UTFDataFormatException
+    • java.net.MalformedURLException
+    • java.net.ProtocolException
+    • java.net.SocketException
+    • java.net.UnknownHostException
+    • java.net.UnknownServiceException
+    • RuntimeException
+    • java.util.EmptyStackException
+    • java.util.NoSuchElementException
+    • java.awt.AWTException
+\end{alltt}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Manejo de Excepciones en Ruby}
+
+Ruby soporta el manejo de excepciones como cualquier lenguaje actual de programación. El manejo de excepciones en Ruby, involucra los siguientes elementos sintácticos:
+
+
+\subsection{\textit{Raise \& Rescue}}
+
+	La ejecución de \textit{raise} produce una excepción. \textit{raise} es un método del módulo Kernel y tiene un alias definido como \textit{fail}. La sintaxis se presenta a continuación:
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{ruby}| raise ExceptionClass[, "message"]  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+\begin{minted}{ruby}
+raise  	# se relanza la ultima excepcion
+raise "Danger, Will Robinson!"
+raise “Houston, we have a problem”
+raise ArgumentError, "Falla de datos"
+raise ArgumentError.new("Falla de datos")
+raise "Falta nombre" if nombre.nil?
+\end{minted}
+
+Ahora, ¿Cómo agrupamos un segmento de código en el cual se quieren manejar excepciones? Podemos agrupar el código usando un bloque \textit{begin end}. Dentro podemos incluir la claúsula \textit{rescue}, por ejemplo: 
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+begin
+  expr..
+[rescue [tipo_de_error [=> var],..]
+  expr..]..
+[else
+  expr..]
+[ensure
+  expr..]
+end
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+La sintaxis anterior implica que podemos poner una serie de clausulas \textit{rescue} especificando diferentes tipos de errores que pueden ser “rescatados” y la claúsula \textit{else} recibiría aquellos errores que no entren dentro de los especificados por \textit{rescue}. 
+
+La cláusula \textit{ensure} es usada para especificar código que queremos que se ejecute independientemente del error generado. Por ejemplo:
+
+\begin{minted}{ruby}
+begin
+  # Error...
+rescue
+  # intento de recuperación...
+  retry # tratar de nuevo
+ensure
+  # Este código es siempre ejecutado
+end
+\end{minted}
+
+%ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+def raise_exception  
+   puts 'Antes de raise.'  
+   raise 'Ocurrio un error'  
+   puts 'Después de raise'  
+end  
+raise_exception
+
+def raise_y_rescue  
+	begin  
+		puts 'Antes de raise.'  
+    	raise 'Ocurrio un error.'  
+    	puts 'Después de raise.'  
+    	rescue  
+    	puts 'Siendo rescatado.'  
+	end  
+	puts 'Despues del bloque begin - end.'  
+end  
+raise_y_rescue
+
+begin
+	# ...  
+	rescue UnaExepcion  
+   	# ...  
+   	rescue OtroTipoDeExepcion  
+   	# ...  
+   	else  
+    # Otras exceciones  
+end
+
+begin  
+	raise "Probando excepciones." 
+    rescue Exception => e
+    	puts "Salida:"
+		puts e.message  
+		puts e.backtrace.inspect  
+		puts "fin salida."
+end
+
+x = a/b rescue puts("Division entre cero!")
+\end{minted}
+\caption{Ejemplo de excepciones en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Jerarquía de excepciones}
+
+Las excepciones en Ruby dependen de una jerarquía de herencia la cual tiene como superclase a \textit{Exception}\footnote{Davis, R., Ruby QuickRef, 2004, \url{http://www.zenspider.com/Languages/Ruby/QuickRef.html, Last access: June 2008}}:
+
+\begin{alltt}
+*  Exception
+          o NoMemoryError
+          o ScriptError
+                + LoadError
+                + NotImplementedError
+                + SyntaxError
+          o SignalException
+                + Interrupt
+          o StandardError (default for rescue)
+                + ArgumentError
+                + IOError
+                      # EOFError
+                + IndexError
+                + LocalJumpError
+                + NameError
+                      # NoMethodError
+                + RangeError
+                      # FloatDomainError
+                + RegexpError
+                + RuntimeError (default for raise)
+                + SecurityError
+                + SystemCallError
+                      # Errno::*
+                + SystemStackError
+                + ThreadError
+                + TypeError
+                + ZeroDivisionError
+          o SystemExit
+          o fatal
+\end{alltt}
+
+De igual forma es posible derivar algunas de las clases de la jerarquía de excepciones para crear una excepción más especializada.
+
+\subsection{\textit{Catch \& Throw}}
+
+Es posible en Ruby usar también los clásicos \textit{catch \& throw} los cuales son usados comúnmente cuando es necesario saltar de un punto de anidamiento más profundo\cite{thomas2005programming}.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{ruby}
+catch (:label) do 
+	#... 
+end
+
+throw :label  #salta atrás hasta el catch correspondiente y ejecuta el bloque
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+%ejemplo
+
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+def pregunta pr
+print pr
+res = readline.chomp
+throw :salida_solicitada if res == "!"
+res
+end
+
+catch :salida_solicitada do
+nombre = pregunta "Nombre: "
+edad = pregunta "Edad: "
+sexo = pregunta "Sexo: "
+# ...
+end
+\end{minted}
+\caption{Ejemplo \textit{catch \& throw} en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Manejo de Excepciones en Python}
+
+Como la mayoría de los lenguajes actuales, Python soporta el manejo de excepciones. Un resumen de la forma en que funcionan se muestra a continuación:
+
+\begin{itemize}
+\item \textit{try/except}. Capturar y recuperarse de excepciones levantadas por Python o por nuestro código.
+\item \textit{try/finally}. Ejecutar acciones de limpieza ya sea que ocurran o no excepciones.
+\item \textit{raise}. Lanzar una excepción manualmente en nuestro código.
+\end{itemize}
+
+De manera similar a otros lenguajes, podemos ver excepciones que son generadas por diversas situaciones y al no ser manejadas implican la interrupción de la ejecución del programa.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#Ejemplo de excepción lanzada por un error en código
+
+i=5
+j=0
+k=i/j
+\end{minted}
+\caption{Ejemplo de excepción lanzada en python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el siguiente ejemplo vemos el uso de \textit{raise} para lanzar una excepción manualmente en nuestro código.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#ejemplo de lanzamiento de excepción sin tratamiento
+
+i=1
+j=0
+if j==0 :
+    raise ZeroDivisionError('División entre 0')
+else:
+    print(i/j)
+\end{minted}
+\caption{Ejemplo de lanzamiento de excepción sin tratamiento en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+De manera similar a los otros lenguajes, lo adecuado es manejar las posibles excepciones mediante bloques especiales. La sintaxis general es:
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+try: 
+     <instrucciones>
+except [<tipo> [as <variable>]]: 
+     <instrucciones>
+[except [<tipo> [as <variable>]]: 
+     <instrucciones>]* 
+[else: 
+     <instrucciones>] 
+[finally: 
+     <instrucciones>] 
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+En el siguiente ejemplo, vemos como se maneja la división entre cero con el bloque \textit{try/except}.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#tratamiento de excepciones
+
+i=5
+j=0
+
+try:
+    k=i/j
+    print('Esto no se va a ejecutar')
+except ZeroDivisionError:
+    print('Ha intentado dividir por cero')
+
+print('fin del programa')
+\end{minted}
+\caption{Ejemplo de tratamiento de excepciones en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+En el siguiente agregamos el bloque \textit{finally}, que se ejecuta independientemente de que se genere o no la excepción.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#tratamiento de excepciones y tratamiento general con finally
+
+i=5
+j=0
+
+try:
+    k=i/j
+    print('Esto no se va a ejecutar')
+except ZeroDivisionError:
+    print('Ha intentado dividir por cero')
+finally:
+    print('Salida de finally')
+
+print('fin del programa')
+\end{minted}
+\caption{Ejemplo de tratamiento de excepciones y tratamiento general con finally en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+También podemos definir nuestra propia jerarquía de excepciones si así lo consideramos necesario.
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#Excepción definida por el usuario
+
+class DivisionByZeroException (Exception):
+    def __str__(self):
+        return 'Mi excepcion'
+
+class DivisionByZero:
+    def division(self):
+        num1=10
+        num2=0
+
+        if num2==0:
+            raise DivisionByZeroException()
+
+        print('División: ' + str(num1/num2)) 
+
+#script
+try:
+    DivisionByZero().division()
+except DivisionByZeroException:
+    print('Ejecutando script, detectando excepción')
+finally:
+    print('Finally siendo ejecutado en el script de pruebe')
+
+print('Finalizando main')
+\end{minted}
+\caption{Ejemplo de excepción definida por el usuario en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Toda excepción que creemos debe ser una subclase de \textit{Exception}. La figura \ref{fig:excep_python_jerarquia} muestra la jerarquía de herencia de las excepciones de Python.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=.6]{imagenes/excepciones_python.png}
+    \caption{ Jerarquía de herencia de las excepciones en Python }
+    \label{fig:excep_python_jerarquia}
+\end{figure}
+
+Un resumen se puede ver en el cuadro \ref{tab:resumen_excep_python}.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\caption{Resumen de excepciones de Python}
+\label{tab:resumen_excep_python}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+Opción                                                                                                       & Interpretación                                                                   \\ \hline
+except:                                                                                                      & Recibe todas las excepciones. O todas las demás si ya se recibieron otras antes. \\ \hline
+except \textless{}tipo\textgreater{}:                                                                        & Recibe una excepción en particular.                                              \\ \hline
+except \textless{}tipo\textgreater as \textless{}variable\textgreater{}:                                     & Recibe la excepción y asigna su instancia                                        \\ \hline
+except (\textless{}tipo1\textgreater{}, \textless{}tipo2\textgreater{}):                                     & Recibe todas las excepciones indicadas.                                          \\ \hline
+except (\textless{}tipo1\textgreater{}, \textless{}tipo2\textgreater{}) as \textless{}variable\textgreater{} & Recibe todas las excepciones indicadas y asigna su instancia a una variable.     \\ \hline
+else:                                                                                                        & Se ejecuta si no es lanzada ninguna excepción en el bloque try.                  \\ \hline
+finally:                                                                                                     & Siempre se ejecuta al salir del segmento de manejo de excepciones.               \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+Un ejemplo resumiendo las opciones en un solo programa:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# Ejemplo try/except/else/finally
+sep = '-' * 45 + '\n'
+print(sep + 'Excepción lanzada y cachada')
+try:
+    x = 'spam'[99]
+except IndexError as e:
+    print('except: ', e)
+finally:
+    print('finally')
+print('después de bloque try')
+
+print(sep + 'NO se lanza excepción')
+try:
+    x = 'spam'[3]
+except IndexError:
+    print('except')
+finally:
+    print('finally')
+print('después de bloque try')
+
+print(sep + 'NO se lanza excepción, con opción else')
+try:
+    x = 'spam'[3]
+except IndexError:
+    print('except')
+else:
+    print('else')
+finally:
+    print('finally')
+print('after')
+
+print(sep + 'Excepción lanzada pero no cachada')
+try:
+    x=1 /0
+except IndexError:
+    print('except')
+finally:
+    print('finally')
+print('after')
+\end{minted}
+\caption{Ejemplo resumiendo opciones de manejo de excepciones en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+\part{Más allá de los Objetos}
+

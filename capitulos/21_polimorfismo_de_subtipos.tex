@@ -1,0 +1,2022 @@
+\chapter{Polimorfismo de subtipos}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+	''La capacidad de polimorfismo permite crear programas con mayores posibilidades de expansiones futuras, aún  para procesar en cierta forma objetos de clases que no han sido creadas o están en desarrollo.'' \cite{deitel2012c}  
+\\ \hline
+\end{tabular}
+\end{center}
+
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+  	El \textbf{polimorfismo} se define como la capacidad de objetos de clases diferentes, relacionados mediante herencia, a responder de forma distinta a una misma llamada de un método. \cite{deitel2006c++}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Tener en cuenta que no es lo mismo que simplemente redefinir un método de clase base en una clase derivada, pues como se vio anteriormente, si se tiene a un apuntador de clase base y a través de el se hace la llamada a un método, se ejecuta el método de la clase base independientemente del objeto referenciado por el apuntador. Este no es un comportamiento polimórfico.
+
+
+%%%%%%%%%%
+% CPP
+%%%%%%%%%%
+\ifcpp
+\newpage
+\section{Polimorfismo y funciones virtuales C++}
+
+	En C++, el polimorfismo se implementa a través de clases derivadas y \textbf{funciones virtuales}. Al hacer una solicitud de un método, a través de un apuntador a clase base para usar un método virtual, C++ determina el método que corresponda al objeto de la clase a la que pertenece, y no el método de la clase base.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ 	Una función virtual es un método miembro declarado como \textbf{virtual} en una clase base y siendo este método redefinido en una o más clases derivadas.  
+\\ \hline
+\end{tabular}
+\end{center}
+
+Las funciones virtuales son muy especiales, debido a que cuando una función es accedida por un apuntador a una clase base, y éste mantiene una referencia a un objeto de una clase derivada, el programa determina en tiempo de ejecución a que función llamar, de acuerdo al tipo de objeto al que se apunta. Esto se conoce como \textbf{ligadura tardía}\footnote{Término opuesto a \textbf{ligadura temprana} o \textbf{ligadura estática}, la cual asocia los métodos en tiempo de compilación.} y el compilador de C++ incluye en el código máquina el manejo de ese tipo de asociación de métodos.
+
+	La utilidad se da cuando se tiene un método en una clase base, y éste es declarado virtual. De esta forma, cada clase derivada puede tener su propia implementación del método si es que así lo requiere la clase; y si un apuntador a clase base hace referencia a cualquiera de los objetos de clases derivadas, se determina dinámicamente cual de todos los métodos debe ejecutar.
+
+	La sintaxis en C++ implica declarar al método de la clase base con la palabra reservada \textit{virtual}, redefiniendo ese método en cada una de las clases derivadas.
+
+	Al declarar un método como virtual, este método se conserva así a través de toda la jerarquía de herencia, del punto en que se declaró hacia abajo. Aunque de este modo no es necesario volver a usar la palabra virtual en ninguno de los métodos inferiores del mismo nombre, es posible declararlo de forma explícita para que el programa sea más claro.
+
+	Es importante señalar que las funciones virtuales que sean redefinidas en clases derivadas, deben tener además de la misma firma que la función virtual base, el mismo tipo de retorno.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{cpp}
+class base {
+	virtual <tipo> <método> (<parámetros);
+};
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+//ejemplo funciones virtuales
+#include <iostream>
+using namespace std;
+
+class base {
+public:
+	virtual void quien(){
+		cout<<"base\n";
+	}
+};
+
+class primera: public base {
+public:
+	void quien(){
+		cout<<"primera\n";
+	}
+};
+
+class segunda: public base {
+public:
+	void quien(){
+		cout<<"segunda\n";
+	}
+};
+
+class tercera: public base {
+};
+
+class cuarta: public base {
+public:
+	//No se vale con un tipo de dato diferente
+	/*int quien(){   
+		cout<<"cuarta\n";
+		return 1;
+	}*/
+};
+
+int main() {
+	base objBase, *pBase;
+	primera obj1;
+	segunda obj2;
+	tercera obj3;
+	cuarta  obj4;
+
+	pBase=&objBase;
+	pBase->quien();
+
+	pBase=&obj1;
+	pBase->quien();
+
+	pBase=&obj2;
+	pBase->quien();
+
+	pBase=&obj3;
+	pBase->quien();
+
+	pBase=&obj4;
+	pBase->quien();
+	
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de polimorfismo en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Hay que hacer notar que las funciones virtuales pueden seguirse usando sin apuntadores, mediante un objeto de la clase. De esta forma, el método a ejecutar se determina de manera estática; es decir, en tiempo de compilación (\textbf{ligadura estática}). Obviamente el método a ejecutar es aquel definido en la clase del objeto o el heredado de su clase base, si la clase derivada no lo redefinió.
+
+La sobrecarga no utiliza ligadura dinámica. Esta es resuelta en tiempo de compilación.
+	Si se declara en una clase derivada un método con otro tipo de dato como retorno, el compilador manda un error, ya que esto no es permitido. 
+
+Si se declara un método con el mismo nombre pero diferentes parámetros, la función virtual queda desactivada de ese punto hacia abajo en la jerarquía de herencia.
+
+\subsection{Clase abstracta y clase concreta en C++}
+
+	Existen clases que son útiles para representar una estructura en particular, pero que no van a tener la necesidad de generar objetos directamente a partir de esa clase, éstas se conocen como \textbf{clases abstractas}, o de manera más apropiada como \textbf{clases base abstractas}, puesto que sirven para definir una estructura jerárquica.
+
+	La clase base abstracta entonces, tiene como objetivo proporcionar una clase base que ayude al modelado de la jerarquía de herencia, aunque esta sea muy general y no sea práctico tener instancias de esa clase. 
+
+Por lo tanto, de una clase abstracta no se pueden tener objetos, mientras que en clases a partir de las cuales se puedan instanciar objetos se conocen como \textbf{clases concretas}.
+
+	En C++, una clase se hace abstracta al declarar \textbf{al menos uno }de los métodos virtuales como puro. Un método o función virtual pura es aquel que en su declaración tiene el inicializador de $=0$ .
+
+%TABLA para notas, primera linea de CÓDIGO coloreada. 
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+\rowcolor{gray!50}\textbf{Sintaxis}\\ 
+\hline
+ \mint[linenos=false]{cpp}| virtual <tipo> <nombre>(<parámetros>) =0;   //virtual pura  |\\
+\hline
+\end{tabular}
+\end{center}
+
+Es importante tener en cuenta que una clase sigue siendo abstracta hasta que no se implemente la función virtual pura, en una de las clases derivadas. Si no se hace la implementación, la función se hereda como virtual pura y por lo tanto la clase sigue siendo considerada como abstracta.
+
+	Aunque no se pueden tener objetos de clases abstractas, si se pueden tener apuntadores a objetos de esas clases, permitiendo una manipulación de objetos de las clases derivadas mediante los apuntadores a la clase abstracta.
+	
+\subsection{Destructores virtuales}	
+
+	Cuando se aplica la instrucción \textit{delete} a un apuntador de clase base, será ejecutado el destructor de la clase base sobre el objeto, independientemente de la clase a la que pertenezca. La solución es declarar al destructor de la clase base como virtual. De esta forma al borrar a un objeto se ejecutará el destructor de la clase a la que pertenezca el objeto referenciado, a pesar de que los destructores no tengan el mismo nombre. 
+
+	Un constructor no puede ser declarado como virtual.
+
+Ejemplos de funciones virtuales y polimorfismo:
+
+\ejemplo
+\textbf{Programa de cálculo de salario.}
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// EMPLEADO.H
+// Abstract base class Employee
+#ifndef EMPLEADO_H_
+#define EMPLEADO_H_
+
+class Employee {
+	public:
+   	Employee(const char *, const char *);
+   	~Employee();
+   	const char *getFirstName() const;
+   	const char *getLastName() const;
+
+   	virtual float earnings() const = 0; // virtual pura
+   	virtual void print() const = 0;     // virtual pura
+	private:
+   	char *firstName;
+   	char *lastName;
+};
+
+#endif /*EMPLEADO_H_*/
+
+// EMPLEADO.CPP
+#include <iostream>
+#include <string>
+#include <assert.h>
+#include "empleado.h"
+
+Employee::Employee(const char *first, const char *last)
+{
+   firstName = new char[ strlen(first) + 1 ];
+   assert(firstName != 0);    
+   strcpy(firstName, first);
+
+   lastName = new char[ strlen(last) + 1 ];
+   assert(lastName != 0);     
+   strcpy(lastName, last);
+}
+
+Employee::~Employee()
+{
+   delete [] firstName;
+   delete [] lastName;
+}
+
+const char *Employee::getFirstName() const
+{
+
+   return firstName;
+}
+
+const char *Employee::getLastName() const
+{
+      return lastName;
+}
+// JEFE.H
+// Clase drivada de empleado
+#ifndef JEFE_H_
+#define JEFE_H_
+
+#include "empleado.h"
+
+class Boss : public Employee {
+	public:
+   	Boss(const char *, const char *, float = 0.0);
+   	void setWeeklySalary(float);
+   	virtual float earnings() const;
+   	virtual void print() const;
+	private:
+   	float weeklySalary; 
+};
+
+#endif /*JEFE_H_*/
+
+// JEFE.CPP
+#include <iostream>
+#include "jefe.h"
+using namespace std;
+Boss::Boss(const char *first, const char *last, float s)
+   : Employee(first, last)  
+{ weeklySalary = s > 0 ? s : 0; }
+
+void Boss::setWeeklySalary(float s)
+{ weeklySalary = s > 0 ? s : 0; }
+
+float Boss::earnings() const { return weeklySalary; }
+
+void Boss::print() const
+{
+   cout << "\n             Jefe: " << getFirstName()
+	<< ' ' << getLastName();
+}
+
+
+// COMIS.H
+// Trabajador por comisión derivado de Empleado
+#ifndef COMIS_H_
+#define COMIS_H_
+#include "empleado.h"
+
+class CommissionWorker : public Employee {
+	public:
+   	CommissionWorker(const char *, const char *,
+                    float = 0.0, float = 0.0, int = 0);
+   	void setSalary(float);
+   	void setCommission(float);
+   	void setQuantity(int);
+   	virtual float earnings() const;
+   	virtual void print() const;
+	private:
+  	float salary;     // salario base por semana
+   	float commission; // comisión por cada venta
+   	int quantity;     // cantidad de elementos vendidos por semana
+};
+
+#endif /*COMIS_H_*/
+
+// COMIS.CPP
+#include <iostream>
+#include "comis.h"
+using namespace std;
+
+CommissionWorker::CommissionWorker(const char *first,
+   const char *last, float s, float c, int q)
+   : Employee(first, last)  
+{
+   salary = s > 0 ? s : 0;
+   commission = c > 0 ? c : 0;
+   quantity = q > 0 ? q : 0;
+}
+
+
+void CommissionWorker::setSalary(float s)
+{ salary = s > 0 ? s : 0; }
+
+void CommissionWorker::setCommission(float c)
+{ commission = c > 0 ? c : 0; }
+
+void CommissionWorker::setQuantity(int q)
+{ quantity = q > 0 ? q : 0; }
+
+float CommissionWorker::earnings() const
+{ return salary + commission * quantity; }
+
+void CommissionWorker::print() const
+{
+   cout << "\nTrabajador  por comision: " << getFirstName()
+	<< ' ' << getLastName();
+}
+
+// PIEZA.H
+// Trabajador por pieza derivado de Empleado
+#ifndef PIEZA_H_
+#define PIEZA_H_
+
+#include "empleado.h"
+
+class PieceWorker : public Employee {
+	public:
+   	PieceWorker(const char *, const char *,
+               float = 0.0, int = 0);
+   	void setWage(float);
+   	void setQuantity(int);
+   	virtual float earnings() const;
+   	virtual void print() const;
+	private:
+   	float wagePerPiece; // pago por cada pieza
+   	int quantity;       // piezas por semana
+};
+
+#endif /*PIEZA_H_*/
+
+// PIEZA.CPP
+#include <iostream>
+#include "pieza.h"
+using namespace std;
+
+// Constructor for class PieceWorker
+PieceWorker::PieceWorker(const char *first,
+             const char *last, float w, int q)
+   : Employee(first, last)  
+{
+   wagePerPiece = w > 0 ? w : 0;
+   quantity = q > 0 ? q : 0;
+}
+
+void PieceWorker::setWage(float w)
+{ wagePerPiece = w > 0 ? w : 0; }
+
+void PieceWorker::setQuantity(int q)
+{ quantity = q > 0 ? q : 0; }
+
+float PieceWorker::earnings() const
+{ return quantity * wagePerPiece; }
+
+void PieceWorker::print() const {
+   cout << "\n     Tabajador por pieza: " << getFirstName()
+	<< ' ' << getLastName();
+}
+
+// HORA.H
+// Trabajador por hora derivado de Empleado
+#ifndef HORA_H_
+#define HORA_H_
+
+#include "empleado.h"
+
+class HourlyWorker : public Employee {
+	public:
+   	HourlyWorker(const char *, const char *,
+                float = 0.0, float = 0.0);
+   	void setWage(float);
+   	void setHours(float);
+   	virtual float earnings() const;
+   	virtual void print() const;
+	private:
+   	float wage;   // salario por hora
+   	float hours;  // horas trabajadas en la semana
+};
+
+#endif /*HORA_H_*/
+
+// HORA.CPP
+#include <iostream>
+#include "hora.h"
+using namespace std;
+
+HourlyWorker::HourlyWorker(const char *first, const char *last,
+                           float w, float h)
+   : Employee(first, last)   
+{
+   wage = w > 0 ? w : 0;
+   hours = h >= 0 && h < 168 ? h : 0;
+}
+
+void HourlyWorker::setWage(float w) { wage = w > 0 ? w : 0; }
+
+void HourlyWorker::setHours(float h)
+{ hours = h >= 0 && h < 168 ? h : 0; }
+
+float HourlyWorker::earnings() const { return wage * hours; }
+
+void HourlyWorker::print() const
+{
+   cout << "\n    Trabajador por hora: " << getFirstName()
+	<< ' ' << getLastName();
+}
+
+// main.cpp
+#include <iostream>
+#include <iomanip>
+#include "empleado.h"
+#include "jefe.h"
+#include "comis.h"
+#include "pieza.h"
+#include "hora.h"
+using namespace std;
+
+int main(){
+   // formato de salida
+   cout << setprecision(2);
+
+   Employee *ptr;  // apuntador a clase base
+
+   Boss b("John", "Smith", 800.00);
+   ptr = &b;  // apuntador de clase base apuntando a objeto de clase derivada
+   ptr->print();                           // ligado dinámico
+   cout << " ganado $" << ptr->earnings(); // ligado dinámico
+   b.print();                              // ligado estático
+   cout << " ganado $" << b.earnings();    // ligado estático
+
+   CommissionWorker c("Sue", "Jones", 200.0, 3.0, 150);
+   ptr = &c;  
+   ptr->print();                           
+   cout << " ganado $" << ptr->earnings(); 
+   c.print();                              
+   cout << " ganado $" << c.earnings();    
+
+   PieceWorker p("Bob", "Lewis", 2.5, 200);
+   ptr = &p;  
+   ptr->print();
+   cout << " ganado $" << ptr->earnings(); 
+   p.print();                              
+   cout << " ganado $" << p.earnings();    
+
+   HourlyWorker h("Karen", "Precio", 13.75, 40);
+   ptr = &h;  
+   ptr->print();
+   cout << " ganado $" << ptr->earnings(); 
+   h.print();                              
+   cout << " ganado $" << h.earnings();    
+
+   cout << endl;
+   return 0;
+}
+\end{minted}
+\caption{Ejemplo de funciones virtuales y polimorfismo en C++. Programa de cálculo de salario..}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\ejemplo
+\textbf{Programa de figuras geométricas con una interfaz abstracta Shape (Forma)}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// Figura.H
+#ifndef figura_H
+#define figura_H
+
+class Shape {
+public:
+   virtual float area() const { return 0.0; }
+   virtual float volume() const { return 0.0; }
+   virtual void printShapeName() const = 0; // virtual pura
+};
+#endif
+
+// Punto.H
+#ifndef PUNTO_H_
+#define PUNTO_H_
+#include <iostream>
+#include "figura.h"
+
+class Point : public Shape {
+   friend ostream &operator<<(ostream &, const Point &);
+public:
+   Point(float = 0, float = 0);  
+   void setPoint(float, float);
+   float getX() const { return x; }
+   float getY() const { return y; }
+   virtual void printShapeName() const { cout << "Punto: "; }
+private:
+   float x, y;   
+};
+#endif /*PUNTO_H_*/
+
+// Punto.CPP
+#include <iostream.h>
+#include "punto.h"
+Point::Point(float a, float b)
+{
+   x = a;
+   y = b;
+}
+
+void Point::setPoint(float a, float b)
+{
+   x = a;
+   y = b;
+}
+
+ostream &operator<<(ostream &output, const Point &p)
+{
+   output << '[' << p.x << ", " << p.y << ']';
+   return output; 
+}
+
+// Circulo.H
+#ifndef CIRCULO_H_
+#define CIRCULO_H_
+#include "punto.h"
+
+class Circle : public Point {
+   friend ostream &operator<<(ostream &, const Circle &);
+public:
+   Circle(float r = 0.0, float x = 0.0, float y = 0.0);
+
+   void setRadius(float);
+   float getRadius() const;
+   virtual float area() const;
+   virtual void printShapeName() const { cout << "Circulo: "; }
+private:
+   float radius;   
+};
+#endif /*CIRCULO_H_*/
+
+// Circulo.CPP
+#include <iostream>
+#include <iomanip>
+#include "circulo.h"
+using namespace std;
+
+Circle::Circle(float r, float a, float b)
+   : Point(a, b)
+ { radius = r > 0 ? r : 0; }
+
+void Circle::setRadius(float r) { radius = r > 0 ? r : 0; }
+
+float Circle::getRadius() const { return radius; }
+
+float Circle::area() const { return 3.14159 * radius * radius; }
+
+ostream &operator<<(ostream &output, const Circle &c)
+{
+   output << '[' << c.getX() << ", " << c.getY()
+          << "]; Radio=" << setprecision(2) << c.radius;
+
+   return output; 
+}
+
+// Cilindro.H
+#ifndef CILINDRO_H_
+#define CILINDRO_H_
+#include "circulo.h"
+
+class Cylinder : public Circle {
+   friend ostream &operator<<(ostream &, const Cylinder &);
+public:
+   Cylinder(float h = 0.0, float r = 0.0,
+	    float x = 0.0, float y = 0.0);
+
+   void setHeight(float);
+   virtual float area() const;
+   virtual float volume() const;
+   virtual void printShapeName() const { cout << "Cilindro: "; }
+private:
+   float height;   // altura del cilindro
+};
+#endif /*CILINDRO_H_*/
+
+// Cilindro.CPP
+#include <iostream>
+#include <iomanip>
+#include "cilindro.h"
+
+Cylinder::Cylinder(float h, float r, float x, float y)
+   : Circle(r, x, y)
+{ height = h > 0 ? h : 0; }
+
+void Cylinder::setHeight(float h)
+   { height = h > 0 ? h : 0; }
+
+float Cylinder::area() const
+{
+      return 2 * Circle::area() +
+          2 * 3.14159 * Circle::getRadius() * height;
+}
+
+float Cylinder::volume() const
+{
+   float r = Circle::getRadius();
+   return 3.14159 * r * r * height;
+}
+
+ostream &operator<<(ostream &output, const Cylinder& c)
+{
+   output << '[' << c.getX() << ", " << c.getY()
+          << "]; Radio=" << setprecision(2) << c.getRadius()
+          << "; Altura=" << c.height;
+   return output;  
+}
+
+// main.CPP
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+#include "figura.h"
+#include "punto.h"
+#include "circulo.h"
+#include "cilindro.h"
+
+int main(){
+   Point point(7, 11);
+   Circle circle(3.5, 22, 8);
+   Cylinder cylinder(10, 3.3, 10, 10);
+
+   point.printShapeName();     // ligado estático
+   cout << point << endl;
+
+   circle.printShapeName();    
+   cout << circle << endl;
+
+   cylinder.printShapeName();  
+   cout << cylinder << "\n\n";
+   cout << setprecision(2);
+   Shape *ptr;                 // apuntador de clase base
+
+   // apuntador de clase base referenciando objeto de clase derivada
+   ptr = &point;
+   ptr->printShapeName();      // ligado dinámico
+   cout << "x = " << point.getX() << "; y = " << point.getY()
+	<< "\nArea = " << ptr->area()
+	<< "\nVolumen = " << ptr->volume() << "\n\n";
+
+   ptr = &circle;
+   ptr->printShapeName();  
+   cout << "x = " << circle.getX() << "; y =" << circle.getY()
+	<< "\nArea = " << ptr->area()
+	<< "\nVolumen = " << ptr->volume() << "\n\n";
+
+   ptr = &cylinder;
+   ptr->printShapeName();      // dynamic binding
+   cout << "x = " << cylinder.getX() << "; y = " << cylinder.getY()
+	<< "\nArea = " << ptr->area()
+	<< "\nVolumen = " << ptr->volume() << endl;
+   return 0;
+}
+\end{minted}
+\caption{Ejemplo de polimorfismo en C++. Programa de figuras geométricas con una interfaz abstracta Shape (Forma).}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% CPP_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% JAVA
+%%%%%%%%%%
+\ifjava
+\newpage
+\section{Polimorfismo y clases abstractas Java}
+El polimorfismo es implementado en Java a través de clases derivadas y clases \textbf{abstractas}.
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ Recordar:	El \textbf{polimorfismo} se define como la capacidad de objetos de clases diferentes, relacionados mediante herencia, a responder de forma distinta a una misma llamada de un método.  
+\\ \hline
+\end{tabular}
+\end{center}
+
+Al hacer una solicitud de un método, a través de una variable de referencia a clase base para usar un método, Java determina el método que corresponda al objeto de la clase a la que pertenece, y no el método de la clase base.
+
+	Los métodos en Java - a diferencia de C++ - tienen este comportamiento por default, debido a que cuando un método es accedido por una referencia a una clase base, y esta mantiene una referencia a un objeto de una clase derivada, el programa determina \textbf{en tiempo de ejecución} a que método llamar, de acuerdo al tipo de objeto al que se apunta. 
+
+Esto como ya se ha visto, se conoce como \textbf{ligadura tardía} y permite otro nivel de reutilización de código, resaltado por la simplificación con respecto a C++ de no tener que declarar al método como virtual.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//ejemplo Prueba
+class base {
+	public void quien(){
+		System.out.println("base");
+	}
+}
+
+class primera extends base {
+	public void quien(){
+		System.out.println("primera");
+	}
+}
+
+class segunda extends base {
+	public void quien(){
+		System.out.println("segunda");
+	}
+}
+
+class tercera extends base { }
+
+class cuarta extends base {
+	/*public int quien(){   No se vale con un tipo de dato diferente
+	 	System.out.println("cuarta");
+	  	return 1;
+ 	}*/
+}
+
+public class Prueba {
+	public static void main(String args[]) {
+		base objBase= new base(), pBase;
+		primera obj1= new primera();
+		segunda obj2= new segunda();
+		tercera obj3= new tercera();
+		cuarta  obj4= new cuarta();
+
+		pBase=objBase;
+		pBase.quien();
+
+		pBase=obj1;
+		pBase.quien();
+
+		pBase=obj2;
+		pBase.quien();
+
+		pBase=obj3;
+		pBase.quien();
+	
+		pBase=obj4;
+		pBase.quien();
+	}
+}
+\end{minted}
+\caption{Ejemplo de polimorfismo en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como se aprecia en el ejemplo anterior, en caso de que el método no sea redefinido, se ejecuta el método de la clase base.
+
+	Es importante señalar que – al igual que en C++- los métodos que sean redefinidos en clases derivadas, deben tener además de la misma firma que método base, el mismo tipo de retorno. Si se declara en una clase derivada un método con otro tipo de dato como retorno, se generará un error en tiempo de compilación. 
+
+\subsection{Clase abstracta y clase concreta en Java}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+  	Recordar: Una \textbf{clase base abstracta}, es aquella que es definida para especificar características generales que van a ser aprovechadas por sus clases derivadas, pero no se necesita instanciar a dicha superclase.
+\\ \hline
+\end{tabular}
+\end{center}
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{java}
+abstract class ClaseAbstracta {
+	//código de la clase
+}
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+Además, existe la posibilidad de contar con métodos abstractos:
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Concepto} 
+\end{center} 
+\\ \hline
+ Un \textbf{método abstracto} lleva la palabra reservada \textit{abstract} y contiene sólo el nombre y su firma. No necesita implementarse, ya que esto es tarea de las subclases.  
+\\ \hline
+\end{tabular}
+\end{center}
+
+Si una clase contiene al menos un método abstracto, toda la clase es considerada abstracta y es conveniente, por claridad, declararla como tal. Es posible claro, declarar a una clase como abstracta sin que tenga métodos abstractos.
+
+Ejemplo básico para un método abstracto:
+
+\begin{minted}{java}
+abstract class ClaseAbstracta {
+	
+ 	public abstract void noTengoCodigo( int x);
+
+}
+\end{minted}
+
+	Si se crea una subclase de una clase que contiene un método abstracto, deberá de especificarse el código de ese método; de lo contrario, el método seguirá siendo abstracto y por consecuencia también lo será la subclase\footnote{En C++, una clase se hace abstracta al declarar al menos uno de los métodos virtuales como puro.}.
+
+	Aunque no se pueden tener objetos de clases abstractas, si se pueden tener referencias a objetos de esas clases, permitiendo una manipulación de objetos de las clases derivadas mediante las referencias a la clase abstracta.
+
+El uso de clases abstractas \textbf{fortalece} al polimorfismo, al poder partir de clases definidas en lo general, sin implementación de código, pero pudiendo ser agrupadas todas mediante variables de referencia a las clases base.
+
+Ejemplos de clases abstractas y polimorfismo:
+
+\textbf{Programa de cálculo de salario}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Clase base abstracta Employee
+public abstract class Employee {
+	private String firstName;
+	private String lastName;
+
+   	// Constructor
+   	public Employee( String first, String last )  {
+      firstName = new String ( first );
+      lastName = new String( last );
+   	}
+   
+   	public String getFirstName()  { 
+   		return new String( firstName ); 
+	}
+
+   	public String getLastName()   { 
+   		return new String( lastName ); 
+	}
+
+   	// el metodo abstracto debe de ser implementado por cada
+   	// clase derivada de Employee para poder ser
+   	// instanciadas las subclases
+   	public abstract double earnings(); 
+}
+
+// Clase Boss class derivada de Employee
+public final class Boss extends Employee {
+	private double weeklySalary; 
+
+public Boss( String first, String last, double s) {
+		super( first, last );  // llamada al constructor de clase base
+		setWeeklySalary( s );
+   	}
+   
+	public void setWeeklySalary( double s ){ 
+		weeklySalary = ( s > 0 ? s : 0 ); 
+	}
+   
+	// obtiene pago del jefe
+	public double earnings() { 
+		return weeklySalary; 
+	}
+   
+	public String toString() {
+		return "Jefe: " + getFirstName() + ' ' +
+             getLastName();
+	}
+}
+
+// Clase PieceWorker derivada de Employee
+public final class PieceWorker extends Employee {
+	private double wagePerPiece; // pago por pieza
+	private int quantity;        // piezas por semana
+
+	public PieceWorker( String first, String last,
+                       double w, int q )    {
+		super( first, last );  
+		setWage( w );
+		setQuantity( q );
+	}
+   
+	public void setWage( double w )    { 
+		wagePerPiece = ( w > 0 ? w : 0 ); 
+	}
+   
+	public void setQuantity( int q )    { 
+		quantity = ( q > 0 ? q : 0 ); 
+	}
+   
+	public double earnings()   { 
+		return quantity * wagePerPiece; 
+	}
+
+	public String toString()   {
+		return "Trabajador por pieza: " +
+             getFirstName() + ' ' + getLastName();
+	}  
+}
+
+// Clase HourlyWorker derivada de Employee
+public final class HourlyWorker extends Employee {
+	private double wage;   // pago por hora
+	private double hours;  // horas trabajadas por semana
+
+	public HourlyWorker( String first, String last, 
+                        double w, double h )   {
+		super( first, last );  
+		setWage( w );
+		setHours( h );
+	}
+   
+	public void setWage( double w )   { 
+		wage = ( w > 0 ? w : 0 ); 
+	}
+   
+	public void setHours( double h )   { 
+		hours = ( h >= 0 && h < 168 ? h : 0 ); 
+	}
+   
+	public double earnings()    { 
+		return wage * hours; 
+	}
+   
+	public String toString()    {
+		return "Trabajador por hora: " +
+             getFirstName() + ' ' + getLastName();
+	}
+}
+ 
+// Clase CommissionWorker derivada de Employee
+public final class CommissionWorker extends Employee {
+	private double salary;      // salario base por semana
+	private double commission;  // monto por producto vendido
+	private int quantity;       // total de productos vendidos por semana
+
+	public CommissionWorker( String first, String last,
+                            double s, double c, int q)   {
+		super( first, last );  
+		setSalary( s );
+		setCommission( c );
+		setQuantity( q );
+	}
+   
+	public void setSalary( double s )   { 
+		salary = ( s > 0 ? s : 0 ); 
+	}
+   
+	public void setCommission( double c )    { 
+		commission = ( c > 0 ? c : 0 ); 
+	}
+   
+	public void setQuantity( int q )   { 
+		quantity = ( q > 0 ? q : 0 ); 
+	}
+   
+	public double earnings()   { 
+		return salary + commission * quantity; 
+	}
+   
+	public String toString()   {
+		return "Trabajador por Comision : " +
+             getFirstName() + ' ' + getLastName();
+	}
+}   
+   
+// Programa de ejemplo Polimorfismo
+public class Polimorfismo {
+	public static void main( String rgs[] ) {
+		Employee ref;  // referencia de clase base
+		Boss b;
+		CommissionWorker c;
+		PieceWorker p;
+		HourlyWorker h;
+		b = new Boss( "Alan", "Turing", 800.00 );
+		c = new CommissionWorker( "Ada", "Lovelace", 
+                                400.0, 3.0, 150);
+		p = new PieceWorker( "Grace", "Hopper", 2.5, 200 );
+		h = new HourlyWorker( "James", "Gosling", 13.75, 40 );
+   
+		ref = b;  // referencia de superclase a objeto de subclase
+		System.out.println( ref.toString() + " ganó $" +
+                    ref.earnings() );
+		System.out.println( b.toString() + " ganó $" +
+                    b.earnings() );
+   
+		ref = c;  // referencia de superclase a objeto de subclase
+		System.out.println( ref.toString() + " ganó $" +
+                    ref.earnings() );
+		System.out.println( c.toString() + " ganó $" + 
+                    c.earnings() );
+   
+		ref = p;  // referencia de superclase a objeto de subclase
+		System.out.println( ref.toString() + " ganó $" + 
+                    ref.earnings() );
+		System.out.println( p.toString() + " ganó $" + 
+                    p.earnings() );
+   
+		ref = h;  // referencia de superclase a objeto de subclase
+		System.out.println( ref.toString() + " ganó $" + 
+                    ref.earnings() );
+		System.out.println( h.toString() + " ganó $" + 
+                    h.earnings() );
+	}
+}
+\end{minted}
+\caption{Ejemplo de clase abstracta y polimorfismo en Java. Programa de cálculo de salario}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\ejemplo
+\textbf{Programa de figuras geométricas con una clase abstracta Shape (Forma)}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+// Definicion de clase base abstracta Shape
+public abstract class Shape {
+   
+	public double area() { 
+		return 0.0; 
+	}
+   
+	public double volume() { 
+		return 0.0; 
+	}
+   
+	public abstract String getName();   
+}
+
+// Definicion de clase Point
+public class Point extends Shape {
+	protected double x, y; // coordenadas del punto
+
+	public Point( double a, double b ) { setPoint( a, b ); }
+
+	public void setPoint( double a, double b )   {
+		x = a;
+		y = b;
+	}
+
+	public double getX() { return x; }
+
+	public double getY() { return y; }
+
+	public String toString()
+      { return "[" + x + ", " + y + "]"; }
+
+	public String getName() { 
+		return "Punto"; 
+	}
+}
+
+// Definicion de clase Circle
+public class Circle extends Point {  // hereda de Point
+	protected double radius;
+
+	public Circle()   {
+		super( 0, 0 );  
+		setRadius( 0 );  
+	}
+
+	public Circle( double r, double a, double b )   {
+		super( a, b );  
+		setRadius( r );  
+	}
+
+	public void setRadius( double r )
+      { radius = ( r >= 0 ? r : 0 ); }
+
+	public double getRadius() { return radius; }
+
+	public double area() { return 3.14159 * radius * radius; }
+
+	public String toString()
+      { return "Centro = " + super.toString() + 
+               "; Radio = " + radius; }
+
+	public String getName() { 
+		return "Circulo"; 
+	}
+}
+
+// Definicion de clase Cylinder
+public class Cylinder extends Circle {
+	protected double height;  // altura del cilindro
+      
+	public Cylinder( double h, double r, double a, double b )         {
+		super( r, a, b );  
+		setHeight( h );
+	}
+
+	public void setHeight( double h ){ 
+		height = ( h >= 0 ? h : 0 ); 
+	}
+   
+	public double getHeight() { 
+		return height; 
+	}
+
+	public double area()   {
+		return 2 * super.area() +
+			2 * 3.14159 * radius * height;
+	}
+    
+	public double volume() { 
+		return super.area() * height; 
+	}
+
+	public String toString(){ 
+		return super.toString() + "; Altura = " + height; 
+	}
+
+	public String getName() { 
+		return "Cilindro"; 
+	}
+}
+
+// Codigo de prueba
+public class Polimorfismo02 {
+
+	public static void main (String args []) {
+		Point point;          
+		Circle circle;  
+		Cylinder cylinder; 
+		Shape arrayOfShapes[];
+
+		point = new Point( 7, 11 );          
+		circle = new Circle( 3.5, 22, 8 );  
+		cylinder = new Cylinder( 10, 3.3, 10, 10 ); 
+
+		arrayOfShapes = new Shape[ 3 ];
+
+		// asigno las referencias de los objetos de subclase 
+		// a un arreglo de superclase
+		arrayOfShapes[ 0 ] = point;
+		arrayOfShapes[ 1 ] = circle;
+		arrayOfShapes[ 2 ] = cylinder;  
+
+		System.out.println( point.getName() + ": " + point.toString());
+   
+		System.out.println( circle.getName() + ": " + circle.toString());
+   
+		System.out.println( cylinder.getName() + ": " + cylinder.toString());
+
+		for ( int i = 0; i < 3; i++ ) {
+			System.out.println( arrayOfShapes[ i ].getName() + 
+					": " + arrayOfShapes[ i ].toString());
+			System.out.println( "Area = " + arrayOfShapes[ i ].area() );
+			System.out.println( "Volume = " + arrayOfShapes[ i ].volume() );
+		}
+	}
+}
+\end{minted}
+\caption{Ejemplo de polimorfismo en Java. Programa de figuras geométricas con una clase abstracta Shape (Forma)}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsubsection{Clase abstracta o interfaz}
+% Abstract classes are similar to interfaces. You cannot instantiate them, and they may contain a mix of methods declared with or without an implementation. However, with abstract classes, you can declare fields that are not static and final, and define public, protected, and private concrete methods. With interfaces, all fields are automatically public, static, and final, and all methods that you declare or define (as default methods) are public. In addition, you can extend only one class, whether or not it is abstract, whereas you can implement any number of interfaces.
+
+%Which should you use, abstract classes or interfaces?
+
+%    Consider using abstract classes if any of these statements apply to your situation:
+%        You want to share code among several closely related classes.
+%        You expect that classes that extend your abstract class have many common methods or fields, or require access modifiers other than public (such as protected and private).
+%        You want to declare non-static or non-final fields. This enables you to define methods that can access and modify the state of the object to which they belong.
+ %   Consider using interfaces if any of these statements apply to your situation:
+ %       You expect that unrelated classes would implement your interface. For example, the interfaces Comparable and Cloneable are implemented by many unrelated classes.
+%        You want to specify the behavior of a particular data type, but not concerned about who implements its behavior.
+%        You want to take advantage of multiple inheritance of type.
+
+% source: https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html
+
+
+
+
+\subsection{Ejemplo de Polimorfismo con una Interfaz en Java}
+
+	Los programas anteriores estaban basados en clases y clases abstractas. Sin embargo, también es posible tener variables de referencia a interfaces, a través de las cuales se implemente el polimorfismo. El siguiente programa muestra otra estructura clásica de clases “gráficas”, todas contienen su propia implementación de $draw()$, y son organizadas en dos arreglos de ejemplo: uno de la clase principal, y el segundo del tipo de la interfaz. 
+	
+\begin{figure}
+    \centering
+    \includegraphics{imagenes/polimorfismo_interfaz_java.png}
+    \caption{Ejemplo de polimorfismo con interfaces en Java}
+    \label{fig:my_label}
+\end{figure}	
+	
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {java}
+//programa Polimorfismo
+interface IDrawable {
+    void draw();
+}
+
+class Shape implements IDrawable {
+    public void draw() { System.out.println("Dibujando Figura."); }
+}
+
+class Circle extends Shape {
+    public void draw() { System.out.println("Dibujando Circulo."); }
+}
+
+class Rectangle extends Shape {
+    public void draw() { System.out.println("Dibujando Rectangulo."); }
+}
+
+class Square extends Rectangle {
+    public void draw() { System.out.println("Dibujando cuadrado."); }
+}
+
+class Map implements IDrawable {
+    public void draw() { System.out.println("Dibujando mapa."); }
+}
+
+public class Polimorfismo03 {
+    public static void main(String args[]) {
+        Shape[] shapes = {new Circle(), new Rectangle(), new Square()};   
+        IDrawable[] drawables = {new Shape(), new Rectangle(), new Map()};
+
+        System.out.println("Dibujando figuras:");
+        for (int i = 0; i < shapes.length; i++)                           
+            shapes[i].draw();
+
+        System.out.println("Dibujando elementos dibujables:");
+        for (int i = 0; i < drawables.length; i++)                        
+            drawables[i].draw();
+    }
+}
+\end{minted}
+\caption{Ejemplo de polimorfismo con interfaces en Java.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% JAVA_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% RUBY
+%%%%%%%%%%
+\ifruby
+\newpage
+\section{Polimorfismo en Ruby}
+
+El polimorfismo es implementado en Ruby a través de clases derivadas. 
+
+Al hacer una solicitud de un método, a través de una variable, Ruby determina \textbf{en tiempo de ejecución} a que método llamar, de acuerdo al tipo de objeto al que se apunta. 
+
+%ejemplo
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+#ejemplo Prueba
+class Base 
+	def quien
+		puts "base"
+	end
+end
+
+class Primera < Base 
+	def	quien
+		puts "primera"
+	end
+end
+
+class Segunda < Base 
+	def quien
+		puts "segunda"
+	end
+end
+
+class Tercera < Base 
+
+end
+
+class Cuarta < Base 
+	def quien   #Si se vale con un tipo de retorno diferente (definido dinamicamente)
+	 	puts "cuarta"
+	  	return 1
+	end
+end
+
+#codigo de prueba
+def prueba 
+	objBase= Base.new
+	obj1= Primera.new
+	obj2= Segunda.new
+	obj3= Tercera.new
+	obj4= Cuarta.new
+
+	pBase=objBase
+	pBase.quien
+
+	pBase=obj1
+	pBase.quien
+
+	pBase=obj2
+	pBase.quien
+
+	pBase=obj3
+	pBase.quien
+	
+	pBase=obj4
+	pBase.quien
+end
+
+prueba
+\end{minted}
+\caption{Ejemplo de polimorfismo en Ruby.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+Como se aprecia en el ejemplo anterior, en caso de que el método no sea redefinido, se ejecuta el método de la clase base.
+
+Es importante señalar que  \textbf{no} es necesario que el tipo de retorno coincida, pues éste se determina dinámicamente.
+
+\subsection{¿Y la clase abstracta?}	
+
+Ruby no tiene el concepto de clase abstracta y clase concreta. Si por cuestión de diseño es necesario definir una clase que no debe permitir instancias, es posible crear un método en dicha clase como sigue:
+
+\begin{minted}{ruby}
+class MiClase
+	def self.abstract?
+		return self == MiClase
+	end
+end
+\end{minted}
+
+Esto no limita realmente a que alguien pueda instanciar la clase, pero es posible preguntar si la clase es “abstract?”. 
+
+
+%ejemplo
+\textbf{Programa de cálculo de salario}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+# Clase base Employee
+class Employee 
+	attr_reader :firstName, :lastName
+	
+	@firstName
+	@lastName
+
+	def self.abstract?
+		return self == Employee
+	end
+	
+	# Inicializador
+   	def initialize (first, last)  
+   		@firstName = String.new( first )
+		@lastName = String.new( last )
+   	end
+   
+    # método sin código
+   	def earnings
+   	end	
+end
+
+# Clase Boss cderivada de Employee
+ class Boss < Employee 
+	 @weeklySalary 
+
+	 def initialize (first, last, s) 
+		super( first, last )  # llamada al constructor de clase base
+		setWeeklySalary( s )
+   	end
+   
+	def setWeeklySalary( s ) 
+		@weeklySalary = ( s > 0 ? s : 0 ) 
+	end
+   
+	# obtiene pago del jefe
+	def earnings  
+		return @weeklySalary 
+	end
+   
+	def to_s 
+		return "Jefe: " + @firstName + " " + @lastName
+	end
+end
+
+# Clase PieceWorker derivada de Employee
+class PieceWorker < Employee 
+	attr_reader :wagePerPiece, :quantity
+	
+	@wagePerPiece # pago por pieza
+	@quantity  # piezas por semana
+
+	def initialize(first, last, w, q )    
+		super( first, last )  
+		setWage( w )
+		setQuantity( q )
+	end
+   
+	def setWage( w )     
+		@wagePerPiece = ( w > 0 ? w : 0 ) 
+	end
+   
+	def setQuantity( q )     
+		@quantity = ( q > 0 ? q : 0 ) 
+	end
+   
+	def earnings    
+		return quantity * wagePerPiece 
+	end
+
+	def to_s   
+		return "Trabajador por pieza: " + @firstName + " " + @lastName
+	end  
+end
+
+# Clase HourlyWorker derivada de Employee
+class HourlyWorker < Employee 
+	attr_reader :wage, :hours
+	
+	@wage   # pago por hora
+	@hours  # horas trabajadas por semana
+
+	def initialize(first, last, w, h)   
+		super( first, last )  
+		setWage( w )
+		setHours( h )
+	end
+   
+	def setWage( w )    
+		@wage = ( w > 0 ? w : 0 ) 
+	end
+   
+	def setHours( h )    
+		@hours = ( h >= 0 && h < 168 ? h : 0 ) 
+	end
+   
+	def earnings     
+		return @wage * @hours 
+	end
+   
+	def to_s    
+		return "Trabajador por hora: " + @firstName + " " + @lastName
+	end
+end
+
+# Clase CommissionWorker derivada de Employee
+class CommissionWorker < Employee 
+	attr_reader :salary, :commission, :quantity
+	
+	@salary      # salario base por semana
+	@commission  # monto por producto vendido
+	@quantity    # total de productos vendidos por semana
+
+	def initialize(first, last, s, c, q)   
+		super( first, last )  
+		setSalary( s )
+		setCommission( c )
+		setQuantity( q )
+	end
+   
+	def setSalary( s )    
+		@salary = ( s > 0 ? s : 0 ) 
+	end
+   
+	def setCommission( c )     
+		@commission = ( c > 0 ? c : 0 ) 
+	end
+   
+	def setQuantity( q )    
+		@quantity = ( q > 0 ? q : 0 ) 
+	end
+   
+	def earnings    
+		return @salary + @commission * @quantity 
+	end
+   
+	def to_s   
+		return "Trabajador por Comision : " + @firstName + " " + @lastName
+	end
+end   
+
+
+# Codigo de ejemplo Polimorfismo
+b = Boss.new( "Alan", "Turin", 800.00 )
+c = CommissionWorker.new( "Ada", "Lovelace", 400.0, 3.0, 150)
+p = PieceWorker.new( "Grace", "Hopper", 2.5, 200 )
+h = HourlyWorker.new( "James", "Gosling", 13.75, 40 )
+
+puts Employee.abstract?   
+
+ref = b  # referencia a objeto de subclase
+puts ref.to_s + " gano $" +  ref.earnings.to_s
+puts  b.to_s + " gano $" + b.earnings.to_s 
+   
+ref = c  # referencia  a objeto de subclase
+puts ref.to_s + " gano $" + ref.earnings.to_s
+puts c.to_s + " gano $" + c.earnings.to_s
+   
+ref = p  # referencia a objeto de subclase
+puts ref.to_s + " gano $" + ref.earnings.to_s
+puts p.to_s + " gano $" + p.earnings.to_s
+   
+ref = h  # referencia a objeto de subclase
+puts ref.to_s + " gano $" + ref.earnings.to_s
+puts h.to_s + " gano $" + h.earnings.to_s
+\end{minted}
+\caption{Ejemplo polimorfismo en Ruby. Programa de cálculo de salario.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+%ejemplo
+\textbf{Programa de figuras geométricas con una clase abstracta Shape (Forma)}
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {ruby}
+# Definicion de clase base abstracta Shape
+class Shape 
+	def self.abstract?
+		return self == Shape
+	end
+   
+	def area 
+		return 0.0 
+	end
+   
+	def volume 
+		return 0.0 
+	end
+   
+	def getName  
+	end	
+end
+
+# Definicion de clase Point
+class Point < Shape 
+	attr_reader :x, :y
+	
+	@x
+	@y # coordenadas del punto
+
+	def initialize (a, b) 
+		setPoint( a, b ) 
+	end
+
+	def setPoint(a, b)
+		@x, @y = a, b
+	end
+
+	def to_s
+       return "[" + @x.to_s + ", " + @y.to_s + "]"
+	end
+
+	def getName 
+		return "Punto" 
+	end
+end
+
+# Definicion de clase Circle
+class Circle < Point # hereda de Point
+	attr_reader :radius
+	
+	@radius
+
+	def initialize(r, a, b)
+		super( a, b )
+		setRadius( r )  
+	end
+
+	def setRadius(r)
+    	@radius = ( r >= 0 ? r : 0 )
+	end
+
+	def area 
+		return 3.14159 * radius * radius
+	end
+
+	def to_s
+      	return "Centro = " + super + "; Radio = " + @radius.to_s
+	end
+
+	def getName 
+		return "Circulo " 
+	end
+end
+
+# Definicion de clase Cylinder
+class Cylinder < Circle
+	attr_reader :height
+	alias_method :areaCircle, :area  #define un nuevo nombre para el metodo area de Circle
+	# o puede usarse alias :areaCircle :area
+	
+	@height # altura del cilindro
+      
+	def initialize(h, r, a, b)       
+		super(r, a, b)  
+		setHeight(h)
+	end
+
+	def setHeight(h) 
+		@height = ( h >= 0 ? h : 0 )
+	end
+   
+	def area
+		return 2 * super +	2 * 3.14159 * @radius * @height
+	end
+     
+	def volume 
+		return areaCircle * @height 
+	end
+
+	def to_s 
+		return super + "; Altura = " + @height.to_s 
+	end
+
+	def getName 
+		return "Cilindro " 
+	end
+end
+
+# Codigo de prueba
+#sh = Shape()           # genera error
+point = Point.new( 7, 11 )          
+circle = Circle.new( 3.5, 22, 8 )
+cylinder = Cylinder.new( 10, 3.3, 10, 10 )
+
+# asigno las referencias de los objetos de subclase 
+# a un arreglo 
+arrayOfShapes=[]
+arrayOfShapes[0 ] = point
+arrayOfShapes[1 ] = circle
+arrayOfShapes[2 ] = cylinder 
+  
+puts point.getName + ": " + point.to_s
+   
+puts circle.getName + ": " + circle.to_s
+   
+dos?puts cylinder.getName + ": " + cylinder.to_s
+
+for  elem in arrayOfShapes
+	puts elem.getName + elem.to_s
+	puts "  Area = " + elem.area.to_s
+	puts "  Volumen = " + elem.volume.to_s
+end
+\end{minted}
+\caption{Ejemplo polimorfismo en Ruby. Programa de figuras geométricas con una clase abstracta Shape (Forma).}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% RUBY_END
+%%%%%%%%%%
+
+%%%%%%%%%%
+% PYTHON
+%%%%%%%%%%
+\ifpython
+\newpage
+\section{Polimorfismo en Python}
+
+Debido a que Python es un lenguaje tipado dinámicamente, el polimorfismo se ejecuta en automático. De hecho, cada operación es una operación polimórfica en Python.
+Cualquier método aplicado a un objeto funcionará mientras la clase del objeto la soporte, siendo determinado en tiempo de ejecución si es posible llevarse a cabo la operación.
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+# Ejemplo de polimorfismo en Python
+class base:
+    def quien(self):
+        print('base')
+class primera (base):
+    def quien(self):
+        print('primera')
+class segunda (base):
+    def quien(self):
+        print('segunda')
+class tercera (base):
+    def foo(self):
+        return        
+#script de ejecución
+objBase = base()
+obj1 = primera()
+obj2 = segunda()
+obj3 = tercera()
+
+pBase= objBase
+pBase.quien()
+pBase= obj1
+pBase.quien()
+pBase= obj2
+pBase.quien()
+pBase= obj3
+pBase.quien()
+\end{minted}
+\caption{Ejemplo de polimorfismo en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\subsection{Clases abstractas y polimorfismo en Python}
+
+El concepto de clases abstractas no está implementado directamente en Python. Sin embargo, si proporciona un módulo para clases bases abstractas (ABC – Abstract Base Class)\footnote{\href{https://docs.python.org/3/library/abc.html}{abc}}. El módulo proporciona una metaclase\footnote{\href{https://realpython.com/python-metaclasses/}{Metaclasses}} ABCMeta y una clase de ayuda ABC\footnote{El concepto de metaclases en Python va más allá del alcance del curso.}. Una clase que tiene una metaclase derivada de ABCMeta no puede ser instanciada. 
+Se pueden definir métodos abstractos mediante el uso del decorador $@abstractmethod$. El uso de este decorador requiere que la metaclase de la clase sea ABCMeta o se derive de esta.
+
+% TABLA con más de una línea de CÓDIGO
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Sintaxis} 
+\end{center} 
+\\ \hline
+    \begin{minted} [linenos=false]{python}
+from abc import ABC
+
+class <MiClaseAbstracta>(ABC):
+    <resto de la clase>
+    \end{minted}
+\\ \hline
+\end{tabular}
+\end{center}
+
+\ejemplo
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {python}
+#polimorfismo y clase abstracta en Python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    def area(self):
+        return 0
+    def volume(self):
+        return 0
+
+    @abstractmethod
+    def getName(self):
+        pass
+
+class Point (Shape):
+    def __init__(self, a, b):
+        self.x = a
+        self.y = b
+
+    def setPoint(self, a, b):
+        self.x = a
+        self.y = b
+
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
+
+    def toString(self):
+        return "[" + str(self.x) + ", " + str(self.y) + "]"
+
+    def getName(self):
+        return 'Punto'
+    
+class Circle (Point):
+    def __init__(self, r, a, b):
+        super().__init__(a, b)
+        self.radius = r
+
+    def setRadius(self, r):
+        if r>=0 :
+            self.radius = r
+        else:
+            self.radius = 0
+
+    def area(self):
+        return 3.14159 * self.radius * self.radius
+
+    def toString(self):
+        return "Centro = " + super().toString() + "; Radio = " + str(self.radius)
+        
+    def getName(self):
+        return 'Círculo'
+
+class Cylinder (Circle):
+    def __init__(self, h, r, a, b):
+        super().__init__(r, a, b)
+        self.height = h
+
+    def setHeight(self, h):
+        if h>=0:
+            self.height  = h
+        else:
+            self.height = 0
+
+    def getHeight(self):
+        return self.height
+
+    def area(self):
+        return 2 * super().area() + 2 * 3.14159 * self.radius * self.height
+
+    def volume(self):
+        return super().area() * self.height
+
+    def toString(self):
+        return super().toString() + "; Altura = " + str(self.height)
+        
+    def getName(self):
+        return 'Cilindro'
+
+#script de prueba
+point = Point(7, 11)
+circle = Circle(3.5, 22, 8)
+cylinder = Cylinder(10, 3.3, 10, 10)
+arrayOfShapes = [point, circle, cylinder]
+
+print(point.getName() + ": " + point.toString())
+print(circle.getName() + ": " + circle.toString())
+print(cylinder.getName() + ": " + cylinder.toString())
+
+for sh in arrayOfShapes:
+    print(sh.getName() + ": " + sh.toString())
+    print( "Area = " + str(sh.area()) )
+    print( "Volume = " + str(sh.volume()) )
+\end{minted}
+\caption{Ejemplo de clases abstractas y polimorfismo en Python.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:1}
+\end{longlisting}
+
+\fi
+%%%%%%%%%%
+% PYTHON_END
+%%%%%%%%%%
+
+
+%%%%%%%%%%
+% DRAFT
+%%%%%%%%%%
+\ifdraft
+\newpage
+
+\section{Polimorfismo en C#}
+
+\section{Polimorfismo en D}
+
+\section{Polimorfismo en Scala}
+
+\section{Principio de sustitución de Liskov y Polimorfismo}
+El principio de sustitución de Liskov (LSP, por sus siglas en inglés) es uno de los principios fundamentales de la programación orientada a objetos, propuesto por Barbara Liskov en 1988. Este principio establece que los objetos de una clase derivada deben poder ser sustituidos por objetos de la clase base sin afectar la corrección del programa.
+
+De manera más formal, el principio de sustitución de Liskov se puede expresar de la siguiente manera: "Si S es un subtipo de T, entonces los objetos del tipo T pueden ser reemplazados por objetos del tipo S (es decir, objetos del subtipo) sin alterar ninguna de las propiedades deseables de ese programa (corrección, ejecución de tareas, etc.)".
+
+El principio de sustitución de Liskov es importante en el diseño orientado a objetos por las siguientes razones:
+
+    \begin{enumerate}
+        \item \textbf{Herencia y polimorfismo}: El LSP garantiza que la herencia y el polimorfismo funcionen correctamente. Si una clase derivada viola el LSP, puede introducir errores y comportamientos inesperados cuando se utiliza en lugar de la clase base.
+        \item \textbf{Modularidad y extensibilidad}: Al cumplir con el LSP, las clases derivadas pueden extender el comportamiento de las clases base sin romper las suposiciones existentes. Esto facilita la modularidad y la extensibilidad del software.
+        \item \textbf{Reusabilidad}: El LSP promueve la reusabilidad del código, ya que las clases derivadas que cumplen con el principio pueden ser sustituidas por la clase base sin problemas en diferentes partes del sistema.
+        \item \textbf{Diseño robusto}: Al seguir el LSP, se evitan errores relacionados con la herencia y se promueve un diseño más robusto y mantenible.
+    \end{enumerate}
+
+Para cumplir con el principio de sustitución de Liskov, las clases derivadas deben adherirse a las siguientes reglas:
+
+    \begin{enumerate}
+        \item Las precondiciones de los métodos de la clase derivada no deben ser más estrictas que las precondiciones de los métodos de la clase base.
+        \item Las postcondiciones de los métodos de la clase derivada no deben ser más débiles que las postcondiciones de los métodos de la clase base.
+        \item Los invariantes de la clase derivada deben ser consistentes con los invariantes de la clase base.
+        \item Las excepciones arrojadas por los métodos de la clase derivada deben ser subtipos de las excepciones arrojadas por los métodos de la clase base.
+    \end{enumerate}
+
+Al seguir el principio de sustitución de Liskov, se garantiza que las clases derivadas sean verdaderas extensiones de las clases base, lo que conduce a un diseño más modular, extensible y mantenible en la programación orientada a objetos.
+
+\fi
+%%%%%%%%%%
+% DRAFT_END
+%%%%%%%%%%
+
+
+
+
+
