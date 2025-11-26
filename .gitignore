@@ -1,0 +1,17 @@
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lot
+*.lof
+*.lol
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+!main.pdf
+_minted*
+*.pyg
