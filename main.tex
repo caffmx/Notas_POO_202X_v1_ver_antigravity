@@ -158,7 +158,7 @@ pdfkeywords={}
 %\cpptrue % <- comment this line to switch between the two versions
 
 \newif\ifjava
-%\javatrue % <- comment this line to switch between the two versions
+\javatrue % <- comment this line to switch between the two versions
 
 \newif\ifpython
 %\pythontrue % <- comment this line to switch between the two versions
@@ -209,11 +209,45 @@ pdfkeywords={}
         
         \vspace{1.5cm}
         
-        {\sffamily\Huge\bfseries\color{primaryColor} Notas de Programación \\ Orientada a Objetos}
+        {\sffamily\Huge\bfseries\color{primaryColor} Notas de Programación \\ Orientada a Objetos \\con}
+%\ifthenelse{\boolean{cpp}}{
+%\Large{\textbf{C++}}\\
+%}{}
+
+\ifcpp
+C++   
+%\else
+\fi
+
+\ifjava
+Java
+\fi
+
+\ifruby
+Ruby
+\fi
+
+\ifpython
+Python
+\fi
+
+\ifcsharp
+C\#
+\fi
+
+\ifd
+D
+\fi
+
+\ifscala
+Scala
+\fi
+
         
+
         \vspace{0.5cm}
         
-        {\sffamily\Large\color{secondaryColor} Manual de Referencia y Estudio \pubnumber}
+        {\sffamily\Large\color{secondaryColor} POO Handbook \pubnumber}
         
         \vspace{2cm}
         
@@ -231,6 +265,10 @@ pdfkeywords={}
         ``Considerate la vostra semenza:\\
         fatti non foste a viver come bruti,\\
         ma per seguir virtute e canoscenza.''\\
+        \vspace{0.5cm}
+        Considerad vuestra estirpe:\\
+        hechos no fuisteis para vivir como brutos,\\
+        sino para perseguir virtud y conocimiento.\\
         \vspace{0.5cm}
         \normalfont\textsc{-- Dante Alighieri, La Divina Comedia}
         \end{quote}
@@ -291,20 +329,46 @@ pdfkeywords={}
 \part{Introducción}
 
 \include{capitulos/01_lenguajes_y_ambientes_sugeridos_para_desarrollo}
+
+\ifcpp
 \include{capitulos/02_introducción_a_características_de_c}
+\fi
+
+\ifjava
 \include{capitulos/03_introducción_a_java}
+\fi
+
+\ifruby
 \include{capitulos/04_introducción_a_ruby}
+\fi
+
+\ifpython
 \include{capitulos/05_introducción_a_python}
+\fi
+
+\ifcsharp
 \include{capitulos/06_introducción_a_c}
+\fi
+
+\ifscala
 \include{capitulos/07_introducción_a_scala}
+\fi
+
+\ifd
 \include{capitulos/08_introducción_a_d}
+\fi
+
 \include{capitulos/09_introducción_a_la_programación_orientada_a_objetos_citeweitzenfeld1994paradigma_muller1997introduccion}
 \include{capitulos/10_abstracción_de_datos_clases_y_objetos}
 \include{capitulos/11_polimorfismo_adhoc_sobrecarga_de_operaciones}
 \include{capitulos/12_constructores_y_destructores}
 \include{capitulos/13_miembros_de_clase_o_estáticos}
 \include{capitulos/14_objetos_constantes}
+
+\ifcpp
 \include{capitulos/15_amistad_en_c}
+\fi
+
 \include{capitulos/16_polimorfismo_adhoc_sobrecarga_de_operadores}
 \include{capitulos/17_herencia}
 \include{capitulos/18_asociaciones_entre_clases}
@@ -314,17 +378,34 @@ pdfkeywords={}
 \include{capitulos/22_polimorfismo_paramétrico_programación_genérica}
 \include{capitulos/23_manejo_de_excepciones}
 \include{capitulos/24_afirmaciones}
+
+\ifdraft
 \include{capitulos/25_diseño_por_contratos}
+\fi
+
 \include{capitulos/26_pruebas_de_unidad}
+
+\ifjava
 \include{capitulos/27_multihilos_introducción_a_la_programación_concurrente_en_java}
 \include{capitulos/28_multihilos_programación_concurrente_en_java_2}
+\fi
+
+\ifpython
 \include{capitulos/29_multihilos_en_python}
+\fi
+
+\ifjava
 \include{capitulos/30_java_clases_anidadas_y_anónimas}
 \include{capitulos/31_java_expresiones_lambda_lambda}
 \include{capitulos/32_java_interfaz_gráfica_con_javafx}
 \include{capitulos/33_java_manejo_de_eventos_con_javafx}
 \include{capitulos/34_programación_en_red_con_java}
 \include{capitulos/35_programación_en_red_con_java_2}
+\fi
+
 \include{capitulos/36_referencias}
 \include{capitulos/37_apéndice_a_herramientas_adicionales_sugeridas}
+
+\ifdraft
 \include{capitulos/38_temas_pendientes}
+\fi
