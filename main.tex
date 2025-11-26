@@ -13,10 +13,18 @@
 \usepackage{wrapfig}
 
 \usepackage[table]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 85, 150} % Deep Blue
+\definecolor{secondaryColor}{RGB}{80, 80, 80} % Dark Gray
 
 \usepackage{bm}
 \usepackage{secdot}		
-\usepackage{mathptmx}
+
+% Fonts: Palatino for text, Helvetica for sans, Courier for mono
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo} 
+\usepackage[scaled=0.95]{helvet}
+\usepackage{courier}
+
 \usepackage{float}
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp}
@@ -28,7 +36,13 @@
 \usepackage{minted}
 \usepackage{listings}
 \lstset{
-	literate={_}{_}1
+	literate={_}{_}1,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{primaryColor}\bfseries,
+    commentstyle=\color{secondaryColor}\itshape,
+    stringstyle=\color{orange},
+    frame=single,
+    breaklines=true
 }
 
 \usepackage{hyperref}
@@ -42,16 +56,16 @@
 \usepackage{url}
 
 
+% Header and Footer Configuration
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{\textcolor{blue}{\textbf{Notas de Programación Orientada a Objetos}} \\ \leftmark}
+\fancyhead[LE,RO]{\sffamily\bfseries\thepage}
+\fancyhead[LO]{\sffamily\nouppercase{\rightmark}}
+\fancyhead[RE]{\sffamily\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryColor}\leaders\hrule height \headrulewidth\hfill}}
 
-%\lfoot{Página \thepage}
-\rfoot{\textcolor{blue}{Carlos Alberto Fernández y Fernández}}
-\cfoot{\\ - \thepage \hspace{1pt} / \pageref{LastPage} -}
-\renewcommand{\footrulewidth}{1pt}
-
-
+\renewcommand{\footrulewidth}{0pt}
 
 
 %Para código de múltiples páginas
@@ -59,28 +73,38 @@
 \setminted{
     linenos=true,
     autogobble,
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    fontsize=\footnotesize
 }
 
 \newenvironment{longlisting}{\captionsetup{type=listing}}{}
 %%%%
 
-
-
-
 \usepackage{titlesec}
-\titleformat{\section}{\normalsize\bfseries}{\thesection.}{1em}{}	% required for heading numbering style
-\titleformat*{\subsection}{\normalsize\bfseries}
+% Chapter style
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\huge\bfseries\color{primaryColor}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+  
+% Section style
+\titleformat{\section}
+  {\normalfont\sffamily\Large\bfseries\color{primaryColor}}
+  {\thesection}{1em}{}
+
+% Subsection style
+\titleformat{\subsection}
+  {\normalfont\sffamily\large\bfseries\color{secondaryColor}}
+  {\thesubsection}{1em}{}
 
 \usepackage{tocloft}	% change typeset, titles, and format list of appendices/figures/tables
 \renewcommand{\cftdot}{}	
-\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\contentsname}{Índice General}
 \renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-%\renewcommand\cftbeforesecskip{\setlength{4pt}{}}
-%\addtolength{\cftfignumwidth}{1em}
-%\renewcommand{\cftfigpresnum}{\figurename\ }
-%\addtolength{\cfttabnumwidth}{1em}
-%\renewcommand{\cfttabpresnum}{\tablename\ }
+\renewcommand{\cftchapfont}{\sffamily\bfseries\color{primaryColor}}
+\renewcommand{\cftsecfont}{\sffamily}
 \setlength{\cfttabindent}{0in}    %% adjust as you like
 \setlength{\cftfigindent}{0in} 
 
@@ -178,119 +202,56 @@ pdfkeywords={}
 %	Pub Number automated based on metadata
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titlepage}
-\begin{flushright}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 	Automated based on metadata - delete if not applicable
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\LARGE{\textbf{POO Handbook \pubnumber}}\\
-\vfill
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	Title 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Huge{\textbf{Notas de Programación Orientada a Objetos con}}\\
-
-%\ifthenelse{\boolean{cpp}}{
-%\Large{\textbf{C++}}\\
-%}{}
-
-\ifcpp
-C++   
-%\else
-\fi
-
-\ifjava
-Java
-\fi
-
-\ifruby
-Ruby
-\fi
-
-\ifpython
-Python
-\fi
-
-\ifcsharp
-C\#
-\fi
-
-\ifd
-D
-\fi
-
-\ifscala
-Scala
-\fi
-
-
-
-
-\vfill
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	Authors - add complete list of authors, affiliations will be 
-%   added on title page
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-   \large \textbf{Carlos Alberto Fernández y Fernández}, \\ Instituto de Computación,\\ Universidad Tecnológica de la Mixteca.
-   
-\vfill
-
-
-%%%%  CITA DANTE
-
-\begin{flushright}
-\vspace*{1cm}
-\textit{Considerate la vostra semenza:\\
-fatti non foste a viver come bruti,\\
-ma per seguir virtute e canoscenza.}
-
-\vspace{0.5cm}
-
-Considerad vuestra estirpe:\\
-hechos no fuisteis para vivir como brutos,\\
-sino para perseguir virtud y conocimiento.
-
-\vspace{0.5cm}
-
-\textsc{Dante Alighieri}\\
-\textit{La Divina Comedia, Infierno, Canto XXVI}
-\end{center}
-
-%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	The DOI is automated based on metadata.	
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\normalsize This publication is available free of charge from:\\
-%\DOI\\
-%\vfill
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	NIST LOGO - keep as-is
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\includegraphics[width=0.15\linewidth]{imagenes/logoUTM.eps}\\ 
- 
-  
-\end{flushright}
+    \begin{center}
+        \vspace*{2cm}
+        
+        \includegraphics[width=0.3\linewidth]{imagenes/logoUTM.eps}
+        
+        \vspace{1.5cm}
+        
+        {\sffamily\Huge\bfseries\color{primaryColor} Notas de Programación \\ Orientada a Objetos}
+        
+        \vspace{0.5cm}
+        
+        {\sffamily\Large\color{secondaryColor} Manual de Referencia y Estudio \pubnumber}
+        
+        \vspace{2cm}
+        
+        \textbf{\Large Carlos Alberto Fernández y Fernández}
+        
+        \vspace{0.5cm}
+        
+        \textit{Instituto de Computación}\\
+        \textit{Universidad Tecnológica de la Mixteca}
+        
+        \vfill
+        
+        \begin{quote}
+        \itshape\color{secondaryColor}
+        ``Considerate la vostra semenza:\\
+        fatti non foste a viver come bruti,\\
+        ma per seguir virtute e canoscenza.''\\
+        \vspace{0.5cm}
+        \normalfont\textsc{-- Dante Alighieri, La Divina Comedia}
+        \end{quote}
+        
+        \vfill
+        
+        {\large \today}
+        
+    \end{center}
 \end{titlepage}
 
-
 \begin{titlepage}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Disclaimer/CODEN page - required
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{flushright}
-\footnotesize  This work is licensed under a \href{https://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License}.\\ 
-
-\vfill
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   This secton automated - do not change
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\normalsize \textbf{Universidad Tecnológica de la Mixteca \pubnumber\\ 
-POO Handbook \pubnumber, \pageref{LastPage} páginas (\today)} \\
-\vspace{12pt}
-%\textbf{This publication is available free of charge from: \DOI}
-\vfill
-\end{flushright}
+    \vspace*{\fill}
+    \begin{flushright}
+        \footnotesize 
+        \textbf{Universidad Tecnológica de la Mixteca}\\
+        Notas de POO \pubnumber\\
+        \pageref{LastPage} páginas\\
+        \vspace{1em}
+        This work is licensed under a \href{https://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License}.
+    \end{flushright}
 \end{titlepage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   Start front matter - page number starts with "i"
