@@ -39,8 +39,16 @@ def clean_conditionals(directory):
         # Check last few lines
         modified = False
         # Iterate backwards
-        for i in range(len(lines)-1, max(-1, len(lines)-10), -1):
+        for i in range(len(lines)-1, max(-1, len(lines)-100), -1):
             line = lines[i].strip()
+            # Remove \fi if it's at the end
+            if re.search(r'\\fi', line):
+                 # Be careful not to remove \fi that closes an internal \if
+                 # But for now, assume if it's at the very end, it's dangling
+                 lines.pop(i)
+                 modified = True
+                 # Continue checking? Maybe only one dangling fi
+            
             for pattern in patterns:
                 if re.search(pattern, line):
                     # Remove this line
@@ -53,10 +61,10 @@ def clean_conditionals(directory):
                 f.writelines(lines)
             print(f"Cleaned end of {filename}")
 
-    # Process removals from start
-    for filename, patterns in remove_from_start.items():
+    # Process removals from start - check ALL files for starting \fi
+    for filename in os.listdir(directory):
+        if not filename.endswith('.tex'): continue
         filepath = os.path.join(directory, filename)
-        if not os.path.exists(filepath): continue
         
         with open(filepath, 'r', encoding='utf-8') as f:
             lines = f.readlines()
@@ -65,15 +73,14 @@ def clean_conditionals(directory):
         modified = False
         for i in range(min(5, len(lines))):
             line = lines[i].strip()
-            for pattern in patterns:
-                if re.search(pattern, line):
-                    # Remove this line
-                    lines.pop(i)
-                    modified = True
-                    # Adjust index since we popped
-                    i -= 1 
-                    break
-        
+            # Remove \fi if it's at the start
+            if re.search(r'^\s*\\fi', line):
+                lines.pop(i)
+                modified = True
+                # Adjust index since we popped
+                i -= 1 
+                # Keep checking in case there are multiple
+                
         if modified:
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.writelines(lines)
