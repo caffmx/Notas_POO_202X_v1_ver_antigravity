@@ -27,7 +27,7 @@ Las afirmaciones en C++ se manejan a través de la macro\footnote{\href{http://w
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{cpp}| assert (int expression)  |\\
+ \mint[frame=none,linenos=false]{cpp}| assert (int expression)  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -36,7 +36,7 @@ Que se encuentra en la biblioteca \textit{assert.h}.  Si la expresión dentro de
 
 Las afirmaciones serán deshabilitadas si previo a la introducción de la biblioteca se introduce la instrucción de preprocesador definiendo la macro \textit{NDEBUG}:
 
-\mint[linenos=false]{cpp}| #define NDEBUG |
+\mint[frame=none,linenos=false]{cpp}| #define NDEBUG |
 
 %longlist  para potencialmente grandes codigos fuentes
 \begin{longlisting}
@@ -96,9 +96,9 @@ Las afirmaciones fueron introducidas en Java desde la versión 1.4 del jdk.  Cad
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}| assert Expression1;  |\\
+ \mint[frame=none,linenos=false]{java}| assert Expression1;  |\\
  o \\
- \mint[linenos=false]{java}| assert Expression1 : Expression2 ;  |\\
+ \mint[frame=none,linenos=false]{java}| assert Expression1 : Expression2 ;  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -109,7 +109,7 @@ donde \textit{Expression1} es una expresión booleana. Esta expresión es la eva
 
 Es importante no introducir código en las afirmaciones que en realidad sea una acción del programa. Por ejemplo:
 
-\mint[linenos=false]{java}| assert ++i < max; |
+\mint[frame=none,linenos=false]{java}| assert ++i < max; |
 
 Es inapropiado pues se esta modificando el estado del programa al mismo tiempo que validando. Lo correcto sería algo del estilo:
 
@@ -183,14 +183,14 @@ Python también soporta la instrucción \textit{assert} para  lanzar una excepci
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{python}| assert <expresión> [, ‘mensaje opcional’]  |\\
+ \mint[frame=none,linenos=false]{python}| assert <expresión> [, ‘mensaje opcional’]  |\\
 \hline
 \end{tabular}
 \end{center}
 
 Que en realidad equivale a lanzar la excepción
 
-\mint[linenos=false]{python}| raise AssertionError() |
+\mint[frame=none,linenos=false]{python}| raise AssertionError() |
 
 bajo una condición.
 
@@ -225,7 +225,7 @@ printNumber(c)
 
 Para descartar la ejecución de las afirmaciones se tiene que ejecutar el Python con la opción en la línea de comandos de  -O (activando modo de Optimización), poniendo la variable $\_\_debug\_\_$ en falso\footnote{\href{https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement}{Assert statement}}:
 
-\mint[linenos=false]{bash}| $ python -O |
+\mint[frame=none,linenos=false]{bash}| $ python -O |
 
 
 
@@ -315,7 +315,7 @@ En este ejemplo:
 
 Para ejecutar estas pruebas con pytest, simplemente abre una terminal en la ubicación de tus archivos y ejecuta el siguiente comando:
 
-\mint[linenos=false]{console}| pytest test_calculadora.py |
+\mint[frame=none,linenos=false]{console}| pytest test_calculadora.py |
 
 
 Otro ejemplo:

@@ -502,14 +502,14 @@ La sintaxis mínima es la siguiente:
 \textbf{Sintaxis} 
 \end{center} 
 \\ \hline
- \mint[linenos=false]{java}|tipo nombreAtributo; |\\
+ \mint[frame=none,linenos=false]{java}|tipo nombreAtributo; |\\
 
 Los atributos pueden ser inicializados desde su lugar de declaración:
 
- \mint[linenos=false]{java}|tipo nombreAtributo = valor;|\\
+ \mint[frame=none,linenos=false]{java}|tipo nombreAtributo = valor;|\\
 
 o, en el caso de variables de objetos:
-   \mint[linenos=false]{java}|tipo nombreAtributo = new Clase();|\\
+   \mint[frame=none,linenos=false]{java}|tipo nombreAtributo = new Clase();|\\
 \\ \hline
 \end{tabular}
 \end{center}
@@ -554,7 +554,7 @@ Si bien en Java existen también los miembros públicos y privados, estos tienen
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}|public <definición de miembro>|\\
+ \mint[frame=none,linenos=false]{java}|public <definición de miembro>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -567,7 +567,7 @@ Si bien en Java existen también los miembros públicos y privados, estos tienen
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}|private <definición de miembro>|\\
+ \mint[frame=none,linenos=false]{java}|private <definición de miembro>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -619,11 +619,11 @@ El operador \textit{new} crea automáticamente un área de memoria del tamaño a
 \textbf{Sintaxis} 
 \end{center} 
 \\ \hline
- \mint[linenos=false]{java}|<identificador> = new Clase();|\\
+ \mint[frame=none,linenos=false]{java}|<identificador> = new Clase();|\\
 
 o en el momento de declarar a la variable de objeto:
 
- \mint[linenos=false]{java}|Clase <identificador> = new Clase();|\\
+ \mint[frame=none,linenos=false]{java}|Clase <identificador> = new Clase();|\\
 
 \\ \hline
 \end{tabular}
@@ -828,7 +828,7 @@ En Ruby es posible que un método definido para una clase quede indefinido:
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{ruby}|undef <nombreMétodo> [( <parámetros> ) ] |\\
+ \mint[frame=none,linenos=false]{ruby}|undef <nombreMétodo> [( <parámetros> ) ] |\\
 \hline
 \end{tabular}
 \end{center}
@@ -862,7 +862,7 @@ Accesibles donde la clase es visible.
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{ruby}|public <lista de métodos>|\\
+ \mint[frame=none,linenos=false]{ruby}|public <lista de métodos>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -877,7 +877,7 @@ Accesibles solo por instancias de la clase.
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{ruby}|private <lista de métodos>|\\
+ \mint[frame=none,linenos=false]{ruby}|private <lista de métodos>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -899,7 +899,7 @@ end
 
 Todos los atributos que forman parte de una clase deben ser declarados dentro de la misma. En Ruby los atributos son llamados variables de instancia, y no requieren ser declarados fuera de los métodos. Podemos usar variables de instancia conforme se necesiten. Una variable de instancia debe llevar como prefijo el símbolo @, por ejemplo:
 
-\mint[linenos=false]{ruby}|@variableInstanciaOAtributo|
+\mint[frame=none,linenos=false]{ruby}|@variableInstanciaOAtributo|
 
 Ejemplo:
 \begin{minted}{ruby}
@@ -951,11 +951,11 @@ objeto.metodo
 
 Esto implicaría que cada objeto en Ruby es un objeto de alguna clase. De hecho es posible preguntarle a un objeto a que clase pertenece:
 
-\mint[linenos=false]{ruby}|"hola".class |
+\mint[frame=none,linenos=false]{ruby}|"hola".class |
 
 O mejor aún, los métodos que la clase tiene:
 
-\mint[linenos=false]{ruby}|"hola".methods |
+\mint[frame=none,linenos=false]{ruby}|"hola".methods |
 
 Aunque esto puede hacerse directamente con el nombre de la clase\footnote{Para saber la razón por la que es posible usar el nombre de una clase, ver el tema de miembros de clase.}. Sin embargo el resultado puede variar, por ejemplo si le preguntamos a una clase a que clase pertenece! :
 
@@ -975,7 +975,7 @@ En Ruby, un objeto es instanciado mediante la ejecución del \textbf{método} \t
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{ruby}|identificador = Clase.new   |\\
+ \mint[frame=none,linenos=false]{ruby}|identificador = Clase.new   |\\
 \hline
 \end{tabular}
 \end{center}
@@ -1152,7 +1152,7 @@ Un aspecto importante a considerar es que la lista de parámetros, al igual que 
 \subsection{Atributos miembro}
 Los atributos o variables de instancia en Python deben ser declarados dentro de un método de la clase mediante:
 
-\mint[linenos=false]{python}|self.nombre= valor|
+\mint[frame=none,linenos=false]{python}|self.nombre= valor|
 
 Los atributos podrán ser accedidos usando la misma notación (\textit{self.nombre})
 
@@ -1605,7 +1605,7 @@ En Python, un objeto es instanciado mediante la ejecución objeto de la clase qu
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{python}|identificador = Clase()|\\
+ \mint[frame=none,linenos=false]{python}|identificador = Clase()|\\
 \hline
 \end{tabular}
 \end{center}
@@ -1768,7 +1768,7 @@ def nombreMétodo [( <parámetros> ) ][: tipo retorno] =
 
 La lista de parámetros es opcional. Un método sin parámetros no requiere los paréntesis en su uso (definición y/o llamada):
 
-\mint[linenos=false]{scala}|def foo = ''foo''|
+\mint[frame=none,linenos=false]{scala}|def foo = ''foo''|
 
 \subsubsection{Atributos miembro}
 
@@ -1780,7 +1780,7 @@ Los atributos Scala deben ser declarados dentro la clase mediante:
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{scala}|var nombre: tipo [= valor]|\\
+ \mint[frame=none,linenos=false]{scala}|var nombre: tipo [= valor]|\\
 \hline
 \end{tabular}
 \end{center}
@@ -1795,7 +1795,7 @@ Es posible también definir atributos que no van a cambiar (su referencia, aunqu
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{scala}|val nombre: tipo [= valor]|\\
+ \mint[frame=none,linenos=false]{scala}|val nombre: tipo [= valor]|\\
 \hline
 \end{tabular}
 \end{center}
@@ -1811,7 +1811,7 @@ class InstTest {
 
 Scala puede inferir el tipo de dato cuando estos son inicializados:
 
-\mint[linenos=false]{scala}|var s= "cadena"  |
+\mint[frame=none,linenos=false]{scala}|var s= "cadena"  |
 
 \subsection{Un vistazo al acceso a miembros}
 
@@ -1829,7 +1829,7 @@ Solamente son accesible dentro de la clase (o tipo) que lo define, y sus tipos a
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{scala}|private <definición de miembro> |\\
+ \mint[frame=none,linenos=false]{scala}|private <definición de miembro> |\\
 \hline
 \end{tabular}
 \end{center}
@@ -1884,7 +1884,7 @@ En Scala, un objeto es instanciado igual que en Java, usando la instrucción \te
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{scala}|identificador = new Clase()|\\
+ \mint[frame=none,linenos=false]{scala}|identificador = new Clase()|\\
 \hline
 \end{tabular}
 \end{center}
@@ -2059,15 +2059,15 @@ La sintaxis mínima es la siguiente:
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{csharp}|tipo nombreAtributo;   |\\
+ \mint[frame=none,linenos=false]{csharp}|tipo nombreAtributo;   |\\
  
  Los atributos pueden ser inicializados desde su lugar de declaración:
  
-\mint[linenos=false]{csharp}|tipo nombreAtributo = valor;  |\\
+\mint[frame=none,linenos=false]{csharp}|tipo nombreAtributo = valor;  |\\
 
 o, en el caso de variables de objetos:
 
-\mint[linenos=false]{csharp}|tipo nombreAtributo = new Clase(); |\\
+\mint[frame=none,linenos=false]{csharp}|tipo nombreAtributo = new Clase(); |\\
 
 \hline
 \end{tabular}
@@ -2149,7 +2149,7 @@ En C\#, como en Java, se define el acceso a cada miembro de manera unitaria, al 
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{csharp}|public <definición de miembro>  |\\
+ \mint[frame=none,linenos=false]{csharp}|public <definición de miembro>  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -2162,7 +2162,7 @@ En C\#, como en Java, se define el acceso a cada miembro de manera unitaria, al 
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{csharp}|private <definición de miembro>  |\\
+ \mint[frame=none,linenos=false]{csharp}|private <definición de miembro>  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -2176,7 +2176,7 @@ Miembros definidos de esta manera son accesibles por métodos de cualquier clase
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{csharp}|internal <definición de miembro>  |\\
+ \mint[frame=none,linenos=false]{csharp}|internal <definición de miembro>  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -2225,9 +2225,9 @@ Como en Java, en C\# todos los objetos son creados dinámicamente, por lo que se
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{csharp}| <identificador> = new Clase();  |\\
+ \mint[frame=none,linenos=false]{csharp}| <identificador> = new Clase();  |\\
  o en el momento de declarar a la variable de objeto:
-  \mint[linenos=false]{csharp}| Clase <identificador> = new Clase();  |\\
+  \mint[frame=none,linenos=false]{csharp}| Clase <identificador> = new Clase();  |\\
 \hline
 \end{tabular}
 \end{center}	

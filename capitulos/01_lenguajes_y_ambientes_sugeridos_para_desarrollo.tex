@@ -11,85 +11,85 @@
 
     \includegraphics[scale=.4]{imagenes/groovy.png}
 
-\begin{lstlisting}[language=Java, caption={Groovy: Hola Mundo}]
+\begin{minted}{groovy}
 println "Hola Mundo"
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{JRuby}. Es una implementación en Java del intérprete de Ruby. Su alta integración con Java permite completo acceso en los dos sentidos entre código Java y Ruby.
 
-\begin{lstlisting}[language=Ruby, caption={JRuby: Hola Mundo}]
+\begin{minted}{ruby}
 puts "Hola Mundo"
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Jython/JPython}. Una implementación de Python en Java. Programas en Jython pueden importar y usar clases en Java. 
 
     \includegraphics[scale=.5]{imagenes/jython.png}
 
-\begin{lstlisting}[language=Python, caption={Jython: Hola Mundo}]
+\begin{minted}{python}
 print("Hola Mundo")
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Kotlin}. Un lenguaje orientado a objetos para JVM, para aplicaciones del lado del servidor, Android y compilación a JavaScript.
 
-\begin{lstlisting}[language=Java, caption={Kotlin: Hola Mundo}]
+\begin{minted}{kotlin}
 fun main() {
     println("Hola Mundo")
 }
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{IronPython}. Es una implementación de Python en .NET y Mono. Permite el uso de bibliotecas de .NET y una fácil interoperabilidad con lenguajes como C\#.
 
-\begin{lstlisting}[language=Python, caption={IronPython: Hola Mundo}]
+\begin{minted}{python}
 print("Hola Mundo desde .NET")
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Dart}. Es un lenguaje de programación de código abierto, desarrollado por Google, optimizado para la creación de aplicaciones web, móviles (con Flutter), de escritorio y del lado del servidor.
 
-\begin{lstlisting}[language=Java, caption={Dart: Hola Mundo}]
+\begin{minted}{dart}
 void main() {
   print('Hola Mundo');
 }
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Go}. Conocido también como Golang, es un lenguaje compilado y concurrente, desarrollado por Google. Es apreciado por su simplicidad y eficiencia en sistemas distribuidos.
 
-\begin{lstlisting}[language=C, caption={Go: Hola Mundo}]
+\begin{minted}{go}
 package main
 import "fmt"
 func main() {
     fmt.Println("Hola Mundo")
 }
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Swift}. Creado por Apple, es un lenguaje multiparadigma para el desarrollo de aplicaciones en iOS, macOS, watchOS y tvOS. Se enfoca en seguridad y rendimiento.
 
-\begin{lstlisting}[language=C, caption={Swift: Hola Mundo}]
+\begin{minted}{swift}
 print("Hola Mundo")
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Cobra}. Lenguaje inspirado en Python y Ruby, pero con tipos estáticos, generación de código para .NET/Mono, ligado dinámico, contratos y soporte de pruebas de unidad.
 
-\begin{lstlisting}[caption={Cobra: Hola Mundo}]
+\begin{minted}{python}
 class Hola
     def main
         print "Hola Mundo"
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Fantom}. Es un lenguaje portable y orientado a objetos, diseñado para ejecutarse en múltiples plataformas (JVM, .NET y JavaScript). Más información en: \url{http://fantom.org/}
 
-\begin{lstlisting}[caption={Fantom: Hola Mundo}]
+\begin{minted}{java}
 class Hola {
   static Void main() {
     echo("Hola Mundo")
   }
 }
-\end{lstlisting}
+\end{minted}
 
 \item \textbf{Elixir}. Es un lenguaje funcional, concurrente y distribuido que se ejecuta en la máquina virtual de Erlang (BEAM). Es usado en sistemas tolerantes a fallos y aplicaciones web escalables.
 
-\begin{lstlisting}[caption={Elixir: Hola Mundo}]
+\begin{minted}{elixir}
 IO.puts "Hola Mundo"
-\end{lstlisting}
+\end{minted}
 
 \end{itemize}
 
@@ -191,6 +191,15 @@ Se caracteriza por ser ligero, extensible y multiplataforma (Windows, Linux, mac
 \end{itemize}
 
 Hoy en día, Visual Studio Code es probablemente el editor más popular en la comunidad de desarrolladores.
+
+\subsubsection{Editores asistidos por IA}
+
+La inteligencia artificial ha revolucionado la forma en que escribimos código. Nuevas herramientas integran modelos de lenguaje avanzados directamente en el flujo de trabajo del desarrollador.
+
+\begin{itemize}
+\item \textbf{Cursor}. Es un editor de código construido sobre VS Code que integra IA de manera nativa. Permite generar código, editar bloques existentes y chatear con el proyecto entero para entender el contexto. Al ser un fork de VS Code, mantiene compatibilidad con sus extensiones.
+\item \textbf{Antigravity}. Es un asistente de codificación agéntico avanzado desarrollado por el equipo de Google Deepmind. Diseñado para trabajar como un par programador, puede realizar tareas complejas, modificar múltiples archivos y ejecutar comandos, ofreciendo un nivel de autonomía superior en la resolución de problemas de programación. Al igual que Cursor, es un fork de VS Code, por lo que aprovecha la compatibilidad con sus extensiones con los componentes de este.
+\end{itemize}
 
 \subsubsection{Algunos editores ligeros}
 
@@ -341,20 +350,20 @@ En este ejemplo, la función calcular \textit{area\_circulo} está documentada u
 Para generar la documentación utilizando \textit{Pydoc}, se debe ejecutar el siguiente comando en la línea de comandos:
 
 %one line
-\mint[linenos=false]{console}| python -m pydoc nombre_del_archivo.py |
+\mint[frame=none,linenos=false]{console}| python -m pydoc nombre_del_archivo.py |
 
 o directamente \textit{pydoc} :
 
-\mint[linenos=false]{console}| pydoc -w nombre_del_archivo.py |
+\mint[frame=none,linenos=false]{console}| pydoc -w nombre_del_archivo.py |
 
 
 Para ver la documentación podemos dar el nombre del módulo o archivo:
 
-\mint[linenos=false]{console}| pydoc nombre.py |
+\mint[frame=none,linenos=false]{console}| pydoc nombre.py |
 
 Inclusive ver localmente toda la documentación que tengamos disponible en nuestra localmente en nuestra computadora, lanzando un servidor temporal:
 
-\mint[linenos=false]{console}| pydoc -p 8001 |
+\mint[frame=none,linenos=false]{console}| pydoc -p 8001 |
 
 \textit{Pydoc} es una herramienta útil para generar documentación automática básica para el código Python. Sin embargo, es importante tener en cuenta que no es una herramienta de documentación completa.
 \fi

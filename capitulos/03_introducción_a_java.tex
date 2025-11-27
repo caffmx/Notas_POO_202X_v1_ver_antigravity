@@ -183,7 +183,7 @@ Normalmente se compila como se ha mostrado en el ejemplo anterior. Sin embargo, 
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{bash}|javac [opciones] <archivo1.java>|\\
+ \mint[frame=none,linenos=false]{bash}|javac [opciones] <archivo1.java>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -420,13 +420,13 @@ La declaración de una variable se realiza de la misma forma que en C/C++. Siemp
 
 Ejemplo:
 
-\mint[linenos=false]{java}|int x;|
+\mint[frame=none,linenos=false]{java}|int x;|
 
 Las variables pueden ser inicializadas en el momento de su declaración, siempre que el valor que se les asigne coincida con el tipo de dato de la variable.
 
 Ejemplo:
 
-\mint[linenos=false]{java}|int x = 0;|
+\mint[frame=none,linenos=false]{java}|int x = 0;|
 
 \subsubsection{Ámbito de una variable}
 
@@ -636,7 +636,7 @@ public class Bool {
 
 El operador de asignación es el símbolo igual ( = ).
 
-\mint[linenos=false]{java}|op1 = Expresión;|
+\mint[frame=none,linenos=false]{java}|op1 = Expresión;|
 
 Asigna el resultado de evaluar la expresión de la derecha a \textit{op1}.
 
@@ -720,7 +720,7 @@ En Java existen literales para los siguientes tipos de datos:
 Son únicamente dos: las palabras reservadas \textit{true} y \textit{false}.
 
 Ejemplo:
-\mint[linenos=false]{java}|boolean activado = false;|
+\mint[frame=none,linenos=false]{java}|boolean activado = false;|
 
 
 \subsubsection{Literales de tipo entero}
@@ -1000,7 +1000,7 @@ public class DiaSemana {
 
 Nótese que en el caso de que se introduzca un valor no comprendido entre 1 y 7, no se realizará ninguna acción. Esto puede corregirse agregando la opción por omisión:
 
-\mint[linenos=false]{java}|default: instruccionesPorDefecto;|
+\mint[frame=none,linenos=false]{java}|default: instruccionesPorDefecto;|
 
 
 donde la palabra reservada \textit{default}, sustituye a $case <expr>$ para ejecutar el conjunto de instrucciones definido en caso de que no coincida con ningún otro caso.
@@ -1356,11 +1356,11 @@ Para manejar colecciones de objetos del mismo tipo estructurados en una sola var
 
 En Java, los arreglos son en realidad objetos y por lo tanto se puede llamar a sus métodos. Existen dos formas equivalentes de declarar arreglos en Java:
 
-\mint[linenos=false]{java}|tipo nombreDelArreglo[  ];|
+\mint[frame=none,linenos=false]{java}|tipo nombreDelArreglo[  ];|
 
 o
 
-\mint[linenos=false]{java}|tipo[  ] nombreDelArreglo;|
+\mint[frame=none,linenos=false]{java}|tipo[  ] nombreDelArreglo;|
 
 Ejemplo:
 
@@ -1388,7 +1388,7 @@ String Días[]={"Lunes","Martes","Miércoles","Jueves",
 
 Una simple declaración de un vector no reserva espacio en memoria, a excepción del caso anterior, en el que sus elementos obtienen la memoria necesaria para ser almacenados. Para reservar la memoria hay que llamar explícitamente a \textit{new} de la siguiente forma:
 
-\mint[linenos=false]{java}|new tipoElemento[ <numElementos> ];|
+\mint[frame=none,linenos=false]{java}|new tipoElemento[ <numElementos> ];|
 
 Ejemplo:
 
@@ -1401,13 +1401,13 @@ También se puede indicar el número de elementos durante su declaración:
 
 Ejemplo:
 
-\mint[linenos=false]{java}|int vector[] = new int[5];|
+\mint[frame=none,linenos=false]{java}|int vector[] = new int[5];|
 
 Para hacer referencia a los elementos particulares del arreglo, se utiliza el identificador del arreglo junto con el índice del elemento entre corchetes. El índice del primer elemento es el cero y el del último, el número de elementos menos uno.
 
 Ejemplo:
 
-\mint[linenos=false]{java}|j = vector[0]; vector[4] = matriz[2][3];|
+\mint[frame=none,linenos=false]{java}|j = vector[0]; vector[4] = matriz[2][3];|
 
 El intento de acceder a un elemento fuera del rango del arreglo, a diferencia de lo que ocurre en C, provoca una excepción (error) que, de no ser manejado por el programa, será la máquina virtual quien aborte la operación. 
 
@@ -1494,14 +1494,14 @@ El manejo de enumeraciones en Java tiene la sintaxis de C, C++ y C\# :
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }|\\
+ \mint[frame=none,linenos=false]{java}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }|\\
 \hline
 \end{tabular}
 \end{center}
 
 Por lo que para el código anterior, la enumeración sería:
 
-\mint[linenos=false]{java}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO }|
+\mint[frame=none,linenos=false]{java}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO }|
 
 La sintaxis completa de enum es más compleja, ya que una enumeración en Java es realmente una clase, por lo que puede tener métodos en su definición. También es posible declarar la enumeración como pública, en cuyo caso debería ser declarada en su propio archivo. 
 
@@ -1732,7 +1732,7 @@ Las clases en Java son organizadas mediante paquetes. Un paquete es entonces el 
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}|package [<ruta>]<nombre paquete>|\\
+ \mint[frame=none,linenos=false]{java}|package [<ruta>]<nombre paquete>|\\
 \hline
 \end{tabular}
 \end{center}

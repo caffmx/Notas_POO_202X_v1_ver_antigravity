@@ -155,13 +155,13 @@ pdfkeywords={}
 
 
 \newif\ifcpp
-%\cpptrue % <- comment this line to switch between the two versions
+\cpptrue % <- comment this line to switch between the two versions
 
 \newif\ifjava
 \javatrue % <- comment this line to switch between the two versions
 
 \newif\ifpython
-%\pythontrue % <- comment this line to switch between the two versions
+\pythontrue % <- comment this line to switch between the two versions
 
 \newif\ifruby
 %\rubytrue % <- comment this line to switch between the two versions
@@ -209,40 +209,41 @@ pdfkeywords={}
         
         \vspace{1.5cm}
         
-        {\sffamily\Huge\bfseries\color{primaryColor} Notas de Programación \\ Orientada a Objetos \\con}
+        {\sffamily\Huge\bfseries\color{primaryColor} Notas de Programación Orientada a Objetos con}
+        {\sffamily\Huge\bfseries\color{primaryColor} 
+        
 %\ifthenelse{\boolean{cpp}}{
 %\Large{\textbf{C++}}\\
 %}{}
 
-\ifcpp
-C++   
-%\else
-\fi
+            \ifcpp
+                C++   
+            \fi
 
-\ifjava
-Java
-\fi
+            \ifjava
+                Java
+            \fi
 
-\ifruby
-Ruby
-\fi
+            \ifruby
+                Ruby
+            \fi
 
-\ifpython
-Python
-\fi
+            \ifpython
+                Python
+            \fi
 
-\ifcsharp
-C\#
-\fi
+            \ifcsharp
+                C\#
+            \fi
 
-\ifd
-D
-\fi
+            \ifd
+                D
+            \fi
 
-\ifscala
-Scala
-\fi
-
+            \ifscala
+                Scala
+            \fi
+}
         
 
         \vspace{0.5cm}

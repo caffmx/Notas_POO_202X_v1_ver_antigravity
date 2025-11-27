@@ -81,11 +81,11 @@ fecha: java.util.Date = Mon Aug 31 13:43:32 CDT 2009
 
 Por otro lado, la ejecución de scripts se hace utilizando el mismo intérprete, pero indicando, en el momento de ejecución, el nombre del programa:
 
-\mint[linenos=false]{scala}|>scala programa.scala|
+\mint[frame=none,linenos=false]{scala}|>scala programa.scala|
 
 Finalmente, como se mencionó, es posible compilar los programa en Scala y obtener archivos $.class$, usando el programa $scalac$:
 
-\mint[linenos=false]{scala}|>scalac programa.scala|
+\mint[frame=none,linenos=false]{scala}|>scalac programa.scala|
 
 Se necesita que los archivos fuente contengan una o más clases definidas.
 
@@ -139,7 +139,7 @@ object HolaMundo extends App{
 \subsection{Convenciones léxicas}
 Scala utiliza la misma convección de comentarios de Java, C\#, C, etc.; es decir utiliza $//comentario$ y $/*comentario*/$. Scala utiliza la regla de \textbf{mayor coincidencia}, que se refiere al uso de de paréntesis en los números:
 
-\mint[linenos=false]{scala}|(1).(((2).*(3))./(x))  |
+\mint[frame=none,linenos=false]{scala}|(1).(((2).*(3))./(x))  |
 
 ya que $1.$ es una coincidencia valida y es mayor que 1, haciendo que este sea un \textit{Double} y no un \textit{Int} y al tener $(1).+(2)$ se consideran enteros tanto 1 como 2. 
 
@@ -257,11 +257,11 @@ scala> val array: Array[String] = new Array(5)
 
 Scala es como Java, ya que la mayoría de las variables son referenciados a objetos \textit{head-allocated}, por lo que la referencia del arreglo no se puede cambiar para apuntar a un arreglo diferente, sin embargo, los elementos del arreglo si son mutables. Si se trata de modificar el tamaño del arreglo después de ser inicializada entonces el programa marcara un error:
     
-\mint[linenos=false]{scala}|array = new Array(2)|
+\mint[frame=none,linenos=false]{scala}|array = new Array(2)|
 
 Los elementos de una variable inmutable debe ser inicializada en el momento que se declara. Pero se pueden modificar sus valores después de ser inicializada:
     
-\mint[linenos=false]{scala}|scala>array(0)=3.23|
+\mint[frame=none,linenos=false]{scala}|scala>array(0)=3.23|
 
 Las variables mutables se declaran con la palabra clave \textit{var} y debe ser inicializada inmediatamente después de ser declarada:
 
@@ -344,7 +344,7 @@ for (breed <- dogBreeds)
 
 Es decir, para cada elemento de la lista \textit{dogBreeds} se crea una variable temporal llamada \textit{breed} con el valor del elemento y lo muestra en pantalla. Al operador $<-$ se le conoce como expresión generadora. También se puede utilizar un rango de la forma tradicional:
 
-\mint[linenos=false]{scala}| for(i<-1 to 10)println(i) |
+\mint[frame=none,linenos=false]{scala}| for(i<-1 to 10)println(i) |
 
 \subsubsection{Ciclo \textit{while} y \textit{do-while}}
 El ciclo \textit{while} y \textit{do-while} son parecidos al de Java, realiza cierta tarea siempre que la condición sea verdadera, por ejemplo:

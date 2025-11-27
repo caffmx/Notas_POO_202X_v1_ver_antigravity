@@ -65,7 +65,7 @@ try {
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{cpp}| throw "Se genera una excepción de tipo char *";  |\\
+ \mint[frame=none,linenos=false]{cpp}| throw "Se genera una excepción de tipo char *";  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -427,11 +427,11 @@ También se podría haber utilizado en la declaración del bloque \textit{catch}
 
 Por ejemplo:
 
-\mint[linenos=false]{java}| catch (RuntimeException ex) |
+\mint[frame=none,linenos=false]{java}| catch (RuntimeException ex) |
 
 o
 
-\mint[linenos=false]{java}| catch (Exception ex) |
+\mint[frame=none,linenos=false]{java}| catch (Exception ex) |
 
 Sin embargo, es mejor utilizar excepciones más cercanas al tipo de error previsto, ya que lo que se pretende es recuperar al programa de alguna condición de error y si tratan de capturar todas las excepciones de una forma muy general, posiblemente habrá que averiguar después qué condición de error se produjo para poder dar una respuesta adecuada. 
 
@@ -756,7 +756,7 @@ Ruby soporta el manejo de excepciones como cualquier lenguaje actual de programa
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{ruby}| raise ExceptionClass[, "message"]  |\\
+ \mint[frame=none,linenos=false]{ruby}| raise ExceptionClass[, "message"]  |\\
 \hline
 \end{tabular}
 \end{center}

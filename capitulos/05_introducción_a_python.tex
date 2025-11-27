@@ -71,7 +71,7 @@ Números flotantes se escriben con un punto y tienen el equivalente a un \textit
 \subsection{Variables}
 Una variable es un espacio para almacenar datos modificables, en la memoria de una computadora, en Python una variable se define por la sintaxis:
 
-\mint[linenos=false]{python}| nombre_de_la_variable= valor_de_la_variable |
+\mint[frame=none,linenos=false]{python}| nombre_de_la_variable= valor_de_la_variable |
 
 Cada variable tiene un nombre y un valor, el cual define a la vez el tipo de datos de la variable. Para nombrarlos es necesario un nombre descriptivo y en minúsculas. Pueden utilizarse nombres compuestos pero las palabras se separan por guiones bajos. 
 %Además antes y después del signo $=$ debe haber uno y sólo un espacio en blanco. 
@@ -221,7 +221,7 @@ Python no tiene el concepto de arreglos. La secuencia de elementos más usada en
 
 Son similares a los arreglos en otros lenguajes, con la diferencia de que son de tamaño dinámico y pueden contener elementos de distinto tipo.
 
-\mint[linenos=false]{python}| mi_lista = ['cadena de texto',15,2.8,'otro dato',25] |
+\mint[frame=none,linenos=false]{python}| mi_lista = ['cadena de texto',15,2.8,'otro dato',25] |
 
 A los datos de las listas se accede mediante el índice entre corchetes. Sus datos son mutables.
 
@@ -306,7 +306,7 @@ IndexError: list assignment index out of range
 
 Una tupla es una variable que permite almacenar varios datos inmutables de tipos diferentes. 
 
-\mint[linenos=false]{python}|mi_tupla = ('Cadena de texto', 15 , 2.8 ,'otro dato', 25) |
+\mint[frame=none,linenos=false]{python}|mi_tupla = ('Cadena de texto', 15 , 2.8 ,'otro dato', 25) |
 
 Se puede acceder a cada uno de estos datos mediante su índice correspondiente, siendo el 0 el índice del primer elemento.
 
@@ -901,28 +901,28 @@ El contenido de cada módulo, podrá ser utilizado a la vez, por otros módulos.
 \subsubsection{Importación de un módulo completo:}
 Se puede importar un módulo completo utilizando la palabra clave \textit{import} seguida del nombre del módulo. Por ejemplo:
 
-\mint[linenos=false]{python}| import modulo |
+\mint[frame=none,linenos=false]{python}| import modulo |
 
 Esto carga todo el contenido del archivo ''modulo.p'' en el programa actual. Luego, se puede acceder a las funciones, variables y clases definidas en ese módulo utilizando la notación de punto, como modulo.funcion(), modulo.variable, o modulo.Clase.
 
 \subsubsection{Importación de módulos con alias:}
 Se puede asignar un alias al módulo importado para hacer que el código sea más legible o evitar conflictos de nombres. Para hacerlo, se utiliza la palabra clave \textit{as}. Por ejemplo:
 
-\mint[linenos=false]{python}| import modulo as alias |
+\mint[frame=none,linenos=false]{python}| import modulo as alias |
 
 Esto permite utilizar alias en lugar de modulo para acceder a sus elementos.
 
 \subsubsection{Importación selectiva:}
 Se puede importar solo partes específicas de un módulo utilizando la declaración \textit{from}. Por ejemplo:
 
-\mint[linenos=false]{python}| from modulo import funcion, variable |
+\mint[frame=none,linenos=false]{python}| from modulo import funcion, variable |
 
 Esto importará solo la función "funcion" y la variable variable del módulo "modulo.py". Luego, se pueden utilizar directamente sin el prefijo del módulo.
 
 \subsubsection{Importación de todos los elementos:}
 También se pueden importar todos los elementos de un módulo utilizando el asterisco *, pero esto no se recomienda en general debido a que puede hacer que el código sea menos legible y propenso a conflictos de nombres. Por ejemplo:
 
-\mint[linenos=false]{python}| from modulo import * |
+\mint[frame=none,linenos=false]{python}| from modulo import * |
 
 Esto importará todas las funciones, variables y clases definidas en \textit{modulo.py}.
 

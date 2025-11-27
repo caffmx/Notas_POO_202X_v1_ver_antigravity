@@ -170,7 +170,7 @@ Ruby interpreta $;$ y el espacio en blanco como el final de una instrucción. De
 
 Comentarios en Ruby son representados con $\#$ :
 
-\mint[linenos=false]{ruby}|# Este es un comentario|
+\mint[frame=none,linenos=false]{ruby}|# Este es un comentario|
 
 Comentarios de más de una línea usan $=begin$ y $=end$, los cuales deben estar al comienzo de una línea:
 
@@ -225,7 +225,7 @@ Una cadena es un arreglo de bytes y una instancia de la clase String:
 
 Cadenas adyacentes son concatenadas :
 
-\mint[linenos=false]{ruby}|''una'' ''cadena''      # es igual a ''una cadena''|
+\mint[frame=none,linenos=false]{ruby}|''una'' ''cadena''      # es igual a ''una cadena''|
 
 \subsection{Variables}
 
@@ -250,7 +250,7 @@ y además:
 
 Visibles a través de todo el programa y deben iniciar con el símbolo \$, por ejemplo:
 
-\mint[linenos=false]{ruby}|$soyGlobal|
+\mint[frame=none,linenos=false]{ruby}|$soyGlobal|
 
 Una variable global no inicializada tiene el valor de \textit{nil}. Existen además variables globales predefinidas que contienen información sobre el programa en ejecución.
 
@@ -258,7 +258,7 @@ Una variable global no inicializada tiene el valor de \textit{nil}. Existen adem
 
 Las variables de instancia pertenecen a un objeto y son lo que también es conocido en objetos como atributos. Estas son visibles dentro de un objeto en particular y deben  comenzar con $@$, por ejemplo:
 
-\mint[linenos=false]{ruby}|@soyVariableDeInstancia|
+\mint[frame=none,linenos=false]{ruby}|@soyVariableDeInstancia|
 
 Al igual que las variables globales, estas tienen el valor de \textit{nil} si no han sido inicializadas.
 
@@ -266,7 +266,7 @@ Al igual que las variables globales, estas tienen el valor de \textit{nil} si no
 
 Las variables de clase son visibles, como su nombre lo dice, en la clase y para todos los objetos de la misma. Comienzan con $@@$, por ejemplo:
 
-\mint[linenos=false]{ruby}|@@variableDeClase|
+\mint[frame=none,linenos=false]{ruby}|@@variableDeClase|
 	
 Estas variables deben ser inicializadas antes de que puedan ser usadas en los métodos. El uso de una variable de clase no inicializada produce un error. Además, estas clases son compartidas por descendientes de las clases donde fueron definidas.
 
@@ -299,7 +299,7 @@ También se cuenta con asignación abreviada como en los lenguajes C/C++ y Java:
 
 \subsubsection{Asignación paralela}
 
-\mint[linenos=false]{ruby}|destino[, destino...][, *destino] = expr[, expr...][, *expr]|
+\mint[frame=none,linenos=false]{ruby}|destino[, destino...][, *destino] = expr[, expr...][, *expr]|
 
 Identificadores destino reciben la asignación de la correspondiente expresión en el lado derecho. Si el último destino  (lado izquierdo) tiene como prefijo un *, el resto de los valores en el lado derecho se asigna en ese destino como un arreglo. Si el * esta en el último elemento del lado derecho, el conjunto de elementos son expandidos antes de su asignación.
 
@@ -317,13 +317,13 @@ Un aspecto interesante aquí es que los operadores \textit{and} y \textit{or} ti
 
 El operador ternario $?:$ es el operador condicional similar al de C/C++ y Java.
 
-\mint[linenos=false]{ruby}|a? b : c|
+\mint[frame=none,linenos=false]{ruby}|a? b : c|
 
 \subsection{Operador \textit{defined?}}
 
 Este es un operador que puede determinar si una expresión esta definida. Regresa una descripción de la expresión, o nulo si la expresión no esta definida.
 
-\mint[linenos=false]{ruby}|defined? variable|
+\mint[frame=none,linenos=false]{ruby}|defined? variable|
 
 Por ejemplo:
 
@@ -381,35 +381,35 @@ or
 
 Un arreglo en Ruby es una clase contenedora que contiene una colección de objetos. \textbf{Cualquier} tipo de objetos pueden ser almacenados en un arreglo, inclusive pudiendo contener elementos de distinto tipo en un mismo arreglo. Otra característica es que el arreglo aumenta de tamaño conforme se añaden elementos. Un arreglo es representado con sus elementos entre corchetes $[ ]$ :
 
-\mint[linenos=false]{ruby}|[ ]		#Arreglo vacío  |
+\mint[frame=none,linenos=false]{ruby}|[ ]		#Arreglo vacío  |
 
-\mint[linenos=false]{ruby}|[1, 2, 3]	#Arreglo de 3 elementos |
+\mint[frame=none,linenos=false]{ruby}|[1, 2, 3]	#Arreglo de 3 elementos |
 
 Los arreglos pueden ser asignados:
-\mint[linenos=false]{ruby}|ar1= []|
+\mint[frame=none,linenos=false]{ruby}|ar1= []|
 
-\mint[linenos=false]{ruby}|ar2= [1, 2, 3]      # => [1, 2, 3]|
+\mint[frame=none,linenos=false]{ruby}|ar2= [1, 2, 3]      # => [1, 2, 3]|
 
 
 
 Un arreglo puede añadir fácilmente un elemento mediante el operador $<<$. Ruby dinámicamente ajusta el tamaño del arreglo al añadir o remover los elementos:
 
-\mint[linenos=false]{ruby}|ar3=  ar2 << "otro"   # => [1, 2, 3, "otro"]  |
+\mint[frame=none,linenos=false]{ruby}|ar3=  ar2 << "otro"   # => [1, 2, 3, "otro"]  |
 
 El operador $<<$ modifica el operando izquierdo, por lo que la modificación de un arreglo puede hacerse directamente como:
 
-\mint[linenos=false]{ruby}|ar3<<"otro mas"   # => [1, 2, 3, "otro", "otro mas"]|
+\mint[frame=none,linenos=false]{ruby}|ar3<<"otro mas"   # => [1, 2, 3, "otro", "otro mas"]|
 
 De hecho, en la penúltima expresión \textit{ar3} en realidad está recibiendo la referencia de \textit{ar2} al cual se le añadió la cadena “otro”.
 
 También es posible asignar a una posición fuera del arreglo actual. Por ejemplo: 
 
 
-\mint[linenos=false]{ruby}|ma=[3,4,5]      # => [3, 4, 5] |
+\mint[frame=none,linenos=false]{ruby}|ma=[3,4,5]      # => [3, 4, 5] |
 
 Y luego:
 
-\mint[linenos=false]{ruby}|ma[3]=10        # => [3, 4, 5, 10]|
+\mint[frame=none,linenos=false]{ruby}|ma[3]=10        # => [3, 4, 5, 10]|
 
 E inclusive: 
 
@@ -438,7 +438,7 @@ a[3][0]       # => 4
 
 El tamaño del arreglo es validado:
 
-\mint[linenos=false]{ruby}|a[5]          # => nil  |
+\mint[frame=none,linenos=false]{ruby}|a[5]          # => nil  |
 
 
 Es posible hacer uso de valores negativos como índices, y estos se tomarán de la última posición (-1) hasta la posición negativa del tamaño del arreglo (también posición 0:
@@ -522,7 +522,7 @@ unless condicional [then]
 [else
     \end{minted}
 El \textit{unless} puede ser usado como un modificador de una declaración:
- \mint[linenos=false]{ruby}|instrucciones unless condicional|\\
+ \mint[frame=none,linenos=false]{ruby}|instrucciones unless condicional|\\
 \\ \hline
 \end{tabular}
 \end{center}
@@ -605,7 +605,7 @@ end
     \end{minted}
 El \textit{while} puede ser usado como un modificador de una declaración:
 
-\mint[linenos=false]{ruby}|instrucciones while condicional  |
+\mint[frame=none,linenos=false]{ruby}|instrucciones while condicional  |
 o:
    \begin{minted} [linenos=false]{ruby}
 begin 
@@ -637,7 +637,7 @@ until condicional [do]
 end
     \end{minted}
 o:
-\mint[linenos=false]{ruby}|instrucciones until condicional  |
+\mint[frame=none,linenos=false]{ruby}|instrucciones until condicional  |
 o:
    \begin{minted} [linenos=false]{ruby}
 begin  
@@ -1045,7 +1045,7 @@ De hecho, un módulo, aunque es similar a una clase no puede tener instancias ni
 
 Cuando existe ambigüedad, es posible referirse a un método o identificador dentro de un módulo usando el operador $::$, por ejemplo:
 
-\mint[linenos=false]{ruby}|nombre-módulo::método |
+\mint[frame=none,linenos=false]{ruby}|nombre-módulo::método |
 
 
 También es posible referirse directamente a los elementos dentro de un módulo sin necesidad de usar el nombre del módulo y el operador $::$ en cada ocasión. Para esto podemos incluir (\textit{include}) el módulo. Esta característica da además lugar a los \textit{mixins} que se verán posteriormente. Es importante notar que \textit{include} hace referencia a un módulo y no a un archivo. Si el módulo esta en un diferente archivo, este debe ser solicitado mediante la instrucción \textit{require} antes de poder ser incluido \cite{thomas2005programming}.

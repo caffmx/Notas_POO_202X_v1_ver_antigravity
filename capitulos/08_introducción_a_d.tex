@@ -338,14 +338,14 @@ Un arreglo estático se declara de la siguiente forma:
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{d}| <tipo> [<tamaño] <variable>  |\\
+ \mint[frame=none,linenos=false]{d}| <tipo> [<tamaño] <variable>  |\\
 \hline
 \end{tabular}
 \end{center}
 
 De tal forma que un arreglo de 10 enteros quedaría de la siguiente forma:
 
-\mint[linenos=false]{d}| int [10] arr |
+\mint[frame=none,linenos=false]{d}| int [10] arr |
 
 Un arreglo dinámico pos su parte de declararía de manera similar pero sin indicar el tamaño específico.
 
@@ -355,7 +355,7 @@ Un arreglo dinámico pos su parte de declararía de manera similar pero sin indi
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{d}| <tipo> [ ] <variable>  |\\
+ \mint[frame=none,linenos=false]{d}| <tipo> [ ] <variable>  |\\
 \hline
 \end{tabular}
 \end{center}
@@ -726,7 +726,7 @@ D soporta los controles de instrucciones \textit{break} y \textit{continue}.
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{d}|break;|\\
+ \mint[frame=none,linenos=false]{d}|break;|\\
 \hline
 \end{tabular}
 \end{center}
@@ -768,7 +768,7 @@ fontsize=\footnotesize]
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{d}|continue;|\\
+ \mint[frame=none,linenos=false]{d}|continue;|\\
 \hline
 \end{tabular}
 \end{center}
@@ -952,7 +952,7 @@ Por ejemplo, si $empleado.d$ y $oficina.d$ están dentro del directorio \texttt{
 
 La palabra clave de \textit{import}, es para la introducción de un módulo en el módulo actual:
 
-\mint[linenos=false]{d}|import std.stdio; |
+\mint[frame=none,linenos=false]{d}|import std.stdio; |
 
 
 El nombre del módulo puede contener el nombre del paquete también. Por ejemplo, el \textit{std}. indica que \textit{stdio} es un módulo del paquete \textit{std}.
@@ -961,9 +961,9 @@ El nombre del módulo puede contener el nombre del paquete también. Por ejemplo
 
 La  salida básica a consola en D se hace con write y writeln
 
-\mint[linenos=false]{d}|         write("Dato ", n, ": ", foo, "\n"); |
+\mint[frame=none,linenos=false]{d}|         write("Dato ", n, ": ", foo, "\n"); |
 
-\mint[linenos=false]{d}|write("Salida sin salto de línea"); |
+\mint[frame=none,linenos=false]{d}|write("Salida sin salto de línea"); |
 
 
 La lectura por otro lado podemos hacerla con la función $readln()$ que regresa la entrada estándar a un arreglo de caracteres.

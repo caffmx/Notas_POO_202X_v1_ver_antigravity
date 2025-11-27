@@ -7,10 +7,10 @@ Ahora comentaremos algunas características de C++ que no tienen que ver directa
 \section{Comentarios en C++}
 
 	Los comentarios en C son:
-\mint[linenos=false]{c}|/*  comentario en C     */|
+\mint[frame=none,linenos=false]{c}|/*  comentario en C     */|
 
 	En C++ los comentarios pueden ser además de una sola línea:
-\mint[linenos=false]{cpp}|// este es un comentario en C++|
+\mint[frame=none,linenos=false]{cpp}|// este es un comentario en C++|
 
 Acabando el comentario al final de la línea, lo que quiere decir que el programador no se preocupa por cerrar el comentario.
 
@@ -30,15 +30,15 @@ Los operadores de inserción y de  extracción  de flujo no requieren cadenas de
 
 	De tal forma un código de desplegado con \textit{printf} y \textit{scanf} de la forma (usando el área de nombres estándar):
 
-\mint[linenos=false]{c}|printf("Número: ");|
-\mint[linenos=false]{c}|scanf("\%d", &num);|
-\mint[linenos=false]{c}|printf("El valor leído es: " \%d\n", num);|
+\mint[frame=none,linenos=false]{c}|printf("Número: ");|
+\mint[frame=none,linenos=false]{c}|scanf("\%d", &num);|
+\mint[frame=none,linenos=false]{c}|printf("El valor leído es: " \%d\n", num);|
 
 Sería en C++ de la siguiente manera:
 
-\mint[linenos=false]{cpp}|cout << "Número";|
-\mint[linenos=false]{cpp}|cin >> num;|
-\mint[linenos=false]{cpp}|cout << "El valor leído es: " << num << '\n';|
+\mint[frame=none,linenos=false]{cpp}|cout << "Número";|
+\mint[frame=none,linenos=false]{cpp}|cin >> num;|
+\mint[frame=none,linenos=false]{cpp}|cout << "El valor leído es: " << num << '\n';|
 
 \section{Funciones en línea}
 
@@ -58,7 +58,7 @@ El compilador desecha las solicitudes \textit{inline} para programas que incluya
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint{cpp}|inline <declaración de la función>|\\
+ \mint[frame=none]{cpp}|inline <declaración de la función>|\\
 \hline
 \end{tabular}
 \end{center}
@@ -214,7 +214,7 @@ int punto( int x, int y){
 
 	C++ no permite la llamada omitiendo un valor antes de la extrema derecha de los argumentos:
 
-\mint[linenos=false]{cpp}|punto( , 8);|
+\mint[frame=none,linenos=false]{cpp}|punto( , 8);|
 
 Otro ejemplo de  valores o argumentos por default:
 
@@ -410,7 +410,7 @@ Se debe indicar el tamaño a través de \textit{sizeof} y utilizar una máscara 
 
 	Es posible hacer asignaciones de memoria con inicialización:	
 
-\mint[linenos=false]{cpp}|int *max= new int (1000);|
+\mint[frame=none,linenos=false]{cpp}|int *max= new int (1000);|
 
 También es posible crear arreglos dinámicamente:
 
@@ -716,14 +716,14 @@ Las enumeraciones sirven para agrupar un conjunto de elementos dentro de un tipo
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{cpp}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }; |\\
+ \mint[frame=none,linenos=false]{cpp}|enum <nombreEnum> { <elem 1>, <elem 2>, …, <elem n> }; |\\
 \hline
 \end{tabular}
 \end{center}
 
 Por lo que para el código anterior, la enumeración sería:
 
- \mint[linenos=false]{cpp}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO } |
+ \mint[frame=none,linenos=false]{cpp}|enum Temporada { PRIMAVERA, VERANO, OTOÑO, INVIERNO } |
 
 \textcolor{blue}{Ejemplo:}
 
@@ -1029,7 +1029,7 @@ La sintaxis para inicializar una variable automáticamente es la siguiente:
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{cpp}{| auto <variable>= <valor>;}
+ \mint[frame=none,linenos=false]{cpp}{| auto <variable>= <valor>;}
  |\\
 \hline
 \end{tabular}

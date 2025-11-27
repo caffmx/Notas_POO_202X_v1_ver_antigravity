@@ -20,14 +20,14 @@ En C++, es posible tener objetos de tipo constante, los cuales no podrán ser mo
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{cpp}| const <clase> <lista de objetos>;  |\\
+ \mint[frame=none,linenos=false]{cpp}| const <clase> <lista de objetos>;  |\\
 \hline
 \end{tabular}
 \end{center}	
 
 Ejemplo:
 
-\mint[linenos=false]{cpp}| const Hora h1(9,30,20); |
+\mint[frame=none,linenos=false]{cpp}| const Hora h1(9,30,20); |
 
 Para estos objetos, algunos compiladores llegan a ser tan rígidos en el cumplimiento de la instrucción, que no permiten que se hagan llamadas a métodos sobre esos objetos.  La compilación estándar permite la ejecución de métodos, siempre y cuando no modifiquen el estado del objeto. 
 
@@ -175,14 +175,14 @@ Ya se mencionó en la sección de fundamentos de Java el uso de la palabra reser
 \hline
 \rowcolor{gray!50}\textbf{Sintaxis}\\ 
 \hline
- \mint[linenos=false]{java}| final <clase> <lista de identificadores de objetos>;  |\\
+ \mint[frame=none,linenos=false]{java}| final <clase> <lista de identificadores de objetos>;  |\\
 \hline
 \end{tabular}
 \end{center}
 
 Por ejemplo:
 
- \mint[linenos=false]{java}| final Hora h1= new Hora(9,30,20);  |
+ \mint[frame=none,linenos=false]{java}| final Hora h1= new Hora(9,30,20);  |
 
 % TABLA con más de una línea 
 \begin{center}
@@ -471,7 +471,7 @@ object Constantes {
 
 C\# no permite el uso de objetos constantes. Aunque existe la palabra clave \textit{const}, ésta es usada para definir un identificador para una expresión constante. Esto no permite la asignación de objetos puesto que son creados dinámicamente. De hecho:
 
-\mint[linenos=false]{csharp}| public const int i = x; |
+\mint[frame=none,linenos=false]{csharp}| public const int i = x; |
 
 es un error si $x$ no es constante.
 
