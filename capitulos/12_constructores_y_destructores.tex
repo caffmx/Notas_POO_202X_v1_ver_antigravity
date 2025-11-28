@@ -306,6 +306,189 @@ int main(){
 \label{listing:1}
 \end{longlisting}
 
+\subsection{Punteros Inteligentes (Smart Pointers)}
+
+En C++ moderno (a partir de C++11), se recomienda el uso de \textbf{punteros inteligentes} en lugar de la gestión manual de memoria con \textit{new} y \textit{delete}. Los punteros inteligentes implementan el principio RAII (\textit{Resource Acquisition Is Initialization}), liberando automáticamente la memoria cuando el objeto sale de su ámbito, evitando fugas de memoria y simplificando el código.
+
+Los punteros inteligentes están definidos en la biblioteca \textit{<memory>} y son:
+
+\begin{itemize}
+\item \textbf{std::unique\_ptr} - Posesión exclusiva de un recurso. No puede ser copiado, solo movido.
+\item \textbf{std::shared\_ptr} - Posesión compartida con conteo de referencias. Múltiples punteros pueden apuntar al mismo objeto.
+\item \textbf{std::weak\_ptr} - Referencia no propietaria que no incrementa el contador de referencias. Usado para romper ciclos de referencias.
+\end{itemize}
+
+\textcolor{blue}{Ejemplo} con \textit{std::unique\_ptr}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// Ejemplo de uso de std::unique_ptr
+#include <iostream>
+#include <memory>
+#include <string.h>
+
+using namespace std;
+
+class Cola{
+	private:
+	int q[10], sloc, rloc;
+	char *nom;
+
+	public:
+	Cola(const char *cad=NULL) {
+		if(cad){
+			nom=new char[strlen(cad)+1];
+			strcpy(nom, cad);
+		}else
+			nom=NULL;
+		sloc=rloc=-1;
+	}
+	~Cola( ) {
+		if(nom){
+			cout<<"Cola : "<<nom<<" destruida\n";
+			delete [] nom;
+		}
+	}
+
+	char set(int);
+	int get();
+};
+
+char Cola::set(int val){
+	if(sloc>=10){
+		cout<<"la cola esta llena";
+		return 0;
+	}
+	sloc++;
+	q[sloc]=val;
+	return 1;
+}
+
+int Cola::get(){
+	if(rloc==sloc)
+		cout<<"la cola esta vacia";
+	else {
+		rloc++;
+		return q[rloc];
+	}
+	return 0;
+}
+
+int main(){
+	Cola a("Cola a"), b("Cola b");
+	
+	// Uso de unique_ptr - gestion automatica de memoria
+	unique_ptr<Cola> pCola = make_unique<Cola>("Cola pCola");
+	
+	a.set(1);
+	b.set(2);
+	pCola->set(3);  // acceso con ->
+	a.set(11);
+	b.set(22);
+	pCola->set(33);
+	
+	cout<<a.get()<<endl;
+	cout<<a.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<b.get()<<endl;
+	cout<<pCola->get()<<endl;
+	cout<<pCola->get()<<endl;
+	
+	// No es necesario delete - el destructor se llama automaticamente
+	// cuando pCola sale de ambito
+}
+\end{minted}
+\caption{Ejemplo de uso de std::unique\_ptr para gestión automática de memoria en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:smart_ptr}
+\end{longlisting}
+
+\textcolor{blue}{Ejemplo} con \textit{std::shared\_ptr}:
+
+%longlist  para potencialmente grandes codigos fuentes
+\begin{longlisting}
+\begin{minted}
+    [frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=lightgray,
+fontsize=\footnotesize]
+    {cpp}
+// Ejemplo de std::shared_ptr - posesion compartida
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Recurso {
+	public:
+	Recurso(int v) : valor(v) {
+		cout << "Recurso creado: " << valor << endl;
+	}
+	~Recurso() {
+		cout << "Recurso destruido: " << valor << endl;
+	}
+	void mostrar() {
+		cout << "Valor: " << valor << endl;
+	}
+	private:
+	int valor;
+};
+
+int main() {
+	// Crear shared_ptr
+	shared_ptr<Recurso> ptr1 = make_shared<Recurso>(42);
+	
+	cout << "Contador de referencias: " << ptr1.use_count() << endl;
+	
+	{
+		// Compartir posesion
+		shared_ptr<Recurso> ptr2 = ptr1;
+		cout << "Contador de referencias: " << ptr1.use_count() << endl;
+		ptr2->mostrar();
+		
+		// ptr2 sale de ambito aqui
+	}
+	
+	cout << "Contador de referencias: " << ptr1.use_count() << endl;
+	
+	// El recurso se destruye automaticamente cuando el último
+	// shared_ptr sale de ambito
+	return 0;
+}
+\end{minted}
+\caption{Ejemplo de std::shared\_ptr mostrando el conteo de referencias en C++.}
+% \caption[Long Code Example]{A long code example which will break across pages.}
+\label{listing:shared_ptr}
+\end{longlisting}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Ventajas de los Punteros Inteligentes} 
+\end{center} 
+\\ \hline
+\begin{itemize}
+\item Gestión automática de memoria - no es necesario llamar a \textit{delete}.
+\item Prevención de fugas de memoria (\textit{memory leaks}).
+\item Prevención de doble liberación (\textit{double delete}).
+\item Código más seguro y expresivo.
+\item Compatible con excepciones - la memoria se libera incluso si ocurre una excepción.
+\end{itemize}
+\\ \hline
+\end{tabular}
+\end{center}
+
 \fi
 %%%%%%%%%%
 % CPP_END
