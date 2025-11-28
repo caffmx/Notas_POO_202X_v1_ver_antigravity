@@ -29,7 +29,7 @@
 \end{tabular}
 \end{center}
 
-Tener en cuenta que no es lo mismo que simplemente redefinir un método de clase base en una clase derivada, pues como se vio anteriormente, si se tiene a un apuntador de clase base y a través de el se hace la llamada a un método, se ejecuta el método de la clase base independientemente del objeto referenciado por el apuntador. Este no es un comportamiento polimórfico.
+Tener en cuenta que no es lo mismo que simplemente sobreescribir un método de clase base en una clase derivada, pues como se vio anteriormente, si se tiene a un apuntador de clase base y a través de el se hace la llamada a un método, se ejecuta el método de la clase base independientemente del objeto referenciado por el apuntador. Este no es un comportamiento polimórfico.
 
 
 %%%%%%%%%%
@@ -50,7 +50,7 @@ Tener en cuenta que no es lo mismo que simplemente redefinir un método de clase
 \textbf{Concepto} 
 \end{center} 
 \\ \hline
- 	Una función virtual es un método miembro declarado como \textbf{virtual} en una clase base y siendo este método redefinido en una o más clases derivadas.  
+ 	Una función virtual es un método miembro declarado como \textbf{virtual} en una clase base y siendo este método sobreescrito en una o más clases derivadas.  
 \\ \hline
 \end{tabular}
 \end{center}
@@ -63,7 +63,7 @@ Las funciones virtuales son muy especiales, debido a que cuando una función es 
 
 	Al declarar un método como virtual, este método se conserva así a través de toda la jerarquía de herencia, del punto en que se declaró hacia abajo. Aunque de este modo no es necesario volver a usar la palabra virtual en ninguno de los métodos inferiores del mismo nombre, es posible declararlo de forma explícita para que el programa sea más claro.
 
-	Es importante señalar que las funciones virtuales que sean redefinidas en clases derivadas, deben tener además de la misma firma que la función virtual base, el mismo tipo de retorno.
+	Es importante señalar que las funciones virtuales que sean sobreescritas en clases derivadas, deben tener además de la misma firma que la función virtual base, el mismo tipo de retorno.
 
 % TABLA con más de una línea de CÓDIGO
 \begin{center}
@@ -824,9 +824,9 @@ public class Prueba {
 \label{listing:1}
 \end{longlisting}
 
-Como se aprecia en el ejemplo anterior, en caso de que el método no sea redefinido, se ejecuta el método de la clase base.
+Como se aprecia en el ejemplo anterior, en caso de que el método no sea sobreescrito, se ejecuta el método de la clase base.
 
-	Es importante señalar que – al igual que en C++- los métodos que sean redefinidos en clases derivadas, deben tener además de la misma firma que método base, el mismo tipo de retorno. Si se declara en una clase derivada un método con otro tipo de dato como retorno, se generará un error en tiempo de compilación. 
+	Es importante señalar que – al igual que en C++- los métodos que sean sobreescritos en clases derivadas, deben tener además de la misma firma que método base, el mismo tipo de retorno. Si se declara en una clase derivada un método con otro tipo de dato como retorno, se generará un error en tiempo de compilación. 
 
 \subsection{Clase abstracta y clase concreta en Java}
 
@@ -1428,7 +1428,7 @@ prueba
 \label{listing:1}
 \end{longlisting}
 
-Como se aprecia en el ejemplo anterior, en caso de que el método no sea redefinido, se ejecuta el método de la clase base.
+Como se aprecia en el ejemplo anterior, en caso de que el método no sea sobreescrito, se ejecuta el método de la clase base.
 
 Es importante señalar que  \textbf{no} es necesario que el tipo de retorno coincida, pues éste se determina dinámicamente.
 

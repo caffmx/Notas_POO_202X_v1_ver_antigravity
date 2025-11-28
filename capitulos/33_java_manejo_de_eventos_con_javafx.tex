@@ -19,7 +19,7 @@ Para poder ser manejador de un evento de acción se requiere:
 \item El objeto manejador de \textit{EventHandler} debe estar registrado con el objeto fuente del evento con el método $fuente.setOnAction(manejador)$.
 \end{itemize}
 
-La interfaz \textit{EventHandler\textless ActionEvent\textgreater} contiene el método $handle(ActionEvent)$ para procesar el evento de acción. Nuestra clase manejadora debe redefinir este método para responder al evento.
+La interfaz \textit{EventHandler\textless ActionEvent\textgreater} contiene el método $handle(ActionEvent)$ para procesar el evento de acción. Nuestra clase manejadora debe sobreescribir este método para responder al evento.
 
 El siguiente \textcolor{blue}{ejemplo} procesa el evento de acción para 2 botones y despliega el mensaje correspondiente al ser presionados:
 
@@ -346,7 +346,7 @@ public class ClaseAnónimaEjemplo extends Application {
 \label{listing:1}
 \end{longlisting}
 
-Otro ejemplo, en este caso el programa usa una clase anónima donde redefine la implementación de clase \textit{TextField} para los métodos $replaceText()$ y $replaceSelection()$, creando un campo de texto que solo acepta valores numéricos:
+Otro ejemplo, en este caso el programa usa una clase anónima donde sobreescribe la implementación de clase \textit{TextField} para los métodos $replaceText()$ y $replaceSelection()$, creando un campo de texto que solo acepta valores numéricos:
 
 %longlist  para potencialmente grandes codigos fuentes
 \begin{longlisting}

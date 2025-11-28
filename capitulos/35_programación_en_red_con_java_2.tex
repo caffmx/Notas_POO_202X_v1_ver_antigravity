@@ -234,164 +234,177 @@ baselinestretch=1.2,
 bgcolor=lightgray,
 fontsize=\footnotesize]
     {java}
-// Cliente de TicTacToe 
-import java.applet.Applet;
-import java.awt.*;
+// Cliente de TicTacToe con JavaFX
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import java.net.*;
 import java.io.*;
 
-public class TicTacToeClient extends Applet
-                             implements Runnable {
-   TextField id;
-   TextArea display;
-   Panel boardPanel, panel2;
-   Square board[][], currentSquare;
-   Socket connection;
-   DataInputStream input;
-   DataOutputStream output;
-   Thread outputThread;
-   char myMark;
+public class TicTacToeClient extends Application implements Runnable {
+   private TextField id;
+   private TextArea display;
+   private GridPane boardPanel;
+   private Square board[][];
+   private Square currentSquare;
+   private Socket connection;
+   private DataInputStream input;
+   private DataOutputStream output;
+   private Thread outputThread;
+   private char myMark;
+   private boolean myTurn;
 
+   @Override
+   public void start(Stage primaryStage) {
+      display = new TextArea();
+      display.setEditable(false);
+      display.setPrefRowCount(4);
+      display.setPrefColumnCount(30);
 
-   public void init()
-   {
-      setLayout( new BorderLayout() );
-      display = new TextArea( 4, 30 );
-      display.setEditable( false );
-      add( "South", display );
+      boardPanel = new GridPane();
+      board = new Square[3][3];
 
-      boardPanel = new Panel();
-      boardPanel.setLayout( new GridLayout( 3, 3, 0, 0 ) );
-      board = new Square[ 3 ][ 3 ];
-
-      for ( int row = 0; row < board.length; row++ )
-         for (int col = 0; col < board[row].length; col++ ) {
-            board[ row ][ col ] = new Square();
-            boardPanel.add( board[ row ][ col ] );
+      for (int row = 0; row < 3; row++) {
+         for (int col = 0; col < 3; col++) {
+            board[row][col] = new Square(row, col);
+            boardPanel.add(board[row][col], col, row);
          }
+      }
+
       id = new TextField();
-      id.setEditable( false );
-      add( "North", id );
+      id.setEditable(false);
+      
+      BorderPane root = new BorderPane();
+      root.setTop(id);
+      root.setCenter(boardPanel);
+      root.setBottom(display);
 
-      panel2 = new Panel();
-      panel2.add( boardPanel );
-      add( "Center", panel2 );
-   }
+      Scene scene = new Scene(root, 300, 300);
+      primaryStage.setTitle("Cliente Tic-Tac-Toe");
+      primaryStage.setScene(scene);
+      primaryStage.show();
 
-   public void start()
-   {
-      try {
-         connection =
-            new Socket( InetAddress.getLocalHost(), 5000 );
-         input = new DataInputStream(
-            connection.getInputStream() );
-         output = new DataOutputStream(
-            connection.getOutputStream() );
-      }
-      catch ( IOException e ) {
-         e.printStackTrace();         
-      }
-
-      outputThread = new Thread( this );
+      // Iniciar conexión en un hilo separado
+      outputThread = new Thread(this);
       outputThread.start();
    }
 
-   public boolean mouseUp( Event e, int x, int y )
-   {      
-      for ( int row = 0; row < board.length; row++ ) {
-         for (int col = 0; col < board[row].length; col++ ) {
-            try {
-               if ( e.target == board[ row ][ col ] ) {
-                  currentSquare = board[ row ][ col ];
-                  output.writeInt( row * 3 + col );
-               }
-            }
-            catch ( IOException ie ) {
-                  ie.printStackTrace();         
-            }
-         }
+   public void run() {
+      try {
+         connection = new Socket(InetAddress.getLocalHost(), 5000);
+         input = new DataInputStream(connection.getInputStream());
+         output = new DataOutputStream(connection.getOutputStream());
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.exit(1);
       }
-      return true;
-   }
 
-   public void run()
-   {
       try {
          myMark = input.readChar();
-         id.setText( "Eres el jugador \"" + myMark + "\"" );
-      }
-      catch ( IOException e ) {
-         e.printStackTrace();         
+         Platform.runLater(() -> id.setText("Eres el jugador \"" + myMark + "\""));
+         myTurn = (myMark == 'X');
+      } catch (IOException e) {
+         e.printStackTrace();
       }
 
-      // Recibir mensajes
-      while ( true ) {
+      while (true) {
          try {
             String s = input.readUTF();
-            processMessage( s );
-         }
-         catch ( IOException e ) {
-            e.printStackTrace();         
+            processMessage(s);
+         } catch (IOException e) {
+            e.printStackTrace();
+            break;
          }
       }
    }
 
-
-   public void processMessage( String s )
-   {
-      if ( s.equals( "Movida valida." ) ) {
-         display.appendText( "Movida valida, espere un momento.\n" );
-         currentSquare.setMark( myMark );
-         currentSquare.repaint();
-      }
-      else if ( s.equals( "Movida invalida, intente de nuevo" ) ) {
-         display.appendText( s + "\n" );
-      }
-      else if ( s.equals( "El oponente movio" ) ) {
+   public void processMessage(String s) {
+      if (s.equals("Movida valida.")) {
+         Platform.runLater(() -> {
+             display.appendText("Movida valida, espere un momento.\n");
+             currentSquare.setMark(myMark);
+             currentSquare.repaint();
+         });
+      } else if (s.equals("Movida invalida, intente de nuevo")) {
+         Platform.runLater(() -> display.appendText(s + "\n"));
+         myTurn = true;
+      } else if (s.equals("El oponente movio")) {
          try {
             int loc = input.readInt();
-   
-            done:
-            for ( int row = 0; row < board.length; row++ )
-               for ( int col = 0;
-                     col < board[ row ].length; col++ )
-                  if ( row * 3 + col == loc ) {
-                     board[ row ][ col ].setMark(
-                        ( myMark == 'X' ? 'O' : 'X' ) );
-                     board[ row ][ col ].repaint();
-                     break done;
-                  }
-            display.appendText(
-               "El oponente movio. Es tu turno.\n" );
+            int row = loc / 3;
+            int col = loc % 3;
+            
+            Platform.runLater(() -> {
+                board[row][col].setMark(myMark == 'X' ? 'O' : 'X');
+                board[row][col].repaint();
+                display.appendText("El oponente movio. Es tu turno.\n");
+                myTurn = true;
+            });
+         } catch (IOException e) {
+            e.printStackTrace();
          }
-         catch ( IOException e ) {
-            e.printStackTrace();         
-         }
-      }
-      else {
-         display.appendText( s + "\n" );
+      } else {
+         Platform.runLater(() -> display.appendText(s + "\n"));
       }
    }
-}
 
-class Square extends Canvas {
-   char mark;
-
-   public Square()
-   {
-      resize ( 30, 30 );
+   public static void main(String[] args) {
+       launch(args);
    }
 
-   public void setMark( char c ) { mark = c; }
+   // Clase interna Square
+   private class Square extends StackPane {
+      private char mark;
+      private int row, col;
+      private Text text = new Text();
 
-   public void paint( Graphics g )
-   {
-      g.drawRect( 0, 0, 29, 29 );
-      g.drawString( String.valueOf( mark ), 11, 20 );
+      public Square(int row, int col) {
+         this.row = row;
+         this.col = col;
+         this.mark = ' ';
+         
+         Rectangle border = new Rectangle(50, 50);
+         border.setFill(null);
+         border.setStroke(Color.BLACK);
+         
+         text.setFont(Font.font(20));
+         
+         getChildren().addAll(border, text);
+         
+         setOnMouseClicked(e -> {
+             if (myTurn) {
+                 currentSquare = this;
+                 try {
+                     output.writeInt(this.row * 3 + this.col);
+                     myTurn = false;
+                 } catch (IOException ex) {
+                     ex.printStackTrace();
+                 }
+             }
+         });
+      }
+
+      public void setMark(char c) {
+         mark = c;
+      }
+
+      public void repaint() {
+         text.setText(String.valueOf(mark));
+      }
    }
 }
 \end{minted}
-\caption{Ejemplo - Cliente de TicTacToe.}
+\caption{Ejemplo - Cliente de TicTacToe con JavaFX.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}
@@ -623,9 +636,6 @@ public class TicTacToeServer extends Frame {
       if ( event.id == Event.WINDOW_DESTROY ) {
          hide();
          dispose();
-
-         for ( int i = 0; i < players.length; i++ )
-            players[ i ].stop();
 
          System.exit( 0 );
       }

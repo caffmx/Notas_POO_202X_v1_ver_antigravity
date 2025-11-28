@@ -387,7 +387,7 @@ Python no cuenta con objetos ni variables constantes. Se acostumbra definir vari
 \ifscala
 \newpage
 \section{Objetos constantes en Scala}
-Scala cuenta con identificadores constantes definidos mediante \textit{val} que tienen un comportamiento similar a los definidos con \textit{final}  en Java. Del mismo modo, puede agregarse el modificador \textit{final} aunque el comportamiento es idéntico. Las diferencias básicas con el \textit{final} de Java es que un identificador \textit{val} debe ser inicializado al declararse y el identificador puede ser redefinido.
+Scala cuenta con identificadores constantes definidos mediante \textit{val} que tienen un comportamiento similar a los definidos con \textit{final}  en Java. Del mismo modo, puede agregarse el modificador \textit{final} aunque el comportamiento es idéntico. Las diferencias básicas con el \textit{final} de Java es que un identificador \textit{val} debe ser inicializado al declararse y el identificador puede ser sobreescrito.
 
 \textcolor{blue}{Ejemplo:}
 
@@ -431,8 +431,8 @@ class Fecha {
 
 //Código de prueba  
 object Constantes {
-  val fe = new Fecha()  // similar a final en java, salvo que puede ser redefinido
-  final val fe2= new Fecha()  // similar a final en java, salvo que no puede ser redefinido
+  val fe = new Fecha()  // similar a final en java, salvo que puede ser sobreescrito
+  final val fe2= new Fecha()  // similar a final en java, salvo que no puede ser sobreescrito
    
   def main(args: Array[String]) ={
 	  System.out.println("Constantes")
@@ -445,8 +445,8 @@ object Constantes {
     //  fe2=fe  //no se puede reasignar
     //  fe=fe2  //no se puede reasignar
         
-      val fe = new Fecha() // se puede redefinir fe
-      val fe2 = new Fecha() // se puede redefinir fe2
+      val fe = new Fecha() // se puede sobreescribir fe
+      val fe2 = new Fecha() // se puede sobreescribir fe2
       System.out.println("fin de Constantes")
   }  
 }

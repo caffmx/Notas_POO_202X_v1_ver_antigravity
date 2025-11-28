@@ -143,13 +143,13 @@ Existen dos tipos principales de programas en Java \footnote{Se presenta la divi
 
 Por un lado están las aplicaciones, las cuales son programas \textit{standalone}, escritos en Java y ejecutados por un intérprete del código de bytes desde la línea de comandos del sistema. 
 
-Por otra parte, los \textit{Applets}, que son pequeñas aplicaciones escritas en Java, las cuales siguen un conjunto de convenciones que les permiten ejecutarse dentro de un navegador. Estos \textit{applets} siempre están incrustados en una página \textit{html}.
+Por otra parte, las \textit{Aplicaciones Gráficas}, que son programas que utilizan bibliotecas como JavaFX o Swing para crear interfaces de usuario ricas. Anteriormente se utilizaban \textit{Applets}, pero han sido depreciados y eliminados en versiones modernas del JDK.
 
-En términos del código fuente las diferencias entre un \textit{applet} y una aplicación son:
+En términos del código fuente las diferencias entre una aplicación de consola y una gráfica son:
 
 \begin{itemize}
-\item  Una aplicación debe definir una clase que contenga el método \textit{main()}, que controla su ejecución. Un \textit{applet} no usa el método \textit{main()}; su ejecución es controlado por varios métodos definidos en la clase \textit{applet}.
-\item   Un \textit{applet}, debe definir una clase derivada de la clase \textit{Applet} \footnote{A partir de la versión 1.9 del jdk, los applets ya no son soportados.}.
+\item  Una aplicación de consola debe definir una clase que contenga el método \textit{main()}, que controla su ejecución.
+\item   Una aplicación gráfica con JavaFX hereda de la clase \textit{Application} y sobrescribe el método \textit{start()}.
 \end{itemize}
 
 \section{El Java Developer’s Kit}
@@ -161,7 +161,7 @@ Los principales programas del \textit{Java Development Kit}:
 \begin{itemize}
 \item \textbf{javac}. Es el compilador en línea del JDK.
 \item \textbf{java}. Es la máquina virtual para aplicaciones de Java.
-\item \textbf{appletviewer}. Visor de \textit{applets} de java.
+\item \textbf{javadoc}. Generador de documentación.
 \end{itemize}
 
 
@@ -279,17 +279,7 @@ A partir de la versión 11 del jdk\footnote{ \footnote{\href{https://www.codejav
 \end{alltt}
 
 
-%Para la ejecución de un \textit{applet} utilizamos el \textit{appletviewer}, también proporcionado por el \textit{jdk}:
-
-%\begin{alltt}
-% appletviewer hola.html
-%\end{alltt}
-
-%La ejecución del \textit{applet} desde Eclipse implica seleccionar la opción de \textit{“Run as…”} y posteriormente \textit{“Java Applet”} del menú o icono de ejecución, o del menú contextual.
-
-%Un \textit{applet}  en realidad es construido para se ejecutado por un navegador. El \textit{appletviewer} es una versión reducida de un navegador que es utilizada para probar los \textit{applets}. Un vez que vean que su \textit{applet} se ejecuta en el visor de \textit{applets} pruébenlo en su navegador.
-
-%Es recomendable que primero prueben los \textit{applets} en el visor, ya que este soporta la misma versión de Java del \textit{jdk} que tengan instalado. Dependiendo de su configuración, los navegadores no siempre soportan la última versión de Java.
+%Para la ejecución de una aplicación gráfica se utiliza el mismo comando java, asegurándose de tener las bibliotecas necesarias en el classpath o modulepath.
 
 \section{Fundamentos del Lenguaje Java}
 En esta sección se hablará de cómo está constituido el lenguaje, sus instrucciones, tipos de datos, entre otras características. Antes de comenzar a hacer programación orientada a objetos.

@@ -736,13 +736,13 @@ En el ejemplo anterior se crea un arreglo de apuntadores a \textit{Empleado} y s
 % ADVANCED
 %%%%%%%%%%
 
-\subsection{Redefinición de métodos en C++}
+\subsection{Sobreescritura de métodos en C++}
 
-	Algunas veces, los métodos heredados no cumplen completamente la función que quisiéramos que realicen en las clases derivadas. Es posible en C++  \textbf{redefinir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue redefinida. 
+	Algunas veces, los métodos heredados no cumplen completamente la función que quisiéramos que realicen en las clases derivadas. Es posible en C++  \textbf{sobreescribir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue sobreescrita. 
 
 Es posible sin embargo, utilizar el método original de la clase base por medio del operador de resolución de alcance.
 
-	Se sugiere redefinir métodos que no vayan a ser empleados en la clase derivada, inclusive sin código para inhibir cualquier acción que no nos interese\footnote{n teoría esto no debería ser necesario anular operaciones si nos apegamos a la regla del 100\% (\textbf{de conformidad con la definición})}.
+	Se sugiere sobreescribir métodos que no vayan a ser empleados en la clase derivada, inclusive sin código para inhibir cualquier acción que no nos interese\footnote{n teoría esto no debería ser necesario anular operaciones si nos apegamos a la regla del 100\% (\textbf{de conformidad con la definición})}.
 
 % TABLA con más de una línea 
 \begin{center}
@@ -753,7 +753,7 @@ Es posible sin embargo, utilizar el método original de la clase base por medio 
 \textbf{Concepto} 
 \end{center} 
 \\ \hline
-La redefinición de métodos \textbf{no} es una sobrecarga porque se definen exactamente con la misma firma.  
+La sobreescritura de métodos \textbf{no} es una sobrecarga porque se definen exactamente con la misma firma.  
 \\ \hline
 \end{tabular}
 \end{center}
@@ -1633,7 +1633,7 @@ public class Prueba {
 
 \subsection{Sobreescritura de métodos (Overriding)}
 
-Frecuentemente, los métodos heredados no implementan el comportamiento específico requerido por la subclase. Java permite \textbf{sobreescribir} (o redefinir) un método de la clase base en la clase derivada. Al invocar el método desde una instancia de la subclase, se ejecutará la nueva versión.
+Frecuentemente, los métodos heredados no implementan el comportamiento específico requerido por la subclase. Java permite \textbf{sobreescribir} (o sobreescribir) un método de la clase base en la clase derivada. Al invocar el método desde una instancia de la subclase, se ejecutará la nueva versión.
 
 Es una buena práctica utilizar la anotación \texttt{@Override} para asegurar que el compilador verifique la firma del método. Sin embargo, aún es posible acceder a la lógica original de la clase base utilizando la referencia \texttt{super}.
 
@@ -1725,9 +1725,9 @@ Si un método se especifica en una clase X como \textit{final}:
 \end{tabular}
 \end{center}
 
-Se esta diciendo que el método no podrá ser redefinido en las subclases de X.
+Se esta diciendo que el método no podrá ser sobreescrito en las subclases de X.
 	
-Aunque se omita este calificador, si se trata de un método de clase (estático) o privado, se considera final y no podrá ser redefinido.
+Aunque se omita este calificador, si se trata de un método de clase (estático) o privado, se considera final y no podrá ser sobreescrito.
 
 Por otro lado, es posible que no queramos dejar la posibilidad de extender una clase, para lo que se utiliza el calificador \textit{final} a nivel de clase:
 
@@ -2017,7 +2017,7 @@ public class Main {
 }
 
 \end{minted}
-\caption{Ejemplo de interfaz con potencial ambigüedad en métodos predefinidos en Java.}
+\caption{Ejemplo de interfaz con potencial ambigüedad en métodos psobreescritos en Java.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}
@@ -2139,7 +2139,7 @@ ford.muestra
 
 Las clases en Ruby son considerados objetos de primera clase\footnote{Pueden ser usados en el lenguaje de programación como cualquier otro objeto.}. Cada clase declarada en Ruby es una instancia de la clase \textit{Class} \cite{thomas2005programming}. 
 
-El proceso que se sigue es el siguiente: cuando una clase es definida, un objeto de la clase \textit{Class} es creado y asignado a una constante global con el nombre usado en la definición. Cuando un nuevo objeto de la clase es instanciado ($nombreClase.new$), el método \textit{new}  de \textit{Class} es ejecutado por omisión.\footnote{De hecho, el método \textit{new}  de la clase \textit{Class} puede ser redefinido, aunque no es una práctica recomendada.} 
+El proceso que se sigue es el siguiente: cuando una clase es definida, un objeto de la clase \textit{Class} es creado y asignado a una constante global con el nombre usado en la definición. Cuando un nuevo objeto de la clase es instanciado ($nombreClase.new$), el método \textit{new}  de \textit{Class} es ejecutado por omisión.\footnote{De hecho, el método \textit{new}  de la clase \textit{Class} puede ser sobreescrito, aunque no es una práctica recomendada.} 
 
 A continuación se presenta la información general de la clase Class \cite{thomas2005programming}:
 
@@ -2186,7 +2186,7 @@ Object.superclass 	» 	nil
 
 \subsection{Clase \textit{Object}}
 
-La clase padre de todas las clases en Ruby es la clase \textit{Object}, por lo que sus métodos están disponibles para todos los objetos a menos que estos se encuentren redefinidos.
+La clase padre de todas las clases en Ruby es la clase \textit{Object}, por lo que sus métodos están disponibles para todos los objetos a menos que estos se encuentren sobreescritos.
 
 A continuación se presenta una lista de los métodos de \textit{Object}:
 
@@ -2397,9 +2397,9 @@ prueba
 \label{listing:1}
 \end{longlisting}
 
-\subsection{Redefinición de métodos}
+\subsection{Sobreescritura de métodos}
 
-Ruby permite \textbf{redefinir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue redefinida. Es posible sin embargo, utilizar el método de la clase base por medio la palabra \textit{super}. A diferencia de Java, aquí solo es necesaria esta palabra (y si se necesita la lista de argumentos) para llamar al método correspondiente de la clase base desde la clase derivada.
+Ruby permite \textbf{sobreescribir} un método de la clase base en la clase derivada. Cuando se hace referencia al nombre del método, se ejecuta la versión de la clase en donde fue sobreescrita. Es posible sin embargo, utilizar el método de la clase base por medio la palabra \textit{super}. A diferencia de Java, aquí solo es necesaria esta palabra (y si se necesita la lista de argumentos) para llamar al método correspondiente de la clase base desde la clase derivada.
 
 
 %longlist  para potencialmente grandes codigos fuentes
@@ -2635,9 +2635,9 @@ class <ClaseDerivada>(<Módulo>.<ClaseBase>):
 \end{tabular}
 \end{center}
 
-Todas las clases en Python 3 derivan de la clase \textit{object}. Los métodos de la clase base pueden ser redefinidos. Un objeto ejecutando métodos puede ser que llame a métodos de la clase base o métodos redefinidos en la jerarquía de herencia, de manera similar a los métodos virtuales en C++.
+Todas las clases en Python 3 derivan de la clase \textit{object}. Los métodos de la clase base pueden ser sobreescritos. Un objeto ejecutando métodos puede ser que llame a métodos de la clase base o métodos sobreescritos en la jerarquía de herencia, de manera similar a los métodos virtuales en C++.
 
-Si fuera necesario llamar a un método de clase base que se haya redefinido en una clase derivada puede hacerse.
+Si fuera necesario llamar a un método de clase base que se haya sobreescrito en una clase derivada puede hacerse.
 
 %TABLA para notas, primera linea de CÓDIGO coloreada. 
 \begin{center}
@@ -2809,7 +2809,7 @@ print("Objeto d contiene ", d.getData())
 \label{listing:1}
 \end{longlisting}
 
-En Python, la jerarquía de herencia es definida de derecha a izquierda por lo que hay que tener en cuenta que el resultado puede variar si una clase de más a la izquierda redefine métodos o atributos. Por eso se considera a la clase de la extrema derecha como la “clase base principal”, mientras que las otras clases agregan características (es por este aspecto por el que se maneja a veces como mixins). \textit{En caso de redefinir un método, se ejecutará el que se encuentre más a la extrema izquierda (el último en ser redefinido)}
+En Python, la jerarquía de herencia es definida de derecha a izquierda por lo que hay que tener en cuenta que el resultado puede variar si una clase de más a la izquierda sobreescribe métodos o atributos. Por eso se considera a la clase de la extrema derecha como la “clase base principal”, mientras que las otras clases agregan características (es por este aspecto por el que se maneja a veces como mixins). \textit{En caso de sobreescribir un método, se ejecutará el que se encuentre más a la extrema izquierda (el último en ser sobreescrito)}
 
 Tener en cuenta que la llamada a múltiples inicializadores de clase en herencia múltiple si puede en la práctica generar conflictos. Lo sugerido es en caso de herencia múltiple siempre hacer llamadas a inicializadores de clase base mediante el nombre de la clase base (en lugar de super) \textbf{a través de toda la jerarquía de herencia}, no únicamente en la clase que tiene herencia múltiple
 
@@ -3115,9 +3115,9 @@ object Main extends App {
 \label{listing:1}
 \end{longlisting}
 
-\subsection{Redefinición de métodos}	
+\subsection{Sobreescritura de métodos}	
 
-Comparado con Java, Scala añade unas restricciones para redefinir un método. El método redefinido debe usar el modificador \textit{override} (existe una anotación $@Override$ en Java, pero no es obligatoria). Adicionalmente, no se puede redefinir un \textit{var} con \textit{val} o \textit{def}. Pero puede redefinirse si en la superclase es abstracta. Un \textit{val} no puede ser redefinido por un \textit{var} o \textit{def} en una subclase.
+Comparado con Java, Scala añade unas restricciones para sobreescribir un método. El método sobreescrito debe usar el modificador \textit{override} (existe una anotación $@Override$ en Java, pero no es obligatoria). Adicionalmente, no se puede sobreescribir un \textit{var} con \textit{val} o \textit{def}. Pero puede sobreescribirse si en la superclase es abstracta. Un \textit{val} no puede ser sobreescrito por un \textit{var} o \textit{def} en una subclase.
 
 \ejemplo
 
@@ -3159,7 +3159,7 @@ object Main extends App{
 	
 }
 \end{minted}
-\caption{Ejemplo de redefinición de métodos en Scala.}
+\caption{Ejemplo de sobreescritura de métodos en Scala.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}
@@ -3205,7 +3205,7 @@ object Main extends App{
        h.print
 }
 \end{minted}
-\caption{Ejemplo 2 de redefinición de métodos en Scala.}
+\caption{Ejemplo 2 de sobreescritura de métodos en Scala.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}
@@ -3732,7 +3732,7 @@ En D existen los modificadores de acceso \textit{private}, \textit{package}, \te
 
 
 \begin{itemize}
-\item \textit{private}. Un miembro privado implica que únicamente miembros de la clase o miembros y funciones del módulo de la clase pueden acceder a ellos. Miembros privados no pueden ser redefinidos.
+\item \textit{private}. Un miembro privado implica que únicamente miembros de la clase o miembros y funciones del módulo de la clase pueden acceder a ellos. Miembros privados no pueden ser sobreescritos.
 \item \textit{package}. El modificador \textit{package} extiende la privacidad de manera que estos miembros pueden ser accedidos por otros módulos en el mismo paquete.
 \item \textit{protected}. Un miembro protegido miembros de su clase, clase derivada o miembros y funciones en el mismo módulo pueden acceder a dicho miembro.
 \item \textit{public}. Un miembro público puede ser accedido donde el miembro sea visible.
@@ -3774,7 +3774,7 @@ this<lista de argumentos>) {
 \item Una interfaz proporciona los nombres de los métodos, pero no sus implementaciones.
 \item Una clase puede implementar varias interfaces, aunque solo pueda heredar una clase.
 \item No es posible crear instancias de una interfaz.
-\item Métodos \textbf{estáticos} y \textbf{finales} deben llevar su implementación. Las clases no pueden redefinir estos tipos de miembros.
+\item Métodos \textbf{estáticos} y \textbf{finales} deben llevar su implementación. Las clases no pueden sobreescribir estos tipos de miembros.
 \item La clase que implementa la interfaz debe escribir el código de todos los métodos, de otra forma no se generará un error. 
 \item Una interfaz no puede tener atributos.
 \end{itemize}

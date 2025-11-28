@@ -64,40 +64,43 @@ baselinestretch=1.2,
 bgcolor=lightgray,
 fontsize=\footnotesize]
     {java}
-//Ejemplo de uso de URL
-import java.applet.*;
-import java.net.*;
-import java.awt.*;
+//Ejemplo de uso de URL con JavaFX
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
 
-public class URLEjemplo extends Applet {
+public class URLEjemplo extends Application {
 
-   URL utm = null;
- 
-   public void init()
-     {
+    @Override
+    public void start(Stage primaryStage) {
+        Button btn = new Button("Ir a www.utm.mx");
+        btn.setOnAction(e -> {
+            getHostServices().showDocument("http://www.utm.mx");
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+        
+        Scene scene = new Scene(root, 300, 250);
+        
+        primaryStage.setTitle("Ejemplo URL");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-       try {
-           utm = new URL("http://www.utm.mx");
-         } 
-       catch (MalformedURLException e)
-         {
-           System.out.println("Error:" + e.getMessage());
-         }
-     }
-
-   public boolean mouseDown(Event evt, int x, int y)
-     {
-       getAppletContext().showDocument(utm);
-       return(true);
-     }
-  }
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
 \end{minted}
-\caption{Ejemplo de clase URL.}
+\caption{Ejemplo de clase URL con JavaFX.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}
 
-Este programa detecta un \textit{click} del ratón sobre el área del \textit{applet} y como acción asociada despliega una página de html en el navegador\footnote{No se pruebe en el \textit{appletviewer} ya que este no despliega más que el \textit{applet} y no muestra la página html.}.
+Este programa muestra una ventana con un botón que, al ser presionado, abre la página web indicada en el navegador predeterminado del sistema.
 
 Este es sólo un ejemplo, pero la clase URL es usada por todos aquellos programas que requieran del uso de direcciones de recursos de Internet.
 

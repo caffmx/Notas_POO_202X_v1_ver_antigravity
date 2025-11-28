@@ -137,7 +137,7 @@ end
 mc=MiClase.new
 
 puts mc.x
-# mc.modifica    -- Error pues se ha redefinido el método
+# mc.modifica    -- Error pues se ha sobreescrito el método
 
 mc.modifica 10
 puts mc.x
@@ -185,7 +185,7 @@ class MiClase:
 mc=MiClase()
 mc.modifica(5)
 print(mc.x)
-#  mc.modifica()    -- Error pues se ha redefinido el metodo
+#  mc.modifica()    -- Error pues se ha sobreescrito el metodo
 mc.modifica(10)
 print(mc.x)
 \end{minted}

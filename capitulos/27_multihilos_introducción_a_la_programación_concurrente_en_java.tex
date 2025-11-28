@@ -148,7 +148,7 @@ class MiHilo extends Thread {
 }
 \end{minted}
 
-Esta técnica, extiende a la clase \textit{Thread}, y redefine el método \textit{run()}, el cual debe contener un implementación propia, de acuerdo a lo que se quiera que realice el hilo.
+Esta técnica, extiende a la clase \textit{Thread}, y sobreescribe el método \textit{run()}, el cual debe contener un implementación propia, de acuerdo a lo que se quiera que realice el hilo.
 
 Vamos a mencionar ahora los principales métodos de la clase\footnote{Para las características completas ver la documentación: \textit{Java Platform API Specification}}.
 
@@ -157,7 +157,7 @@ Vamos a mencionar ahora los principales métodos de la clase\footnote{Para las c
 \item \textit{Thread(String nombreThread)}. Constructor de la clase Thread, recibe una cadena para el nombre del hilo.
 \item \textit{Thread( )}. Constructor sin parámetros. Crea de manera automática nombres para los hilos. Llamados Thread1, Thread2, etc.
 \item \textit{start()}. Inicia la ejecución de un hilo. Invoca al método run().
-\item \textit{run()}. Este método se redefine para controlar la ejecución del hilo.
+\item \textit{run()}. Este método se sobreescribe para controlar la ejecución del hilo.
 \item sleep( tiempo ). Causa que el hilo se "duerma" un tiempo determinado. Un hilo dormido no compite por el procesador.
 \item \textit{interrupt( )}. Interrumpe la ejecución de un hilo.
 \item \textit{interrupted()}. Método estático que devuelve verdadero si el hilo actual ha sido interrumpido.
@@ -176,7 +176,7 @@ Ahora, suponga que tiene un programa con varios hilos de ejecución, y uno de lo
 
 La prioridad de un hilo en Java puede ir de 1 a 10. Si se le asigna 10 como prioridad a un hilo, se le estaría asignando la prioridad más alta. Un hilo al que no se le especifica su prioridad, toma una prioridad normal con un valor de 5. Si un hilo es creado por otro, el nuevo hilo hereda la prioridad del hilo padre.
 	
-Java tiene predefinidas 3 constantes de prioridad:
+Java tiene psobreescritas 3 constantes de prioridad:
 
 
 \begin{itemize}

@@ -565,7 +565,7 @@ public class DemoThread implements Runnable {
 \label{listing:1}
 \end{longlisting}
 
-\ejemplo \footnote{ Al compilar este programa el compilador nos avisará del uso de métodos deprecated, debido a que el código incluye llamadas a suspend() y resume().}
+\ejemplo \footnote{Este ejemplo ha sido actualizado para usar JavaFX y mecanismos modernos de sincronización, reemplazando los métodos obsoletos suspend() y resume().}
 
 %longlist  para potencialmente grandes codigos fuentes
 \begin{longlisting}
@@ -576,127 +576,120 @@ baselinestretch=1.2,
 bgcolor=lightgray,
 fontsize=\footnotesize]
     {java}
-// Ejemplo de implementacion de la interfaz Runnable
-import java.awt.*;
-import java.applet.Applet;
+// Ejemplo de implementacion de la interfaz Runnable con JavaFX
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
-public class RandomCharacters extends Applet
-                              implements Runnable {
+public class RandomCharacters extends Application {
 
-   String alphabet;
-   TextField output1, output2, output3;
-   Button button1, button2, button3;
+    private TextField output1, output2, output3;
+    private Button button1, button2, button3;
+    private CharacterRunner runner1, runner2, runner3;
+    private Thread thread1, thread2, thread3;
 
-   Thread thread1, thread2, thread3;
+    @Override
+    public void start(Stage primaryStage) {
+        VBox root = new VBox(10);
+        
+        output1 = new TextField(); output1.setEditable(false);
+        output2 = new TextField(); output2.setEditable(false);
+        output3 = new TextField(); output3.setEditable(false);
 
-   boolean suspend1, suspend2, suspend3;
+        button1 = new Button("Suspender/Continuar 1");
+        button2 = new Button("Suspender/Continuar 2");
+        button3 = new Button("Suspender/Continuar 3");
 
-   public void init()
-   {
-      alphabet = new String( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
-      output1 = new TextField( 10 );
-      output1.setEditable( false );
-      output2 = new TextField( 10 );
-      output2.setEditable( false );
-      output3 = new TextField( 10 );
-      output3.setEditable( false );
-      button1 = new Button( "Suspender/Continuar 1" );
-      button2 = new Button( "Suspender/Continuar 2" );
-      button3 = new Button( "Suspender/Continuar 3" );
+        // Configurar acciones de botones
+        button1.setOnAction(e -> toggleThread(runner1));
+        button2.setOnAction(e -> toggleThread(runner2));
+        button3.setOnAction(e -> toggleThread(runner3));
 
-      add( output1 );
-      add( button1 );
-      add( output2 );
-      add( button2 );
-      add( output3 );
-      add( button3 );
-   }
+        root.getChildren().addAll(output1, button1, output2, button2, output3, button3);
 
-   public void start()
-   {
-      // crea hilos e inicia cada vez que se invoca start()
-      thread1 = new Thread( this, "Hilo 1" );
-      thread2 = new Thread( this, "Hilo 2" );
-      thread3 = new Thread( this, "Hilo 3" );
+        // Iniciar hilos
+        runner1 = new CharacterRunner(output1, "Hilo 1");
+        runner2 = new CharacterRunner(output2, "Hilo 2");
+        runner3 = new CharacterRunner(output3, "Hilo 3");
 
-      thread1.start();
-      thread2.start();
-      thread3.start();
-   }
+        thread1 = new Thread(runner1);
+        thread2 = new Thread(runner2);
+        thread3 = new Thread(runner3);
 
-   public void stop()
-   {
-      // detiene los hilos cada vez que se invoca stop()
-      thread1.stop();
-      thread2.stop();
-      thread3.stop();
-   }
+        thread1.setDaemon(true);
+        thread2.setDaemon(true);
+        thread3.setDaemon(true);
 
-   public boolean action( Event event, Object obj )
-   {
-      if ( event.target == button1 )
-         if ( suspend1 ) {
-            thread1.resume();
-            suspend1 = false;
-         }
-         else {
-            thread1.suspend();
-            output1.setText( "suspendido" );
-            suspend1 = true;
-         }
-      else if ( event.target == button2 )
-         if ( suspend2 ) {
-            thread2.resume();
-            suspend2 = false;
-         }
-         else {
-            thread2.suspend();
-            output2.setText( "suspendido" );
-            suspend2 = true;
-         }
-      else if ( event.target == button3 ) 
-         if ( suspend3 ) {
-            thread3.resume();
-            suspend3 = false;
-         }
-         else {
-            thread3.suspend();
-            output3.setText( "suspendido" );
-            suspend3 = true;
-         }
+        thread1.start();
+        thread2.start();
+        thread3.start();
 
-      return true;
-   }
+        Scene scene = new Scene(root, 300, 400);
+        primaryStage.setTitle("Hilos y JavaFX");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-   public void run(){
-      int location;
-      char display;
-      String executingThread;
+    private void toggleThread(CharacterRunner runner) {
+        runner.toggle();
+    }
 
-      while ( true ) {
-         try {
-            Thread.sleep( (int) ( Math.random() * 5000 ) );
-         }
-         catch ( InterruptedException e ) {
-            e.printStackTrace();
-         }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-         location = (int) ( Math.random() * 26 );
-         display = alphabet.charAt( location );
+    // Clase interna que implementa Runnable
+    class CharacterRunner implements Runnable {
+        private TextField output;
+        private String name;
+        private volatile boolean suspended = false;
+        private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-         executingThread = Thread.currentThread().getName();
+        public CharacterRunner(TextField output, String name) {
+            this.output = output;
+            this.name = name;
+        }
 
-         if ( executingThread.equals( "Hilo 1" ) )
-            output1.setText( "Hilo 1: " + display );
-         else if ( executingThread.equals( "Hilo 2" ) )
-            output2.setText( "Hilo 2: " + display );
-         else if ( executingThread.equals( "Hilo 3" ) )
-            output3.setText( "Hilo 3: " + display );
-      }
-   }
+        public synchronized void toggle() {
+            suspended = !suspended;
+            if (!suspended) {
+                notify();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    synchronized (this) {
+                        while (suspended) {
+                            wait();
+                        }
+                    }
+                    
+                    int location = (int) (Math.random() * 26);
+                    char display = alphabet.charAt(location);
+                    
+                    // Actualizar UI en el hilo de JavaFX
+                    Platform.runLater(() -> output.setText(name + ": " + display));
+                    
+                    Thread.sleep((int) (Math.random() * 1000));
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
+    }
 }
 \end{minted}
-\caption{Ejemplo de implementacion de la interfaz \textit{Runnable} con un \textit{applet}.}
+\caption{Ejemplo de implementación de la interfaz \textit{Runnable} con una aplicación JavaFX.}
 % \caption[Long Code Example]{A long code example which will break across pages.}
 \label{listing:1}
 \end{longlisting}

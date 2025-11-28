@@ -515,7 +515,7 @@ class MiHilo(threading.Thread):
     self.i = i
     threading.Thread.__init__(self) 
   
-  def run(self):                # redefine run con la acción
+  def run(self):                # sobreescribe run con la acción
     print(self.i ** 32) 
   
 MiHilo(2).start()               #start() invoca run()
