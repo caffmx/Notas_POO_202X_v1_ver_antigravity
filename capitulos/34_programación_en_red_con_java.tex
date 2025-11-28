@@ -250,14 +250,14 @@ import java.io.*;
 
 class hiloCliente extends Thread {
 
-   DataInputStream dis = null;
+   BufferedReader dis = null;
    Socket s = null;
 
    public hiloCliente() {
         try {
            //se crea socket con dirección de máquina local
            s = new Socket("127.0.0.1", 2525);
-           dis = new DataInputStream(s.getInputStream());
+           dis = new BufferedReader(new InputStreamReader(s.getInputStream()));
         } 
         catch (IOException e)
         {
