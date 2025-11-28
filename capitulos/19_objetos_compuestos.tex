@@ -30,6 +30,27 @@ Dicho concepto implica obviamente cierta dependencia entre los objetos, por lo q
 \item Cuando el agregado es destruido también sus componentes se destruyen.
 \end{enumerate}
 
+\section{Diferencia entre Agregación y Composición}
+
+Es común encontrar confusión entre los términos \textbf{agregación} y \textbf{composición}. En el estándar UML (Unified Modeling Language), se hace una distinción clara basada en la dependencia del ciclo de vida:
+
+\begin{description}
+    \item[Composición:] Representa una relación "parte-de" fuerte. El componente es una parte integral del compuesto y su existencia depende de él. Si el objeto compuesto es destruido, las partes también lo son (coincide con la opción 2 mencionada anteriormente). Ejemplo: Una \textit{Casa} y sus \textit{Habitaciones}. Si se destruye la casa, las habitaciones dejan de existir.
+    
+    \item[Agregación:] Representa una relación "tiene-un" más débil. El componente puede existir independientemente del agregado (coincide con la opción 1). Ejemplo: Un \textit{Departamento} académico y sus \textit{Profesores}. Si el departamento cierra, los profesores siguen existiendo y pueden ser reasignados.
+\end{description}
+
+\begin{center}
+\begin{tabular}{|m{0.3\textwidth}|m{0.3\textwidth}|m{0.3\textwidth}|}
+ \hline 
+ \rowcolor{gray!50} 
+ \textbf{Característica} & \textbf{Composición} & \textbf{Agregación} \\ \hline
+ Tipo de Relación & Fuerte & Débil \\ \hline
+ Ciclo de Vida & Dependiente (Muerte coincidente) & Independiente \\ \hline
+ Símbolo UML & Rombo relleno & Rombo vacío \\ \hline
+\end{tabular}
+\end{center}
+
 	Un objeto que es parte de otro objeto, puede a su vez ser un objeto compuesto. De esta forma podemos tener múltiples niveles. Un objeto puede ser un \textbf{agregado recursivo}, es decir, tener un objeto de su misma clase. 
 
 Ejemplo: Directorio de archivos.
