@@ -766,7 +766,7 @@ fontsize=\footnotesize]
 
 def fun(**kwargs):
   for clave, val in kwargs.items():
-    print("%s == %s" % (clave, val))
+    print(f"{clave} == {val}")
   print(type(kwargs))  #kwargs es un diccionario
 
 fun(uno='Prueba', dos='de', tres='argumentos')

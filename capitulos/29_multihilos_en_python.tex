@@ -71,12 +71,12 @@ import os, time
 def contador(count):             #ejecuta un nuevo proceso
     for i in range(count):
         time.sleep(1)           # simula que trabaja
-        print('[%s] => %s' % (os.getpid(), i))
+        print(f'[{os.getpid()}] => {i}')
 
 for i in range(5): 
     pid = os.fork()
     if pid != 0:
-        print('Proceso %d generado' % pid)  # en proceso padre: continua
+        print(f'Proceso {pid} generado')  # en proceso padre: continua
     else: 
         contador(5)              # sino in proceso hijo/nuevo 
         os._exit(0)             # ejecuta función y sale
@@ -290,7 +290,7 @@ import _thread as thread, time
 def contador(miId, cont):       # función ejecutado en los hilos
   for i in range(cont):
     time.sleep(1)               
-    print('[%s] => %s' % (miId, i))
+    print(f'[{miId}] => {i}')
 
 for i in range(5):              # lanza 5 hilos
   thread.start_new_thread(contador, (i, 5))   #cada hilo itera 5 veces
@@ -330,7 +330,7 @@ def contador(miId, cont):       # función ejecutado en los hilos
   for i in range(cont):
     time.sleep(1)      
     mutex.acquire()         
-    print('[%s] => %s' % (miId, i))
+    print(f'[{miId}] => {i}')
     mutex.release()
 
 mutex = thread.allocate_lock()  # generar un objeto para bloqueo global
@@ -372,7 +372,7 @@ mutexesFinalizados = [thread.allocate_lock() for i in range(10)]
 def contador(miId, cont): 
   for i in range(cont):
     stdoutmutex.acquire() 
-    print('[%s] => %s' % (miId, i)) 
+    print(f'[{miId}] => {i}') 
     stdoutmutex.release()
   mutexesFinalizados[miId].acquire() # signal main thread
 
@@ -417,7 +417,7 @@ mutexesFinalizados = [False] * 10
 def contador(miId, cont): 
   for i in range(cont):
     stdoutmutex.acquire() 
-    print('[%s] => %s' % (miId, i)) 
+    print(f'[{miId}] => {i}') 
     stdoutmutex.release()
   mutexesFinalizados[miId] = True # signal main thread
 
@@ -469,7 +469,7 @@ class MiHilo(threading.Thread):
   def run(self):
     for i in range(self.cont):
         with self.mutex:
-          print('[%s] => %s' % (self.miId, i))
+          print(f'[{self.miId}] => {i}')
 
 stdoutmutex = threading.Lock() 
 hilos = []
