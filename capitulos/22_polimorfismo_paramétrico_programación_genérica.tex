@@ -539,6 +539,63 @@ Un requerimiento para el uso tipos genéricos en Java es que no pueden usarse ti
 
 Restriciones de las clases genéricas, ver\footnote{\href{https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html#createArrays}{Java generics}}.
 
+\subsection{Autoboxing y Unboxing}
+
+Aunque los tipos genéricos en Java no aceptan tipos primitivos directamente, Java proporciona un mecanismo llamado \textbf{autoboxing} (auto-empaquetado) que convierte automáticamente entre tipos primitivos y sus correspondientes clases wrapper (envolventes). Cada tipo primitivo tiene una clase wrapper correspondiente:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\rowcolor{gray!50}
+\textbf{Tipo Primitivo} & \textbf{Clase Wrapper} \\
+\hline
+int & Integer \\
+\hline
+double & Double \\
+\hline
+boolean & Boolean \\
+\hline
+char & Character \\
+\hline
+byte & Byte \\
+\hline
+short & Short \\
+\hline
+long & Long \\
+\hline
+float & Float \\
+\hline
+\end{tabular}
+\end{center}
+
+El \textbf{autoboxing} es la conversión automática que hace el compilador de Java de un tipo primitivo a su clase wrapper correspondiente. El \textbf{unboxing} es la conversión inversa, de la clase wrapper al tipo primitivo.
+
+\textcolor{blue}{Ejemplo:}
+
+\begin{minted}{java}
+List<Integer> numeros = new ArrayList<Integer>();
+
+// Autoboxing: el int 5 se convierte automáticamente a Integer
+numeros.add(5);  // equivalente a: numeros.add(Integer.valueOf(5));
+
+// Unboxing: el Integer se convierte automáticamente a int
+int valor = numeros.get(0);  // equivalente a: int valor = numeros.get(0).intValue();
+\end{minted}
+
+% TABLA con más de una línea 
+\begin{center}
+\begin{tabular}{|m{\textwidth}| }
+ \hline 
+\rowcolor{gray!50} 
+\begin{center}
+\textbf{Importante} 
+\end{center} 
+\\ \hline
+Gracias al autoboxing, es posible usar tipos primitivos con colecciones genéricas de manera transparente. Sin embargo, es importante recordar que internamente se están usando objetos wrapper, lo cual puede tener implicaciones de rendimiento en código crítico debido a la creación de objetos adicionales.
+\\ \hline
+\end{tabular}
+\end{center}
+
 \section{Biblioteca de Clases Genéricas en Java}
 
 Al igual que C++ con la STL, Java tiene un conjunto de clases genéricas predefinidas. Su uso, de manera similar que con las clases genéricas definidas por el programador, no está permitido para tipos primitivos, por lo que solo objetos podrán ser contenidos. Las principales clases genéricas en Java son, como en la STL, clases contenedoras o colecciones\footnote{ Las colecciones en Java eran implementadas antes de la versión 1.5 pero sin el uso de clases genéricas. El uso de versiones anteriores de colecciones con colecciones genéricas es permitido por compatibilidad hacia atrás pero debe tenerse especial cuidado pues hay situaciones que el compilador no puede validar.}. El \textit{Java Collections Framework }(JCF) es un conjunto de interfaces y clases definidos en los paquetes $java.util$ y $java.util.concurrent$.
