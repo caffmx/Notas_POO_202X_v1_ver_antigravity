@@ -49,7 +49,7 @@ bgcolor=lightgray,
 fontsize=\footnotesize]
     {java}
 //Programa que almacena páginas html
-import java.util.Vector;
+import java.util.ArrayList;
 import java.io.*;
 import java.net.*;
 
@@ -62,8 +62,8 @@ public class CapturaHtmlApp {
 
 class CapturaHtml {
  String urlList = "urlList.txt";
- Vector URLs = new Vector();
- Vector fileNames = new Vector();
+ ArrayList<String> URLs = new ArrayList<>();
+ ArrayList<String> fileNames = new ArrayList<>();
  public CapturaHtml() {
   super();
  }
@@ -77,8 +77,8 @@ class CapturaHtml {
      int tabPos = inLine.lastIndexOf('\t');
      String url = inLine.substring(0,tabPos).trim();
      String fileName = inLine.substring(tabPos+1).trim();
-     URLs.addElement(url);
-     fileNames.addElement(fileName);
+     URLs.add(url);
+     fileNames.add(fileName);
     }
    }
   }catch(IOException ex){
@@ -89,7 +89,7 @@ class CapturaHtml {
   getURLList();
   int numURLs = URLs.size();
   for(int i=0;i<numURLs;++i)
-   captuURL((String) URLs.elementAt(i),(String) fileNames.elementAt(i));
+   captuURL(URLs.get(i), fileNames.get(i));
   System.out.println("Ok.");
  }
  public void captuURL(String urlName,String fileName) {
