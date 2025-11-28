@@ -167,7 +167,7 @@ int Arr::get(int pos) {  //no es necesario sobrecargar
 
 int main(){
 	Arr a(5), b;
-	srand( time(NULL) );
+	srand( time(nullptr) );
 	
 	a.set(0,1);
 	a.set(1,11);
@@ -244,16 +244,16 @@ class Cola{
 	char *nom;
 
 	public:
-	Cola(const char *cad=NULL) {  //funcion en linea
-		if(cad){   //cadena!=NULL
+	Cola(const char *cad=nullptr) {  //funcion en linea
+		if(cad){   //cadena!=nullptr
 			nom=new char[strlen(cad)+1];
 			strcpy(nom, cad);
 		}else
-			nom=NULL;
+			nom=nullptr;
 		sloc=rloc=-1;
 	}
 	~Cola( ) {
-		if(nom){  //nom!=NULL
+		if(nom){  //nom!=nullptr
 			cout<<"Cola : "<<nom<<" destruida\n";
 			delete [] nom;
 		}
@@ -342,12 +342,12 @@ class Cola{
 	char *nom;
 
 	public:
-	Cola(const char *cad=NULL) {
+	Cola(const char *cad=nullptr) {
 		if(cad){
 			nom=new char[strlen(cad)+1];
 			strcpy(nom, cad);
 		}else
-			nom=NULL;
+			nom=nullptr;
 		sloc=rloc=-1;
 	}
 	~Cola( ) {

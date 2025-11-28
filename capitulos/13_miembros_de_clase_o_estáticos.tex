@@ -45,15 +45,15 @@ class Objeto{
 	char nombre[10];
 	static int numObjetos;
  	public:
-	Objeto(char *cadena=NULL);
+	Objeto(char *cadena=nullptr);
 	~Objeto();
 };
 
 Objeto::Objeto(const char *cadena){
-	if(cadena!=NULL)
+	if(cadena!=nullptr)
 		strcpy(nombre, cadena);
 	else
-		nombre=NULL;
+		nombre=nullptr;
 	numObjetos++;
 }
 
@@ -91,13 +91,13 @@ class Persona{
 	char *nombre;
 	
 	public:
-	Persona(const char *c=NULL){
-		if(c!=NULL){
+	Persona(const char *c=nullptr){
+		if(c!=nullptr){
 			nombre= new char[strlen(c)+1];
 			strcpy(nombre, c);
 			cout<<"Persona: "<<nombre<<endl;
 		}else{
-			nombre=NULL;
+			nombre=nullptr;
 			cout<<"Persona: "<<endl;
 		} 
 		nPersonas++;

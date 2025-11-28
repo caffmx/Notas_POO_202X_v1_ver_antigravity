@@ -189,7 +189,7 @@ class String{
    char *s;
    int tam;
 public:
-   String(char * =NULL);
+   String(char * =nullptr);
    String(const String &copia);  //constructor de copia
    ~String();
 //sobrecarga de operador de asignación
@@ -233,17 +233,17 @@ private:
 	char *s;
 	int tam;
 public:
-	String(const char * =NULL);
+	String(const char * =nullptr);
 
 	String(const String &copia){
-		s=NULL;
+		s=nullptr;
 		tam=0;
 		*this=copia;//¿se vale o no?
 	}
 	~String(){
-		if(s!=NULL){
+		if(s!=nullptr){
 			delete []s;
-			s=NULL;
+			s=nullptr;
 			tam=0;
 		}
 	}
@@ -280,8 +280,8 @@ istream &operator >> (istream &entrada, String &cad){
 }
 
 String::String(const char *c){
-	if(c==NULL){
-		s=NULL;
+	if(c==nullptr){
+		s=nullptr;
 		tam=0;
 	} else {
 		tam=strlen(c);
@@ -292,7 +292,7 @@ String::String(const char *c){
 
 const String &String::operator =(const String &c){
 	if(this!= &c) {      //verifica no asignarse a si mismo
-		if(s!=NULL)
+		if(s!=nullptr)
 			delete []s;
 		tam=c.tam;
 		s= new char[tam+1];
@@ -327,7 +327,7 @@ const String &String::operator +=(const String &c){
 
 String &String::copia (const String &c) {
 	if(this!= &c) {      //verifica no asignarse a si mismo
-		if(s!=NULL)
+		if(s!=nullptr)
 			delete []s;
 		tam=c.tam;
 		s= new char[tam+1];
